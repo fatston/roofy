@@ -1,21 +1,25 @@
 // dependencies
 const express = require('express');
 const path = require('path');
-const { send } = require('process');
+const { send, nextTick } = require('process'); // delete if necessary
 const sqlite3 = require('sqlite3').verbose();
 
 
 
 // using dependencies I guess
 const app = express();
-const bodyParser = require('body-parser');
-
-
 app.use(express.static('./public'))
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.json());
+app.use(express.urlencoded({
+    extended: true
+}));
 
 // connect to db
 const db = new sqlite3.Database('./db/basic_login.db');
+
+
+
+// =========== paths =========== //
 
 // home page
 app.get('/',(req,res)=>{
@@ -38,40 +42,9 @@ app.get('/login',(req,res)=>{
 })
 
 // post login request
-app.post('/login', (req,res)=>{
-    let email = req.body.email;
-    let password = req.body.password;
-    console.log(`${email} ${password}`)
-    let sql = `
-        SELECT password
-        FROM user
-        WHERE email  = ?
-        `;
-
-        // let username = 'cliftonkor';
-        // let password = 'password123';
-        let auth = false;
-
-        // first row only
-        db.get(sql, [email], (err, row) => {
-        if (err) {
-            return console.error(err.message);
-        }
-        if (!row || password != row.password) {
-            // wrong email or pass
-            res.send('Oh no wrong email / password!')
-        }
-        else {
-            // success
-            res.sendFile(path.resolve(__dirname,'./public/profile.html'))
-        }
-    })
-});
-
-// profile page
-app.get('/profile',(req,res)=>{
+app.post('/login', authLogin, createSession, (req,res)=>{
     res.sendFile(path.resolve(__dirname,'./public/profile.html'))
-})
+});
 
 // route to registration page
 app.get('/register',(req,res)=>{
@@ -79,39 +52,195 @@ app.get('/register',(req,res)=>{
 })
 
 // post register page
-app.post('/register',(req,res)=>{
+app.post('/register',registerUser,(req,res)=>{
+    res.send(`<h1>Registration Success!</h1> 
+    <p>Please <a href="login">login</a></p>`);
+})
+
+
+// =========== Paths that need checkSession =========== //
+
+// profile page
+app.get('/profile',(req,res)=>{
+    console.log(req.params.name);
+    res.sendFile(path.resolve(__dirname,'./public/profile.html'))
+})
+
+
+// =========== APIs =========== //
+
+// get profile details
+app.post('/api/user/:email', checkSession, getUserDetails,(req,res)=>{
+    res.send('user details: ...');
+})
+
+// get search details
+app.get('/api/search', searchProperties, (req,res)=>{
+    
+})
+
+
+// =========== losted area =========== //
+
+// lost page
+app.all('*',(req,res)=>{
+    res.send('<h1>You seem lost...</h1><p><a href="/">go back</a></p>')
+})
+
+
+
+
+
+// =========== middleware =========== //
+
+
+// =========== session and cookies =========== //
+
+function createSession(req, res, next) {
+    // todo create session function
+    console.log('session created :)');
+    next()
+}
+
+function checkSession(req,res,next) {
+    // todo create check session function
+    if (true == true) {
+        console.log('session is active')
+        next()
+    } else {
+        console.log('session is not active')
+        res.send(`
+            <h1>no hacking allowed!</h1>
+            <a href="login">proceed to login</a>
+        `)
+    }
+}
+
+function createCookie(req, res, next) {
+    // todo create session function
+    console.log('session created :)');
+    next()
+}
+
+// =========== db functions =========== //
+
+function authLogin(req, res, next) {
+    let email = req.body.email;
+    let password = req.body.password;
+
+    let sql = `
+        SELECT password
+        FROM user
+        WHERE email = ?;
+    `;
+    // run the sql query on db
+    db.get(sql, [email], (err, row) => {
+        if (err) {
+            // return false
+            res.send('login failed. <a href="login">try again</a>')
+        }
+        else if (!row || password != row.password) {
+            // wrong email or pass
+            // return false;
+            res.send('wrong email or password. <a href="login">try again</a>')
+        }
+        else {
+            next();
+        }
+    })
+}
+
+function registerUser(req,res,next) {
     let email = req.body.email;
     let password = req.body.password;
     let name = req.body.name;
-    console.log(`${email} ${password} ${name}`)
+
     let sql = `
         SELECT *
         FROM user
         WHERE email  = ?
     `;
 
-    // let username = 'cliftonkor';
-    // let password = 'password123';
-    
-
     sql = `
-        INSERT INTO user VALUES (
-            ?,?,?
+        INSERT INTO user(email,password,name) VALUES (
+            (?),(?),(?)
         );
     `;
 
     db.run(sql, [email,password,name],(err)=>{
         if (err) {
-            res.send('username in use, try another username');
+            res.send('Email is already used. <a href="register">try again</a>')
             res.end();
+        } else {
+            next()
         }
     })
-    res.send('Registration Success! Please <a href="login">login</a>')
-})
+}
 
-app.all('*',(req,res)=>{
-    res.send('<h1>resource not found</h1>')
-})
+function getUserDetails(req,res,next) {
+    // get session details
+    // let email = session.email;
+    let email = 'cliftonkor@gmail.com';
+
+    let sql = `
+        SELECT *
+        FROM user
+        WHERE email = ?;
+    `;
+    // run the sql query on db
+    db.get(sql, [email], (err, row) => {
+        if (err) {
+            // return false
+            res.send('login failed. <a href="login">try again</a>')
+        }
+        else if (!row || password != row.password) {
+            // wrong email or pass
+            // return false;
+            res.send(`
+                <h1>wrong email or password.</h1> 
+                <a href="login">try again</a>
+            `)
+        }
+        else {
+            req.email = row.email;
+            req.name = row.name;
+            // add on if there are more rowz
+            // req.<variablePassed> = row.<nameOfDBRow>
+            next();
+        }
+    })
+}
+
+function searchProperties(req,res,next) {
+    let buyer = false;
+    if (req.body.buy === true) {
+        buyer = true;
+    }
+    let search = req.body.searchString;
+    let type = req.body.residential;
+    let price = req.body.price;
+    let beds = req.body.beds;
+
+    let sql = ``;
+    // run the sql query on db
+    db.get(sql, [buyer,search,type,price,beds], (err, row) => {
+        if (err) {
+            res.json({success: false})
+            res.end()
+        }
+        else if (!row) {
+            res.json({success: false})
+            res.end()
+        }
+        else {
+            // res.json({{success:true},house:...})
+            next();
+        }
+    })
+}
+
+
+// =========== other functions =========== //
 
 
 
@@ -119,5 +248,5 @@ app.listen(5000,()=>{
     console.log('server is listening on port 5000')
 })
 
-// close the database connection
+
 // db.close();

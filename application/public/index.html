@@ -28,9 +28,11 @@
                     <a class="nav-link" href="/contact">Contact</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="https://youtu.be/dQw4w9WgXcQ">Joint</a>
+                    <a class="nav-link" target="_blank" href="https://youtu.be/dQw4w9WgXcQ">Joint</a>
                 </li>
-                
+                <li class="nav-item">
+                    <a class="nav-link" href="/profile">Profile</a>
+                </li>
 
                 <!-- <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -55,23 +57,23 @@
 
     <!-- insert other things here like jquery and shit -->
     <div style="margin-top: 40px;"></div>
-    <div class="container">
+    <div class="container-sm">
         <form> <!-- action = search -->
             <div class="row">
                 <div class="col-3"></div>
                 <div class="col-4">
-                    <input class="form-check-input" type="radio" name="" value="buy" checked>
-                    <label class="form-check-label" for="">
-                        BUY
-                    </label>
-                    <input class="form-check-input" type="radio" name="" value="rent">
-                    <label class="form-check-label" for="">
-                        RENT
-                    </label>
-                    <input class="form-check-input" type="radio" name="" value="loan">
-                    <label class="form-check-label" for="">
-                        LOANZ
-                    </label>
+                    <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked>
+                    <label class="form-check-label" for="inlineRadio1">Buy</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                    <label class="form-check-label" for="inlineRadio2">Rent</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" disabled>
+                    <label class="form-check-label" for="inlineRadio3">Loan</label>
+                    </div>
                 </div>
                 <div class="col-3"></div>
             </div>
@@ -101,6 +103,24 @@
             </div>
         </form>
     </div>
+    <div class="container">
+        <div class="card" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -113,7 +133,7 @@
             </button>
             </div>
             <div class="modal-body">
-                <a href="https://youtu.be/dQw4w9WgXcQ">Click Here</a>
+                <a target="_blank" href="https://youtu.be/dQw4w9WgXcQ">Click Here</a>
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

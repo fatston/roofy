@@ -11,6 +11,7 @@
 
   </head>
   <body>
+    <!-- todo alert for login fail -->
     <nav class="navbar navbar-expand-md navbar-light bg-light">
         <a class="navbar-brand" href="/"><img src="logo.png" style="height: 40px; padding-left:10px"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,7 +20,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto nav-tabs">
                 <li class="nav-item">
-                  <a class="nav-link active" href="/">Home</a>
+                  <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/about">About</a>
@@ -28,8 +29,12 @@
                     <a class="nav-link" href="/contact">Contact</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="https://youtu.be/dQw4w9WgXcQ">Joint</a>
+                    <a class="nav-link" target="_blank" href="https://youtu.be/dQw4w9WgXcQ">Joint</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/profile">Profile</a>
+                </li>
+                
                 
 
                 <!-- <li class="nav-item dropdown">
@@ -60,12 +65,12 @@
         <form action="login" method="POST">
             <div class="form-group">
                 <label for="exampleInputEmail1">Email address</label>
-                <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email" required="required">
+                <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="a@b.c" required="required">
                 <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
             </div>
             <div class="form-group">
                 <label for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" name="password" placeholder="Password" required="required">
+                <input type="password" class="form-control" name="password" placeholder="pp" required="required">
             </div>
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" id="exampleCheck1">
