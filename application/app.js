@@ -220,10 +220,27 @@ function searchProperties(req,res,next) {
     let type = req.body.residential;
     let price = req.body.price;
     let beds = req.body.beds;
-
-    let sql = ``;
+    let questionmark;
+    let sql = `
+        SELECT *
+        FROM properties
+        WHERE search LIKE '%${search}%'
+        AND type = ${type}
+        AND price > ${price}
+    `;
+        if (beds !== "any beds") {
+            let size = beds.size()
+            questionmark = {search, type, price}
+            
+            for (var i = 0; i < size; i++) {
+                sql.append(`
+                    AND beds = ${beds[i]}
+                `)
+            }
+        }
+    
     // run the sql query on db
-    db.get(sql, [buyer,search,type,price,beds], (err, row) => {
+    db.get(sql, (err, row) => {
         if (err) {
             res.json({success: false})
             res.end()
