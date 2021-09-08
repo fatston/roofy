@@ -1,4 +1,5 @@
 // dependencies
+const { EDESTADDRREQ } = require('constants');
 const express = require('express');
 const path = require('path');
 const { send, nextTick } = require('process'); // delete if necessary
@@ -57,6 +58,30 @@ app.post('/register',registerUser,(req,res)=>{
     <p>Please <a href="login">login</a></p>`);
 })
 
+// route to edit profile page
+app.get('/profile/edit/:id',checkSession,(req,res)=>{
+    res.sendFile(path.resolve(__dirname,'./public/edit_profile.html'))
+})
+
+// search home
+app.get('/search',searchProperties,(req,res)=>{
+    res.sendFile(path.resolve(__dirname,'./public/search.html'))
+})
+
+// search query
+app.get('/search/:a/:b',searchProperties,(req,res)=>{
+    let a = req.params.a;
+    let b = req.params.b;
+    res.send(`denny and me draw ${a}, ${b}`)
+    res.end()
+})
+
+// search query
+app.get('/search/:a/:b/:c/:d/:e/:f',searchProperties,(req,res)=>{
+    console.log(a);
+    res.send('denny is loser')
+    res.end()
+})
 
 // =========== Paths that need checkSession =========== //
 
@@ -70,8 +95,9 @@ app.get('/profile',(req,res)=>{
 // =========== APIs =========== //
 
 // get profile details
-app.post('/api/user/:email', checkSession, getUserDetails,(req,res)=>{
-    res.send('user details: ...');
+app.get('/api/user/:id', checkSession, getProfileDetails,(req,res)=>{
+    let id = req.params.id;
+    res.json({success:true, userid:id, email:res.email, name:res.name});
 })
 
 // get search details
@@ -79,13 +105,24 @@ app.get('/api/search', searchProperties, (req,res)=>{
     
 })
 
+// check session
+app.get('/api/checkSession', checkSession, (req,res)=>{
+    res.json({success:true, userid:1});
+})
+
 
 // =========== losted area =========== //
+
+// hacker page
+app.get('/hackerman',(req,res)=>{
+    res.send('<h1>Hacking is illegal!</h1><p><a href="/">go back</a></p>')
+})
 
 // lost page
 app.all('*',(req,res)=>{
     res.send('<h1>You seem lost...</h1><p><a href="/">go back</a></p>')
 })
+
 
 
 
@@ -136,12 +173,9 @@ function authLogin(req, res, next) {
     // run the sql query on db
     db.get(sql, [email], (err, row) => {
         if (err) {
-            // return false
             res.send('login failed. <a href="login">try again</a>')
         }
         else if (!row || password != row.password) {
-            // wrong email or pass
-            // return false;
             res.send('wrong email or password. <a href="login">try again</a>')
         }
         else {
@@ -156,14 +190,8 @@ function registerUser(req,res,next) {
     let name = req.body.name;
 
     let sql = `
-        SELECT *
-        FROM user
-        WHERE email  = ?
-    `;
-
-    sql = `
         INSERT INTO user(email,password,name) VALUES (
-            (?),(?),(?)
+            ?,?,?
         );
     `;
 
@@ -177,83 +205,84 @@ function registerUser(req,res,next) {
     })
 }
 
-function getUserDetails(req,res,next) {
-    // get session details
-    // let email = session.email;
-    let email = 'cliftonkor@gmail.com';
+function getProfileDetails(req,res,next) {
+    let userid = req.params.id;
+    console.log(`userid: ${userid}`);
 
     let sql = `
         SELECT *
         FROM user
-        WHERE email = ?;
+        WHERE userid = ?;
     `;
     // run the sql query on db
-    db.get(sql, [email], (err, row) => {
-        if (err) {
+    db.get(sql, [userid], (err, row) => {
+        if (err || !row) {
             // return false
-            res.send('login failed. <a href="login">try again</a>')
-        }
-        else if (!row || password != row.password) {
-            // wrong email or pass
-            // return false;
-            res.send(`
-                <h1>wrong email or password.</h1> 
-                <a href="login">try again</a>
-            `)
+            console.log(1)
+            res.json({success:false})
         }
         else {
-            req.email = row.email;
-            req.name = row.name;
-            // add on if there are more rowz
-            // req.<variablePassed> = row.<nameOfDBRow>
+            res.email = row.email;
+            res.name = row.name;
             next();
         }
     })
 }
 
+
 function searchProperties(req,res,next) {
+    // console.log(req)
     let buyer = false;
     if (req.body.buy === true) {
         buyer = true;
     }
-    let search = req.body.searchString;
+    let search = req.query.searchString;
     let type = req.body.residential;
     let price = req.body.price;
     let beds = req.body.beds;
-    let questionmark;
     let sql = `
         SELECT *
         FROM properties
-        WHERE search LIKE '%${search}%'
-        AND type = ${type}
-        AND price > ${price}
-    `;
-        if (beds !== "any beds") {
-            let size = beds.size()
-            questionmark = {search, type, price}
+        WHERE search LIKE '%?%'
+        AND type = ?
+        AND price > ?`;
+        
             
-            for (var i = 0; i < size; i++) {
-                sql.append(`
-                    AND beds = ${beds[i]}
-                `)
-            }
-        }
-    
-    // run the sql query on db
-    db.get(sql, (err, row) => {
-        if (err) {
-            res.json({success: false})
-            res.end()
-        }
-        else if (!row) {
-            res.json({success: false})
-            res.end()
+    let questionmark = {search, type, price, beds}
+
+    let size = 2;
+
+    for (let i = 0; i < size; i++) {
+        if (i == 0) {
+            sql = sql.concat(`
+        AND (`)
         }
         else {
-            // res.json({{success:true},house:...})
-            next();
+            sql = sql.concat(`OR`)
         }
-    })
+        sql = sql.concat(` beds = ? `)
+    }
+    sql = sql.concat(')')
+    
+    console.log(sql);
+    console.log(search)
+    
+    // // run the sql query on db
+    // db.get(sql, questionmark, (err, row) => {
+    //     if (err) {
+    //         res.json({success: false})
+    //         res.end()
+    //     }
+    //     else if (!row) {
+    //         res.json({success: false})
+    //         res.end()
+    //     }
+    //     else {
+    //         // res.json({{success:true},house:...})
+    //         next();
+    //     }
+    // })
+    next();
 }
 
 
