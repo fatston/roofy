@@ -15,7 +15,7 @@ app.use(express.urlencoded({
 }));
 
 // connect to db
-const db = new sqlite3.Database('./db/basic_login.db');
+const db = new sqlite3.Database('./db/roofy.db');
 
 
 
