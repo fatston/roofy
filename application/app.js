@@ -164,11 +164,10 @@ app.all('*',(req,res)=>{
 // =========== session and cookies =========== //
 
 function createSession(req, res, next) {
-    // todo create session function
     try {
         sess = req.session;
         sess.userid = res.userid;
-        console.log("session userid: " + sess.userid);
+        // console.log("session userid: " + sess.userid);
     }
     catch {
         console.log('failure: session not created');
@@ -185,11 +184,10 @@ function createSession(req, res, next) {
 function checkSession(req,res,next) {
     // todo create check session function
     if (req.session.userid) {
-        console.log('session is active')
+        // session is active
         next()
     } else {
-        console.log('session is not active')
-        console.log('session userid: ' + req.session.userid);
+        // session is not active
         res.send(`
             <h1>no hacking allowed!</h1>
             <a href="/login">proceed to login</a>
@@ -252,7 +250,6 @@ function registerUser(req,res,next) {
 
 function getProfileDetails(req,res,next) {
     let userid = req.session.userid;
-    console.log(`userid: ${userid}`);
 
     let sql = `
         SELECT *
