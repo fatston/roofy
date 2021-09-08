@@ -4,6 +4,8 @@ const express = require('express');
 const path = require('path');
 const { send, nextTick } = require('process'); // delete if necessary
 const sqlite3 = require('sqlite3').verbose();
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
 
 
 
@@ -13,6 +15,12 @@ app.use(express.static('./public'))
 app.use(express.json());
 app.use(express.urlencoded({
     extended: true
+}));
+app.use(cookieParser())
+app.use(session({
+    secret: "clifton is an awesome programmer",
+    resave: false,
+    saveUninitialized: true
 }));
 
 // connect to db
@@ -83,11 +91,22 @@ app.get('/search/:a/:b/:c/:d/:e/:f',searchProperties,(req,res)=>{
     res.end()
 })
 
+app.get('/logout',(req,res)=>{
+    req.session.destroy(function(err) {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.send(`<p>You have logged out.<br><a href="/">home</a>`)
+        }
+    })
+})
+
+
 // =========== Paths that need checkSession =========== //
 
 // profile page
-app.get('/profile',(req,res)=>{
-    console.log(req.params.name);
+app.get('/profile',checkSession,(req,res)=>{
     res.sendFile(path.resolve(__dirname,'./public/profile.html'))
 })
 
@@ -95,10 +114,12 @@ app.get('/profile',(req,res)=>{
 // =========== APIs =========== //
 
 // get profile details
-app.get('/api/user/:id', checkSession, getProfileDetails,(req,res)=>{
-    let id = req.params.id;
-    res.json({success:true, userid:id, email:res.email, name:res.name});
+app.get('/api/user', checkSession, getProfileDetails,(req,res)=>{
+    res.json({success:true, userid:req.session.userid, email:res.email, name:res.name});
 })
+
+// edit profile details
+app.post('/api/user')
 
 // get search details
 app.get('/api/search', searchProperties, (req,res)=>{
@@ -107,7 +128,16 @@ app.get('/api/search', searchProperties, (req,res)=>{
 
 // check session
 app.get('/api/checkSession', checkSession, (req,res)=>{
-    res.json({success:true, userid:1});
+    res.json({success:true, userid:req.session.userid});
+})
+
+app.get('/api/getuserid',(req,res)=>{
+    if (req.session.userid) {
+        res.json({userid:req.session.userid});
+    }
+    else {
+        res.json({userid:0, loser:true});
+    }
 })
 
 
@@ -135,20 +165,34 @@ app.all('*',(req,res)=>{
 
 function createSession(req, res, next) {
     // todo create session function
-    console.log('session created :)');
-    next()
+    try {
+        sess = req.session;
+        sess.userid = res.userid;
+        console.log("session userid: " + sess.userid);
+    }
+    catch {
+        console.log('failure: session not created');
+        res.send('session not created...');
+        res.end();
+    }
+    finally {
+        next();
+    }
+    
+    
 }
 
 function checkSession(req,res,next) {
     // todo create check session function
-    if (true == true) {
+    if (req.session.userid) {
         console.log('session is active')
         next()
     } else {
         console.log('session is not active')
+        console.log('session userid: ' + req.session.userid);
         res.send(`
             <h1>no hacking allowed!</h1>
-            <a href="login">proceed to login</a>
+            <a href="/login">proceed to login</a>
         `)
     }
 }
@@ -166,19 +210,20 @@ function authLogin(req, res, next) {
     let password = req.body.password;
 
     let sql = `
-        SELECT password
+        SELECT password, userid
         FROM user
         WHERE email = ?;
     `;
     // run the sql query on db
     db.get(sql, [email], (err, row) => {
         if (err) {
-            res.send('login failed. <a href="login">try again</a>')
+            res.send('login failed. <a href="/login">try again</a>')
         }
         else if (!row || password != row.password) {
-            res.send('wrong email or password. <a href="login">try again</a>')
+            res.send('wrong email or password. <a href="/login">try again</a>')
         }
         else {
+            res.userid = row.userid;
             next();
         }
     })
@@ -206,7 +251,7 @@ function registerUser(req,res,next) {
 }
 
 function getProfileDetails(req,res,next) {
-    let userid = req.params.id;
+    let userid = req.session.userid;
     console.log(`userid: ${userid}`);
 
     let sql = `
@@ -218,7 +263,6 @@ function getProfileDetails(req,res,next) {
     db.get(sql, [userid], (err, row) => {
         if (err || !row) {
             // return false
-            console.log(1)
             res.json({success:false})
         }
         else {

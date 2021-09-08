@@ -59,7 +59,7 @@
     <!-- insert other things here like jquery and shit -->
     <div class="container">
         <h1>Edit Profile</h1>
-        <form action="register" method="POST">
+        <form action="profile/edit" method="POST">
             <div class="form-group">
                 <label>Email address: <span id="email"></span></label>
                 <input type="email" id="email" name="email" class="form-control" aria-describedby="emailHelp" placeholder="cliftonkor@gmail.com" required="required">
@@ -89,9 +89,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script>
         // check session
-        let userid = 3;
-        getName(userid,"name");
-        getEmail(userid,"email");
+        getName("name");
+        getEmail("email");
     </script>
   </body>
 </html>

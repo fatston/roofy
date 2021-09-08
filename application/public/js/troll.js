@@ -1,7 +1,6 @@
-
 // used in profile page
-async function getName(userid, target) {
-    const profile_data_url = '/api/user/' + userid;
+async function getName(target) {
+    const profile_data_url = '/api/user/';
     const response = await fetch(profile_data_url);
     const profileData = await response.json();
     if (profileData.success === true) {
@@ -11,8 +10,8 @@ async function getName(userid, target) {
     }
 }
 
-async function getEmail(userid, target) {
-    const profile_data_url = '/api/user/' + userid;
+async function getEmail(target) {
+    const profile_data_url = '/api/user/';
     const response = await fetch(profile_data_url);
     const profileData = await response.json();
     if (profileData.success === true) {
