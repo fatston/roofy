@@ -67,7 +67,11 @@ app.post('/register',registerUser,(req,res)=>{
 })
 
 // route to edit profile page
-app.get('/profile/edit/:id',checkSession,(req,res)=>{
+app.get('/profile/edit',checkSession, (req,res)=>{
+    res.sendFile(path.resolve(__dirname,'./public/edit_profile.html'))
+})
+
+app.post('/profile/edit',checkSession, editProfile, (req,res)=>{
     res.sendFile(path.resolve(__dirname,'./public/edit_profile.html'))
 })
 
@@ -115,11 +119,8 @@ app.get('/profile',checkSession,(req,res)=>{
 
 // get profile details
 app.get('/api/user', checkSession, getProfileDetails,(req,res)=>{
-    res.json({success:true, userid:req.session.userid, email:res.email, name:res.name});
+    res.json({success:true, userid:req.session.userid, email:res.email, name:res.name, password:res.password});
 })
-
-// edit profile details
-app.post('/api/user')
 
 // get search details
 app.get('/api/search', searchProperties, (req,res)=>{
@@ -170,7 +171,7 @@ function createSession(req, res, next) {
         // console.log("session userid: " + sess.userid);
     }
     catch {
-        console.log('failure: session not created');
+        // console.log('failure: session not created');
         res.send('session not created...');
         res.end();
     }
@@ -197,11 +198,13 @@ function checkSession(req,res,next) {
 
 function createCookie(req, res, next) {
     // todo create session function
-    console.log('session created :)');
+    // console.log('session created :)');
     next()
 }
 
 // =========== db functions =========== //
+
+// =========== select statements =========== //
 
 function authLogin(req, res, next) {
     let email = req.body.email;
@@ -227,27 +230,6 @@ function authLogin(req, res, next) {
     })
 }
 
-function registerUser(req,res,next) {
-    let email = req.body.email;
-    let password = req.body.password;
-    let name = req.body.name;
-
-    let sql = `
-        INSERT INTO user(email,password,name) VALUES (
-            ?,?,?
-        );
-    `;
-
-    db.run(sql, [email,password,name],(err)=>{
-        if (err) {
-            res.send('Email is already used. <a href="register">try again</a>')
-            res.end();
-        } else {
-            next()
-        }
-    })
-}
-
 function getProfileDetails(req,res,next) {
     let userid = req.session.userid;
 
@@ -265,11 +247,11 @@ function getProfileDetails(req,res,next) {
         else {
             res.email = row.email;
             res.name = row.name;
+            res.password = row.password;
             next();
         }
     })
 }
-
 
 function searchProperties(req,res,next) {
     // console.log(req)
@@ -325,6 +307,59 @@ function searchProperties(req,res,next) {
     // })
     next();
 }
+
+// =========== insert statements =========== //
+
+function registerUser(req,res,next) {
+    let email = req.body.email;
+    let password = req.body.password;
+    let name = req.body.name;
+
+    let sql = `
+        INSERT INTO user(email,password,name) VALUES (
+            ?,?,?
+        );
+    `;
+
+    db.run(sql, [email,password,name],(err)=>{
+        if (err) {
+            res.send('Email is already used. <a href="register">try again</a>')
+            res.end();
+        } else {
+            next()
+        }
+    })
+}
+
+
+// =========== update statements =========== //
+
+function editProfile(req,res,next) {
+    let email = req.body.email;
+    let password = req.body.password;
+    let name = req.body.name;
+    let userid = req.session.userid;
+
+    let sql = `
+        UPDATE user 
+        SET email = ?, password = ?, name = ?
+        WHERE userid = ?;
+    `;
+
+    db.run(sql, [email,password,name,userid],(err)=>{
+        if (err) {
+            res.send('Something went wrong...')
+            res.end();
+        } else {
+            next()
+        }
+    })
+}
+
+
+
+
+
 
 
 // =========== other functions =========== //
