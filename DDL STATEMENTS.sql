@@ -1,11 +1,20 @@
-/**CREATE STATEMENTS**/
+/*DDL STATEMENTS*/
+
+
+DROP TABLE IF EXISTS user_reviews;
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS transactions;
+DROP TABLE IF EXISTS bookmarks;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS seller;
+DROP TABLE IF EXISTS listings;
 
 CREATE TABLE users(	
 	user_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	email VARCHAR(256)  NOT NULL UNIQUE,
 	password CHAR(256)  NOT NULL ,
 	display_picture BLOB  ,
-	CHECK(EMAIL LIKE '%@% ' )
+	CHECK(EMAIL LIKE '%@%' )
 );	
 	
 	
@@ -18,7 +27,7 @@ CREATE TABLE seller(
 	contact_number INTEGER  UNIQUE NOT NULL,
 	email VARCHAR(256)  NOT NULL UNIQUE,
 	display_picture BLOB  ,
-	CHECK(LENGTH(CONTACT_NUMBER) = 8 AND EMAIL LIKE '%@% ' )
+	CHECK(LENGTH(CONTACT_NUMBER) = 8 AND EMAIL LIKE '%@%')
 );	
 	
 	
@@ -51,9 +60,9 @@ CREATE TABLE listings(
 	
 CREATE TABLE user_reviews(	
 	review_id INTEGER PRIMARY KEY AUTOINCREMENT,
-	revieweruser_id CHAR(6) REFERENCES users(user_id)  ON DELETE CASCADE NOT NULL,
-	user_id CHAR(6) REFERENCES users(user_id)  ON DELETE CASCADE NOT NULL,
-	listing_id CHAR(3) REFERENCES listings(listing_id)  ON DELETE CASCADE NOT NULL,
+	revieweruser_id INTEGER REFERENCES users(user_id)  ON DELETE CASCADE NOT NULL,
+	seller_id INTEGER REFERENCES seller(seller_id)  ON DELETE CASCADE NOT NULL,
+	listing_id INTEGER REFERENCES listings(listing_id)  ON DELETE CASCADE NOT NULL,
 	ur_images BLOB  ,
 	description CHAR(20)  NOT NULL 
 );	
@@ -62,7 +71,7 @@ CREATE TABLE user_reviews(
 	
 CREATE TABLE comments(	
 	listing_id INTEGER REFERENCES listings(listing_id)  ON DELETE CASCADE NOT NULL,
-	seller_id INTEGER REFERENCES users(user_id)  ON DELETE CASCADE NOT NULL,
+	seller_id INTEGER REFERENCES seller(seller_id)  ON DELETE CASCADE NOT NULL,
 	comments TEXT  NOT NULL,
 	datetime DATETIME  NOT NULL
 );	
@@ -70,7 +79,7 @@ CREATE TABLE comments(
 	   
 	
 CREATE TABLE transactions(	
-	property_agent_id INTEGER REFERENCES users(user_id)  ON DELETE CASCADE NOT NULL,
+	property_agent_id INTEGER REFERENCES seller(seller_id)  ON DELETE CASCADE NOT NULL,
 	listing_id INTEGER REFERENCES listings(listing_id)  ON DELETE CASCADE NOT NULL,
 	user_id INTEGER REFERENCES users(user_id)  ON DELETE CASCADE NOT NULL,
 	date DATE  NOT NULL 
