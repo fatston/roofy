@@ -53,7 +53,7 @@ app.get('/login',(req,res)=>{
 
 // post login request
 app.post('/login', authLogin, createSession, (req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/profile.html'))
+    res.sendFile(path.resolve(__dirname,'./public/buyer/profile.html'))
 });
 
 // route to seller login page
@@ -158,7 +158,7 @@ app.get('/logout',(req,res)=>{
 
 // profile page
 app.get('/profile',checkSession,(req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/profile.html'))
+    res.sendFile(path.resolve(__dirname,'./public/buyer/profile.html'))
 })
 
 
@@ -293,7 +293,7 @@ function authLogin(req, res, next) {
     let password = req.body.password;
 
     let sql = `
-        SELECT password, userid
+        SELECT password, user_id
         FROM user
         WHERE email = ?;
     `;
@@ -306,7 +306,7 @@ function authLogin(req, res, next) {
             res.send('wrong email or password. <a href="/login">try again</a>')
         }
         else {
-            res.userid = row.userid;
+            res.userid = row.user_id;
             next();
         }
     })
