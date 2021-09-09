@@ -12,26 +12,17 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-light bg-light">
-        <a class="navbar-brand" href="/"><img src="/logo.png" style="height: 40px; padding-left:10px"></a>
+        <a class="navbar-brand" href="/seller"><img src="/logo.png" style="height: 40px; padding-left:10px"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto nav-tabs">
                 <li class="nav-item">
-                  <a class="nav-link" href="/">Home</a>
+                  <a class="nav-link" href="/seller">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/about">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/contact">Contact</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" target="_blank" href="https://youtu.be/dQw4w9WgXcQ">Joint</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="/profile">Profile</a>
+                    <a class="nav-link active" href="/seller/profile">Profile</a>
                 </li>
                 
 
@@ -52,27 +43,27 @@
                 
             </ul>
         </div>
-        <a href="/login" class="btn">Login</a>
-        <a href="/register" class="btn">Register</a>
         <a href="/logout" class="btn">Logout</a>
     </nav>
     <div style="margin-top: 40px;"></div>
     <!-- insert other things here like jquery and shit -->
     <div class="container">
-        <h1>Profile Page</h1>
-        <h3>Welcome Back <span id="name"></span>!!</h3>
-        <a href="/profile/edit" class="btn btn-secondary">Edit Details</a>
+        <h1>Seller Profile Page</h1>
+        <h3>Welcome Back Seller <span id="name"></span>!!</h3>
+        <a href="/seller/profile/edit" class="btn btn-secondary">Edit Details</a>
     </div>
 
     <!-- javascript -->
     
-    <script src="js/troll.js"></script>
+    <script src="/js/troll.js"></script>
+    <script></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script>
-        getName("name");
+        getSellerName("name");
         // todo change 3 to session data
+
     </script>
   </body>
 </html>

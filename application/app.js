@@ -6,6 +6,7 @@ const { send, nextTick } = require('process'); // delete if necessary
 const sqlite3 = require('sqlite3').verbose();
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const { json } = require('express');
 
 
 
@@ -55,6 +56,16 @@ app.post('/login', authLogin, createSession, (req,res)=>{
     res.sendFile(path.resolve(__dirname,'./public/profile.html'))
 });
 
+// route to seller login page
+app.get('/seller/login',(req,res)=>{
+    res.sendFile(path.resolve(__dirname,'./public/seller/seller_login.html'))
+})
+
+// post seller login request
+app.post('/seller/login', authSellerLogin, createSellerSession, (req,res)=>{
+    res.send('<h1>login success</h1><a href="/seller/">continue</a>')
+});
+
 // route to registration page
 app.get('/register',(req,res)=>{
     res.sendFile(path.resolve(__dirname,'./public/register.html'))
@@ -71,9 +82,45 @@ app.get('/profile/edit',checkSession, (req,res)=>{
     res.sendFile(path.resolve(__dirname,'./public/edit_profile.html'))
 })
 
+// post request for profile page
 app.post('/profile/edit',checkSession, editProfile, (req,res)=>{
     res.sendFile(path.resolve(__dirname,'./public/edit_profile.html'))
 })
+
+// route to seller registration page
+app.get('/seller/register',(req,res)=>{
+    res.sendFile(path.resolve(__dirname,'./public/seller/seller_registration.html'))
+})
+
+// post register page
+app.post('/seller/register/confirmation',registerSeller,(req,res)=>{
+    res.send(`<h1>Registration Success!</h1> 
+    <p>Please <a href="/seller/login">login</a></p>`);
+})
+
+// =========== seller routes =========== //
+
+// route to seller home page
+app.get('/seller',checkSellerSession,(req,res)=>{
+    res.sendFile(path.resolve(__dirname,'./public/seller/seller_home.html'))
+})
+
+// route to seller profile page
+app.get('/seller/profile', checkSellerSession,(req,res)=>{
+    res.sendFile(path.resolve(__dirname,'./public/seller/seller_profile.html'))
+})
+
+// route to edit profile page
+app.get('/seller/profile/edit',checkSellerSession, (req,res)=>{
+    res.sendFile(path.resolve(__dirname,'./public/seller/edit_profile.html'))
+})
+
+// post request for sellerprofile page
+app.post('/seller/profile/edit',checkSellerSession, editSellerProfile, (req,res)=>{
+    res.sendFile(path.resolve(__dirname,'./public/seller/edit_profile.html'))
+})
+
+// =========== Search =========== //
 
 // search home
 app.get('/search',searchProperties,(req,res)=>{
@@ -120,6 +167,11 @@ app.get('/profile',checkSession,(req,res)=>{
 // get profile details
 app.get('/api/user', checkSession, getProfileDetails,(req,res)=>{
     res.json({success:true, userid:req.session.userid, email:res.email, name:res.name, password:res.password});
+})
+
+// get seller details
+app.get('/api/seller', getSellerDetails, (req,res)=>{
+    
 })
 
 // get search details
@@ -182,6 +234,22 @@ function createSession(req, res, next) {
     
 }
 
+function createSellerSession(req, res, next) {
+    try {
+        sess = req.session;
+        sess.sellerid = res.sellerid;
+        // console.log("session userid: " + sess.sellerid);
+    }
+    catch {
+        // console.log('failure: session not created');
+        res.send('session not created...');
+        res.end();
+    }
+    finally {
+        next();
+    }
+}
+
 function checkSession(req,res,next) {
     // todo create check session function
     if (req.session.userid) {
@@ -195,6 +263,20 @@ function checkSession(req,res,next) {
         `)
     }
 }
+
+function checkSellerSession(req,res,next) {
+    if (req.session.sellerid) {
+        // session is active
+        next()
+    } else {
+        // session is not active
+        res.send(`
+            <h1>You tried to hack the seller page!</h1>
+            <a href="/seller/login">proceed to login</a>
+        `)
+    }
+}
+
 
 function createCookie(req, res, next) {
     // todo create session function
@@ -230,13 +312,43 @@ function authLogin(req, res, next) {
     })
 }
 
+function authSellerLogin(req, res, next) {
+    let username = req.body.username;
+    let password = req.body.password;
+
+    let sql = `
+        SELECT *
+        FROM seller
+        WHERE username = ?;
+    `;
+    // run the sql query on db
+    db.get(sql, [username], (err, row) => {
+        if (err) {
+            res.send('login failed. <a href="/seller/login">try again</a>')
+        }
+        else if (!row || password != row.password) {
+            res.send('wrong username or password. <a href="/seller/login">try again</a>')
+        }
+        else {
+            res.sellerid = row.seller_id;
+            res.username = row.username;
+            res.password = row.password;
+            res.name = row.name;
+            res.company = row.company;
+            res.email = row.email;
+            res.contact = row.contact_number;
+            next();
+        }
+    })
+}
+
 function getProfileDetails(req,res,next) {
     let userid = req.session.userid;
 
     let sql = `
         SELECT *
         FROM user
-        WHERE userid = ?;
+        WHERE user_id = ?;
     `;
     // run the sql query on db
     db.get(sql, [userid], (err, row) => {
@@ -248,6 +360,33 @@ function getProfileDetails(req,res,next) {
             res.email = row.email;
             res.name = row.name;
             res.password = row.password;
+            next();
+        }
+    })
+}
+
+function getSellerDetails(req,res,next) {
+    let sellerid = req.session.sellerid;
+
+    let sql = `
+        SELECT *
+        FROM seller
+        WHERE seller_id = ?;
+    `;
+    // run the sql query on db
+    db.get(sql, [sellerid], (err, row) => {
+        if (err || !row) {
+            // return false
+            res.json({success:false})
+        }
+        else {
+            let username = row.username
+            let password = row.password
+            let name = row.name
+            let company = row.company
+            let email = row.email
+            let contact = row.contact_number
+            res.json({success: true, sellerid: sellerid, username: username, password: password, name: name, company: company, email: email, contact : contact})
             next();
         }
     })
@@ -331,6 +470,30 @@ function registerUser(req,res,next) {
     })
 }
 
+function registerSeller(req,res,next) {
+    let username = req.body.username;
+    let password = req.body.password;
+    let name = req.body.name;
+    let company = req.body.company;
+    let contact = req.body.contact;
+    let email = req.body.email;
+
+    let sql = `
+        INSERT INTO seller(username, password, name, company, contact_number, email) VALUES (
+            ?,?,?,?,?,?
+        );
+    `;
+
+    db.run(sql, [username,password,name,company,contact,email],(err)=>{
+        if (err) {
+            res.send(err)
+            res.end();
+        } else {
+            next()
+        }
+    })
+}
+
 
 // =========== update statements =========== //
 
@@ -343,12 +506,38 @@ function editProfile(req,res,next) {
     let sql = `
         UPDATE user 
         SET email = ?, password = ?, name = ?
-        WHERE userid = ?;
+        WHERE user_id = ?;
     `;
 
     db.run(sql, [email,password,name,userid],(err)=>{
         if (err) {
             res.send('Something went wrong...')
+            res.end();
+        } else {
+            next()
+        }
+    })
+}
+
+function editSellerProfile(req,res,next) {
+    let username = req.body.username;
+    let password = req.body.password;
+    let name = req.body.name;
+    let company = req.body.company;
+    let contact = req.body.contact;
+    let email = req.body.email;
+    let sellerid = req.session.sellerid;
+
+    let sql = `
+        UPDATE seller 
+        SET username=?,password=?,name=?,company=?,contact_number=?,email=?
+        WHERE seller_id = ?;
+    `;
+
+    db.run(sql, [username, password, name, company, contact, email, sellerid],(err)=>{
+        if (err) {
+            res.send(err)
+            console.log(err);
             res.end();
         } else {
             next()
