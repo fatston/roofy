@@ -26,39 +26,39 @@ app.use(session({
 
 // connect to db
 const db = new sqlite3.Database('./db/roofy.db');
-
+app.set('view engine', 'ejs');
 
 
 // =========== paths =========== //
 
 // home page
 app.get('/',(req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/index.html'))
+    res.render(path.resolve(__dirname,'./public/index'))
 })
 
 // about page
 app.get('/about',(req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/about.html'))
+    res.render(path.resolve(__dirname,'./public/about'))
 })
 
 // contact page
 app.get('/contact',(req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/contact.html'))
+    res.render(path.resolve(__dirname,'./public/contact'))
 })
 
 // route to login page
 app.get('/login',(req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/login.html'))
+    res.render(path.resolve(__dirname,'./public/login'))
 })
 
 // post login request
 app.post('/login', authLogin, createSession, (req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/buyer/profile.html'))
+    res.render(path.resolve(__dirname,'./public/buyer/profile'))
 });
 
 // route to seller login page
 app.get('/seller/login',(req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/seller/seller_login.html'))
+    res.render(path.resolve(__dirname,'./public/seller/seller_login'))
 })
 
 // post seller login request
@@ -68,7 +68,7 @@ app.post('/seller/login', authSellerLogin, createSellerSession, (req,res)=>{
 
 // route to registration page
 app.get('/register',(req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/register.html'))
+    res.render(path.resolve(__dirname,'./public/register'))
 })
 
 // post register page
@@ -79,17 +79,17 @@ app.post('/register',registerUser,(req,res)=>{
 
 // route to edit profile page
 app.get('/profile/edit',checkSession, (req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/edit_profile.html'))
+    res.render(path.resolve(__dirname,'./public/edit_profile'))
 })
 
 // post request for profile page
 app.post('/profile/edit',checkSession, editProfile, (req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/edit_profile.html'))
+    res.render(path.resolve(__dirname,'./public/edit_profile'))
 })
 
 // route to seller registration page
 app.get('/seller/register',(req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/seller/seller_registration.html'))
+    res.render(path.resolve(__dirname,'./public/seller/seller_registration'))
 })
 
 // post register page
@@ -102,29 +102,29 @@ app.post('/seller/register/confirmation',registerSeller,(req,res)=>{
 
 // route to seller home page
 app.get('/seller',checkSellerSession,(req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/seller/seller_home.html'))
+    res.render(path.resolve(__dirname,'./public/seller/seller_home'))
 })
 
 // route to seller profile page
 app.get('/seller/profile', checkSellerSession,(req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/seller/seller_profile.html'))
+    res.render(path.resolve(__dirname,'./public/seller/seller_profile'))
 })
 
 // route to edit profile page
 app.get('/seller/profile/edit',checkSellerSession, (req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/seller/edit_profile.html'))
+    res.render(path.resolve(__dirname,'./public/seller/edit_profile'))
 })
 
 // post request for sellerprofile page
 app.post('/seller/profile/edit',checkSellerSession, editSellerProfile, (req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/seller/edit_profile.html'))
+    res.render(path.resolve(__dirname,'./public/seller/edit_profile'))
 })
 
 // =========== Search =========== //
 
 // search home
 app.get('/search',searchProperties,(req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/search.html'))
+    res.render(path.resolve(__dirname,'./public/search'))
 })
 
 // search query
@@ -158,7 +158,7 @@ app.get('/logout',(req,res)=>{
 
 // profile page
 app.get('/profile',checkSession,(req,res)=>{
-    res.sendFile(path.resolve(__dirname,'./public/buyer/profile.html'))
+    res.render(path.resolve(__dirname,'./public/buyer/profile'))
 })
 
 
@@ -170,7 +170,7 @@ app.get('/api/user', checkSession, getProfileDetails,(req,res)=>{
 })
 
 // get seller details
-app.get('/api/seller', getSellerDetails, (req,res)=>{
+app.get('/api/seller', checkSellerSession, getSellerDetails, (req,res)=>{
     
 })
 
@@ -257,10 +257,7 @@ function checkSession(req,res,next) {
         next()
     } else {
         // session is not active
-        res.send(`
-            <h1>no hacking allowed!</h1>
-            <a href="/login">proceed to login</a>
-        `)
+        res.json({success: false});
     }
 }
 
@@ -270,10 +267,7 @@ function checkSellerSession(req,res,next) {
         next()
     } else {
         // session is not active
-        res.send(`
-            <h1>You tried to hack the seller page!</h1>
-            <a href="/seller/login">proceed to login</a>
-        `)
+        res.json({success: false});
     }
 }
 
@@ -331,12 +325,6 @@ function authSellerLogin(req, res, next) {
         }
         else {
             res.sellerid = row.seller_id;
-            res.username = row.username;
-            res.password = row.password;
-            res.name = row.name;
-            res.company = row.company;
-            res.email = row.email;
-            res.contact = row.contact_number;
             next();
         }
     })

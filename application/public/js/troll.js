@@ -1,4 +1,5 @@
 // used in profile page
+
 async function getName(target) {
     const profile_data_url = '/api/user/';
     const response = await fetch(profile_data_url);
