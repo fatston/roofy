@@ -79,12 +79,12 @@ app.post('/register',registerUser,(req,res)=>{
 
 // route to edit profile page
 app.get('/profile/edit',checkSession, (req,res)=>{
-    res.render(path.resolve(__dirname,'./public/edit_profile'))
+    res.render(path.resolve(__dirname,'./public/buyer/edit_profile'))
 })
 
 // post request for profile page
 app.post('/profile/edit',checkSession, editProfile, (req,res)=>{
-    res.render(path.resolve(__dirname,'./public/edit_profile'))
+    res.render(path.resolve(__dirname,'./public/buyer/edit_profile'))
 })
 
 // route to seller registration page
