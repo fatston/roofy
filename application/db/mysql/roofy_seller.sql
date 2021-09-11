@@ -29,7 +29,7 @@ CREATE TABLE `seller` (
   `company` varchar(64) DEFAULT NULL,
   `contact_number` int NOT NULL,
   `email` varchar(128) NOT NULL,
-  `display_picture` blob,
+  `display_picture` varchar(1024) DEFAULT NULL,
   `name` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`seller_id`),
   UNIQUE KEY `username` (`username`),
@@ -46,6 +46,7 @@ CREATE TABLE `seller` (
 
 LOCK TABLES `seller` WRITE;
 /*!40000 ALTER TABLE `seller` DISABLE KEYS */;
+INSERT INTO `seller` VALUES (1,'a','a','test',92228002,'cliftonkor@gmail.com','/images/buyer/username/24542365wae4r.png','asdf');
 /*!40000 ALTER TABLE `seller` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -58,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-11 11:54:53
+-- Dump completed on 2021-09-12  0:36:54
