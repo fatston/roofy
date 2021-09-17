@@ -33,22 +33,22 @@ app.set('view engine', 'ejs');
 
 // home page
 app.get('/',(req,res)=>{
-    res.render(path.resolve(__dirname,'./public/index'))
+    res.render(path.resolve(__dirname,'./public/index'), {pageName: 'home'})
 })
 
 // about page
 app.get('/about',(req,res)=>{
-    res.render(path.resolve(__dirname,'./public/about'))
+    res.render(path.resolve(__dirname,'./public/about'), {pageName: 'about'})
 })
 
 // contact page
 app.get('/contact',(req,res)=>{
-    res.render(path.resolve(__dirname,'./public/contact'))
+    res.render(path.resolve(__dirname,'./public/contact'), {pageName: 'contact'})
 })
 
 // route to login page
 app.get('/login',(req,res)=>{
-    res.render(path.resolve(__dirname,'./public/login'))
+    res.render(path.resolve(__dirname,'./public/login'), {pageName: 'login'})
 })
 
 // post login request
@@ -68,7 +68,7 @@ app.post('/seller/login', authSellerLogin, createSellerSession, (req,res)=>{
 
 // route to registration page
 app.get('/register',(req,res)=>{
-    res.render(path.resolve(__dirname,'./public/register'))
+    res.render(path.resolve(__dirname,'./public/register'), {pageName: 'register'})
 })
 
 // post register page
