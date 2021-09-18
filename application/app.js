@@ -118,6 +118,11 @@ app.post('/seller/profile/edit',checkSellerSession, editSellerProfile, (req,res)
     res.render(path.resolve(__dirname,'./public/seller/edit_profile'))
 })
 
+// route to seller listings page
+app.get('/seller/listings',checkSellerSession, (req,res)=>{
+    res.render(path.resolve(__dirname,'./public/seller/seller_listings'))
+})
+
 // =========== Search =========== //
 
 // search home
