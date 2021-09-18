@@ -6,7 +6,7 @@ const { send, nextTick } = require('process'); // delete if necessary
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const { json } = require('express');
-
+const { getListings } = require('./server/listings');
 
 
 // using dependencies I guess
@@ -99,18 +99,18 @@ app.post('/seller/register/confirmation',registerSeller,(req,res)=>{
 // =========== seller routes =========== //
 
 // route to seller home page
-app.get('/seller',checkSellerSession,(req,res)=>{
-    res.render(path.resolve(__dirname,'./public/seller/seller_home'))
+app.get('/seller',checkSellerSession, (req,res)=>{
+    res.render(path.resolve(__dirname,'./public/seller/seller_home'), {'pageName': 'home'})
 })
 
 // route to seller profile page
 app.get('/seller/profile', checkSellerSession,(req,res)=>{
-    res.render(path.resolve(__dirname,'./public/seller/seller_profile'))
+    res.render(path.resolve(__dirname,'./public/seller/seller_profile'), {'pageName': 'profile'})
 })
 
 // route to edit profile page
 app.get('/seller/profile/edit',checkSellerSession, (req,res)=>{
-    res.render(path.resolve(__dirname,'./public/seller/edit_profile'))
+    res.render(path.resolve(__dirname,'./public/seller/edit_profile'), {'pageName': 'profile'})
 })
 
 // post request for sellerprofile page
@@ -118,9 +118,11 @@ app.post('/seller/profile/edit',checkSellerSession, editSellerProfile, (req,res)
     res.render(path.resolve(__dirname,'./public/seller/edit_profile'))
 })
 
-// route to seller listings page
-app.get('/seller/listings',checkSellerSession, (req,res)=>{
-    res.render(path.resolve(__dirname,'./public/seller/seller_listings'))
+//route to seller listings page
+app.get('/seller/listings',checkSellerSession, async (req, res) => {
+    getListings(req.session.sellerid, function(data) {
+        res.render(path.resolve(__dirname,'./public/seller/seller_listings'), {data, 'pageName': 'listings'})
+    })
 })
 
 // =========== Search =========== //
@@ -183,7 +185,7 @@ app.get('/api/search', searchProperties, (req,res)=>{
 })
 
 // check session
-app.get('/api/checkSession', checkSession, (req,res)=>{
+app.get('/api/checkSession', checkSession, (req,res)=> {
     res.json({success:true, userid:req.session.userid});
 })
 
@@ -195,6 +197,7 @@ app.get('/api/getuserid',(req,res)=>{
         res.json({userid:0, loser:true});
     }
 })
+
 
 
 // =========== losted area =========== //
