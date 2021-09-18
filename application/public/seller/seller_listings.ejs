@@ -7,16 +7,71 @@
     
     <!-- styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <link rel="stylesheet" href="/styles/styles.css" />
+    <link rel="stylesheet" href="/styles/seller_listings_styles.css" />
 
   </head>
   <body>
     <%- include('../include/seller-navbar'); %>
-    <div style="margin-top: 40px;"></div>
     <!-- insert other things here like jquery and shit -->
     <div class="container">
-        <h1>Seller Listings Page</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <section class="ftco-section">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-md-6 text-center mb-4">
+                <h2 class="heading-section">Listings</h2>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2 text-center mb-2">
+                <a href="/seller/listings/add" class="btn btn-secondary">Add Listing</a>
+              </div>
+              
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-wrap">
+                  <table class="table myaccordion table-hover" id="accordion">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Address</th>
+                        <th>Sale/Rent</th>
+                        <th>Pricing</th>
+                        <th>Type</th>
+                        <th>&nbsp;</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- This loop each listing and show it in the table -->
+                      <% 
+                        var no = 1
+                        data.data.forEach((listing) => { 
+                        var tag = "collapse" + listing.listing_id
+                      %>
+                        <tr data-toggle="collapse" data-target="#<%= tag %>" aria-expanded="false" aria-controls="<%= tag %>" class="collapsed">
+                          <th scope="row"> <%= no %></th>
+                          <td><%= listing.listing_address %></td>
+                          <td><%= listing.sale_or_rent %></td>
+                          <td>$<%= listing.pricing %></td>
+                          <td><%= listing.property_type %></td>
+                          <td>
+                            <a href="/seller/profile/edit" class="btn btn-secondary">Edit</a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="6" id="<%= tag %>" class="collapse acc" data-parent="#accordion">
+                            <p><%= listing.description %></p>
+                          </td>
+                        </tr>
+                      <% no = no + 1 %>
+                      <% }) %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
     </div>
 
     <!-- javascript -->
@@ -26,7 +81,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script>
-        getSellerName("name");
         // todo change 3 to session data
     </script>
   </body>
