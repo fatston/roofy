@@ -290,15 +290,15 @@ function authLogin(req, res, next) {
         WHERE email = ?;
     `;
     // run the sql query on db
-    db.get(sql, [email], (err, row) => {
+    db.query(sql, [email], (err, row) => {
         if (err) {
             res.send('login failed. <a href="/login">try again</a>')
         }
-        else if (!row || password != row.password) {
-            res.send('wrong email or password. <a href="/login">try again</a>')
+        else if (!row || password != row[0].password) {
+            res.send(`wrong email or password. <a href="/login">try again</a>`)
         }
         else {
-            res.userid = row.user_id;
+            res.userid = row[0].user_id;
             next();
         }
     })
@@ -314,15 +314,15 @@ function authSellerLogin(req, res, next) {
         WHERE username = ?;
     `;
     // run the sql query on db
-    db.get(sql, [username], (err, row) => {
+    db.query(sql, [username], (err, row) => {
         if (err) {
             res.send('login failed. <a href="/seller/login">try again</a>')
         }
-        else if (!row || password != row.password) {
+        else if (!row || password != row[0].password) {
             res.send('wrong username or password. <a href="/seller/login">try again</a>')
         }
         else {
-            res.sellerid = row.seller_id;
+            res.sellerid = row[0].seller_id;
             next();
         }
     })
@@ -337,15 +337,15 @@ function getProfileDetails(req,res,next) {
         WHERE user_id = ?;
     `;
     // run the sql query on db
-    db.get(sql, [userid], (err, row) => {
+    db.query(sql, [userid], (err, row) => {
         if (err || !row) {
             // return false
             res.json({success:false})
         }
         else {
-            res.email = row.email;
-            res.name = row.name;
-            res.password = row.password;
+            res.email = row[0].email;
+            res.name = row[0].name;
+            res.password = row[0].password;
             next();
         }
     })
@@ -360,18 +360,18 @@ function getSellerDetails(req,res,next) {
         WHERE seller_id = ?;
     `;
     // run the sql query on db
-    db.get(sql, [sellerid], (err, row) => {
+    db.query(sql, [sellerid], (err, row) => {
         if (err || !row) {
             // return false
             res.json({success:false})
         }
         else {
-            let username = row.username
-            let password = row.password
-            let name = row.name
-            let company = row.company
-            let email = row.email
-            let contact = row.contact_number
+            let username = row[0].username
+            let password = row[0].password
+            let name = row[0].name
+            let company = row[0].company
+            let email = row[0].email
+            let contact = row[0].contact_number
             res.json({success: true, sellerid: sellerid, username: username, password: password, name: name, company: company, email: email, contact : contact})
             next();
         }
@@ -446,7 +446,7 @@ function registerUser(req,res,next) {
         );
     `;
 
-    db.run(sql, [email,password,name],(err)=>{
+    db.query(sql, [email,password,name],(err)=>{
         if (err) {
             res.send('Email is already used. <a href="register">try again</a>')
             res.end();
@@ -470,7 +470,7 @@ function registerSeller(req,res,next) {
         );
     `;
 
-    db.run(sql, [username,password,name,company,contact,email],(err)=>{
+    db.query(sql, [username,password,name,company,contact,email],(err)=>{
         if (err) {
             res.send(err)
             res.end();
@@ -495,7 +495,7 @@ function editProfile(req,res,next) {
         WHERE user_id = ?;
     `;
 
-    db.run(sql, [email,password,name,userid],(err)=>{
+    db.query(sql, [email,password,name,userid],(err)=>{
         if (err) {
             res.send('Something went wrong...')
             res.end();
@@ -520,7 +520,7 @@ function editSellerProfile(req,res,next) {
         WHERE seller_id = ?;
     `;
 
-    db.run(sql, [username, password, name, company, contact, email, sellerid],(err)=>{
+    db.query(sql, [username, password, name, company, contact, email, sellerid],(err)=>{
         if (err) {
             res.send(err)
             console.log(err);
