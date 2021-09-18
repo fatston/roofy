@@ -3,7 +3,6 @@ const { EDESTADDRREQ } = require('constants');
 const express = require('express');
 const path = require('path');
 const { send, nextTick } = require('process'); // delete if necessary
-const sqlite3 = require('sqlite3').verbose();
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const { json } = require('express');
@@ -21,13 +20,12 @@ app.use(cookieParser())
 app.use(session({
     secret: "clifton is an awesome programmer",
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true 
 }));
 
 // connect to db
-const db = new sqlite3.Database('./db/roofy.db');
 app.set('view engine', 'ejs');
-
+const db = require('./server/connection');
 
 // =========== paths =========== //
 

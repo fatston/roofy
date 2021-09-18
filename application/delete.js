@@ -1,5 +1,5 @@
 // todo test db query
-const db = require('./connection.js');
+const db = require('./server/connection');
 
 async function testttt() {
     let email = 'a@b.c'
