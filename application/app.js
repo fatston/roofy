@@ -6,6 +6,23 @@ const { send, nextTick } = require('process'); // delete if necessary
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const { json } = require('express');
+const multer = require('multer'); //to upload image
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/images/listings')
+    },
+    filename: (req, file, cb) => {
+        var name = Date.now() + path.extname(file.originalname)
+        cb(null, name)
+
+        req.middlewareStorage = {
+            fileimage : name
+        }
+    }
+})
+const upload = multer({storage: storage})
+
 const { getListings, addListing } = require('./server/listings');
 const { getFacilities } = require('./server/facilities');
 
@@ -126,8 +143,10 @@ app.get('/seller/listings',checkSellerSession, async (req, res) => {
     })
 })
 
-app.post('/seller/listings', checkSellerSession, async (req, res) => {
-    addListing(req.session.sellerid, req, async function(data) {
+app.post('/seller/listings', checkSellerSession, upload.single('image'), async (req, res) => {
+    var fileimage = req.middlewareStorage.fileimage;
+    console.log("image name success pass to here ", fileimage)
+    addListing(req.session.sellerid, fileimage, req, async function(data) {
         getFacilities(function(facilities) {
             res.render(path.resolve(__dirname,'./public/seller/seller_listings_add'), {'successAlert': data.status, 'facilities': facilities.data})
         })

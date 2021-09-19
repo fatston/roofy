@@ -16,14 +16,13 @@ const getListings = (id, res) => {
     })
 }
 
-const addListing = (id, req, res) => {
+const addListing = (id, image, req, res) => {
     let user_id = id;
     let listing_address = req.body.listing_address;
     let listing_pc = req.body.listing_pc;
     let listing_date = new Date();
     let sale_or_rent = req.body.sale_or_rent;
     let description = req.body.description;
-    let image = "";
     let property_type = req.body.property_type;
     let floor_level = req.body.floor_level;
     let floor_size = req.body.floor_size;
