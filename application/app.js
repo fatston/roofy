@@ -6,7 +6,8 @@ const { send, nextTick } = require('process'); // delete if necessary
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const { json } = require('express');
-const { getListings } = require('./server/listings');
+const { getListings, addListing } = require('./server/listings');
+const { getFacilities } = require('./server/facilities');
 
 
 // using dependencies I guess
@@ -122,6 +123,20 @@ app.post('/seller/profile/edit',checkSellerSession, editSellerProfile, (req,res)
 app.get('/seller/listings',checkSellerSession, async (req, res) => {
     getListings(req.session.sellerid, function(data) {
         res.render(path.resolve(__dirname,'./public/seller/seller_listings'), {data, 'pageName': 'listings'})
+    })
+})
+
+app.post('/seller/listings', checkSellerSession, async (req, res) => {
+    addListing(req.session.sellerid, req, async function(data) {
+        getFacilities(function(facilities) {
+            res.render(path.resolve(__dirname,'./public/seller/seller_listings_add'), {'successAlert': data.status, 'facilities': facilities.data})
+        })
+    })
+})
+
+app.get('/seller/listings/add', checkSellerSession, async (req, res) => {
+    getFacilities(function(facilities) {
+        res.render(path.resolve(__dirname,'./public/seller/seller_listings_add'), {'facilities': facilities.data})
     })
 })
 

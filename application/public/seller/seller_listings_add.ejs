@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roofy</title>
+    
+    <!-- styles -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" href="./styles.css"/>
+
+  </head>
+  <body>
+    <%- include('../include/seller-navbar'); %>
+    <div style="margin-top: 40px;"></div>
+    <!-- insert other things here like jquery and shit -->
+    <div class="container">
+        <h1>New Listing</h1>
+        <form action="/seller/listings" method="POST" enctype="multipart/form-data">
+            <div class="mb-3" id= "saleOrRent">
+                <label>Listing Type</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="sale_or_rent" id="SALE" value="SALE" checked>
+                    <label class="form-check-label" for="SALE">sale</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="sale_or_rent" id="RENT" value="RENT">
+                    <label class="form-check-label" for="RENT">rent</label>
+                </div>
+            </div>
+            <!-- <div class="mb-3">
+                <label for="formFile" class="form-label">Image</label>
+                <input class="form-control" type="file" name="image" id="formFile">
+            </div> -->
+            <div class="mb-3">
+                <label for="listing_address" class="form-label">Address</label>
+                <input type="text" class="form-control" id="listing_address" placeholder="21 Lower Kent Ridge" name="listing_address" required="required">
+            </div>
+            <div class="mb-3">
+                <label for="listing_pc" class="form-label">Postal Code</label>
+                <input type="number" class="form-control" id="listing_pc" placeholder="119077" name="listing_pc" required="required">
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label>Property Type</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="property_type" id="hdb" value="hdb" checked>
+                    <label class="form-check-label" for="hdb">hdb</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="property_type" id="condo" value="condo">
+                    <label class="form-check-label" for="condo">condo</label>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label>Facilities</label>
+                <% 
+                    facilities.forEach((facility) => {
+                    var no = facility.facility_id 
+                %>
+                <div class="form-check">
+                    <input class="form-check-input" name="facilities" type="checkbox" value="<%= facility.facility_id %>" id="facility<%= no %>">
+                    <label class="form-check-label" for="facility<%= no %>">
+                        <%= facility.facility_name %>
+                    </label>
+                </div>
+                <% }) %>
+            </div>
+
+            <div class="mb-3">
+                <label for="floor_level" class="form-label">Floor Level</label>
+                <input type="number" class="form-control" id="floor_level" placeholder="1" name="floor_level" required="required">
+            </div>
+            <div class="mb-3">
+                <label for="floor_size" class="form-label">Floor Size</label>
+                <input type="number" class="form-control" id="floor_size" placeholder="1" name="floor_size" required="required">
+            </div>
+            <div class="mb-3">
+                <label for="rooms" class="form-label">Room</label>
+                <input type="number" class="form-control" id="rooms" placeholder="1" name="rooms" required="required">
+            </div>
+            <div class="mb-3">
+                <label for="pricing" class="form-label">Pricing</label>
+                <input type="number" class="form-control" id="pricing" placeholder="1" name="pricing" required="required">
+            </div>
+
+            <div class="mb-3">
+                <label>Negotiable?</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p_negotiable" id="yes" value="1" checked>
+                    <label class="form-check-label" for="yes">Yes</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p_negotiable" id="no" value="0">
+                    <label class="form-check-label" for="no">No</label>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="availability" class="form-label">Availability Date</label>
+                <input type="date" class="form-control" id="availability" name="availability" placeholder="1">
+            </div>
+
+            <div class="mb-3 RENT">
+                <label for="lease_term" class="form-label">Lease term (Year)</label>
+                <input type="number" class="form-control" id="lease_term" name="lease_term" placeholder="1">
+            </div>
+
+            <div class="mb-3 SALE">
+                <label for="tenure" class="form-label">Tenure</label>
+                <input type="number" class="form-control" id="tenure" name="tenure" placeholder="99">
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+    </div>
+
+   
+    <!--when form is submitted it will redirect back to this page with a status, if status is true means submit successfully -->
+    <% if(locals.successAlert){ %>
+        <% if(successAlert == true) { %>
+            <script>alert("New Listing Added")</script>
+        <% } else { %>
+            <script>alert("Please try again")</script>
+        <% } %>
+    <% } %>
+    <!-- javascript -->
+    <script>
+        //hide rent fields
+        updateForm("RENT", "none")
+
+        let saleOrRent = document.querySelector("#saleOrRent");
+        saleOrRent.addEventListener('change', function(e) {
+            let elem = event.target;
+            let type = elem.value;
+            let oppType = type == "RENT" ? "SALE" : "RENT";
+            updateForm(oppType, "none")
+            updateForm(type, "block")
+        } )
+        
+        function updateForm(type, display) {
+            const divsToHide = document.getElementsByClassName(type)
+            for(var i = 0; i < divsToHide.length; i++){
+                divsToHide[i].style.display = display;
+            }
+        }
+    </script>
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>
