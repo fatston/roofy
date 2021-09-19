@@ -134,17 +134,7 @@ app.get('/search',searchProperties,(req,res)=>{
 
 // search query
 app.get('/search/:a/:b',searchProperties,(req,res)=>{
-    let a = req.params.a;
-    let b = req.params.b;
-    res.send(`denny and me draw ${a}, ${b}`)
-    res.end()
-})
-
-// search query
-app.get('/search/:a/:b/:c/:d/:e/:f',searchProperties,(req,res)=>{
-    console.log(a);
-    res.send('denny is loser')
-    res.end()
+    
 })
 
 app.get('/logout',(req,res)=>{
@@ -180,8 +170,8 @@ app.get('/api/seller', checkSellerSession, getSellerDetails, (req,res)=>{
 })
 
 // get search details
-app.get('/api/search', searchProperties, (req,res)=>{
-    
+app.get('/api/search/:a', searchProperties, (req,res)=>{
+    res.json(res.row);
 })
 
 // check session
@@ -387,58 +377,25 @@ function getSellerDetails(req,res,next) {
 }
 
 function searchProperties(req,res,next) {
-    // console.log(req)
-    let buyer = false;
-    if (req.body.buy === true) {
-        buyer = true;
-    }
-    let search = req.query.searchString;
-    let type = req.body.residential;
-    let price = req.body.price;
-    let beds = req.body.beds;
+    let search = req.params.a;
     let sql = `
         SELECT *
-        FROM properties
-        WHERE search LIKE '%?%'
-        AND type = ?
-        AND price > ?`;
-        
-            
-    let questionmark = {search, type, price, beds}
-
-    let size = 2;
-
-    for (let i = 0; i < size; i++) {
-        if (i == 0) {
-            sql = sql.concat(`
-        AND (`)
+        FROM listings
+        WHERE listing_address LIKE "%"?"%";
+    `
+    // run the sql query on db
+    db.query(sql, [search], (err, row) => {
+        if (err) {
+            res.json({success:false, problem:err});
+        }
+        else if (!row[0]) {
+            res.json({success:false, err:err, row:row});
         }
         else {
-            sql = sql.concat(`OR`)
+            res.row = row;
+            next();
         }
-        sql = sql.concat(` beds = ? `)
-    }
-    sql = sql.concat(')')
-    
-    console.log(sql);
-    console.log(search)
-    
-    // // run the sql query on db
-    // db.get(sql, questionmark, (err, row) => {
-    //     if (err) {
-    //         res.json({success: false})
-    //         res.end()
-    //     }
-    //     else if (!row) {
-    //         res.json({success: false})
-    //         res.end()
-    //     }
-    //     else {
-    //         // res.json({{success:true},house:...})
-    //         next();
-    //     }
-    // })
-    next();
+    })
 }
 
 // =========== insert statements =========== //
