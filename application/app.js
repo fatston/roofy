@@ -24,6 +24,7 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage})
 
 const { getListings, addListing } = require('./server/listings');
+const { searchListings, getListingDetails } = require('./server/search');
 const { getFacilities } = require('./server/facilities');
 
 
@@ -69,7 +70,7 @@ app.get('/login',(req,res)=>{
 
 // post login request
 app.post('/login', authLogin, createSession, (req,res)=>{
-    res.render(path.resolve(__dirname,'./public/buyer/profile'))
+    res.render(path.resolve(__dirname,'./public/buyer/profile'), {pageName: 'profile'})
 });
 
 // route to seller login page
@@ -79,7 +80,7 @@ app.get('/seller/login',(req,res)=>{
 
 // post seller login request
 app.post('/seller/login', authSellerLogin, createSellerSession, (req,res)=>{
-    res.send('<h1>login success</h1><a href="/seller/">continue</a>')
+    res.render(path.resolve(__dirname,'./public/seller/seller_home'), {'pageName': 'home'})
 });
 
 // route to registration page
@@ -95,12 +96,12 @@ app.post('/register',registerUser,(req,res)=>{
 
 // route to edit profile page
 app.get('/profile/edit',checkSession, (req,res)=>{
-    res.render(path.resolve(__dirname,'./public/buyer/edit_profile'))
+    res.render(path.resolve(__dirname,'./public/buyer/edit_profile'), {pageName:'profile'})
 })
 
 // post request for profile page
 app.post('/profile/edit',checkSession, editProfile, (req,res)=>{
-    res.render(path.resolve(__dirname,'./public/buyer/edit_profile'))
+    res.render(path.resolve(__dirname,'./public/buyer/edit_profile'), {pageName: 'profile'})
 })
 
 // route to seller registration page
@@ -111,7 +112,25 @@ app.get('/seller/register',(req,res)=>{
 // post register page
 app.post('/seller/register/confirmation',registerSeller,(req,res)=>{
     res.send(`<h1>Registration Success!</h1> 
-    <p>Please <a href="/seller/login">login</a></p>`);
+    <h1>Please <a href="/seller/login">login</a></h1>`);
+})
+
+// profile page
+app.get('/profile',checkSession,(req,res)=>{
+    res.render(path.resolve(__dirname,'./public/buyer/profile'), {pageName: 'profile'})
+})
+
+// bookmarks page
+app.get('/bookmarks',checkSession,(req,res)=>{
+    res.render(path.resolve(__dirname,'./public/bookmarks'), {pageName: 'bookmarks'})
+})
+
+// listing details page
+app.get('/listing/:id', (req,res)=>{
+    getListingDetails(req.params.id, function(data) {
+        //res.send(data);
+        res.render(path.resolve(__dirname,'./public/listing_details'), {data, 'pageName': 'home'})
+    })
 })
 
 // =========== seller routes =========== //
@@ -161,14 +180,26 @@ app.get('/seller/listings/add', checkSellerSession, async (req, res) => {
 
 // =========== Search =========== //
 
-// search home
-app.get('/search',searchProperties,(req,res)=>{
+// search router
+app.get('/search',(req,res)=>{
     res.render(path.resolve(__dirname,'./public/search'))
 })
 
-// search query
-app.get('/search/:a/:b',searchProperties,(req,res)=>{
-    
+// search post request
+app.post('/search',(req,res)=>{
+    let search = req.body.search;
+    let sale_or_rent = req.body.sale_or_rent;
+    let property_type = req.body.property_type;
+    let price_lower_bound = req.body.price_lower_bound;
+    let price_upper_bound = req.body.price_upper_bound;
+
+    console.log(`search: ` + search);
+    console.log(`sale_or_rent: ` + sale_or_rent);
+    console.log(`property type: ` + property_type);
+    console.log(`price: ` + price_lower_bound + ` up to ` + price_upper_bound);
+    searchListings([search, sale_or_rent, property_type, price_lower_bound, price_upper_bound], function(data) {
+        res.render(path.resolve(__dirname,'./public/search'), {data, 'pageName': 'home'})
+    })
 })
 
 app.get('/logout',(req,res)=>{
@@ -177,18 +208,12 @@ app.get('/logout',(req,res)=>{
             res.send(err);
         }
         else {
-            res.send(`<p>You have logged out.<br><a href="/">home</a>`)
+            res.send(`<h1>You have logged out.<br><a href="/">home</h1>`)
         }
     })
 })
 
 
-// =========== Paths that need checkSession =========== //
-
-// profile page
-app.get('/profile',checkSession,(req,res)=>{
-    res.render(path.resolve(__dirname,'./public/buyer/profile'))
-})
 
 
 // =========== APIs =========== //
@@ -204,8 +229,20 @@ app.get('/api/seller', checkSellerSession, getSellerDetails, (req,res)=>{
 })
 
 // get search details
-app.get('/api/search/:a', searchProperties, (req,res)=>{
-    res.json(res.row);
+app.post('/api/search', (req,res)=>{
+    let search = req.body.search;
+    let sale_or_rent = req.body.sale_or_rent;
+    let property_type = req.body.property_type;
+    let price_lower_bound = req.body.price_lower_bound;
+    let price_upper_bound = req.body.price_upper_bound;
+
+    console.log(`search: ` + search);
+    console.log(`sale_or_rent: ` + sale_or_rent);
+    console.log(`property type: ` + property_type);
+    console.log(`price: ` + price_lower_bound + ` up to ` + price_upper_bound);
+    searchListings([search, sale_or_rent, property_type, price_lower_bound, price_upper_bound], function(data) {
+        res.send(data)
+    })
 })
 
 // check session
@@ -254,7 +291,7 @@ function createSession(req, res, next) {
     }
     catch {
         // console.log('failure: session not created');
-        res.send('session not created...');
+        res.send('error: session not created...');
         res.end();
     }
     finally {
@@ -287,7 +324,10 @@ function checkSession(req,res,next) {
         next()
     } else {
         // session is not active
-        res.json({success: false});
+        res.send(`
+            <h1>WARNING: YOU ARE NOT LOGGED IN.</h1>
+            <h1><a href="/login">Login</a></h1>
+        `)
     }
 }
 
@@ -297,7 +337,10 @@ function checkSellerSession(req,res,next) {
         next()
     } else {
         // session is not active
-        res.json({success: false});
+        res.send(`
+            <h1>WARNING: YOU ARE NOT LOGGED IN AS A SELLER.</h1>
+            <h1><a href="/seller/login">Login</a></h1>
+        `)
     }
 }
 
@@ -326,7 +369,7 @@ function authLogin(req, res, next) {
         if (err) {
             res.send('login failed. <a href="/login">try again</a>')
         }
-        else if (!row || password != row[0].password) {
+        else if (!row[0] || password != row[0].password) {
             res.send(`wrong email or password. <a href="/login">try again</a>`)
         }
         else {
@@ -348,10 +391,10 @@ function authSellerLogin(req, res, next) {
     // run the sql query on db
     db.query(sql, [username], (err, row) => {
         if (err) {
-            res.send('login failed. <a href="/seller/login">try again</a>')
+            res.send('<h1>login failed. <a href="/seller/login">try again</a></h1>')
         }
         else if (!row || password != row[0].password) {
-            res.send('wrong username or password. <a href="/seller/login">try again</a>')
+            res.send('<h1>wrong username or password. <a href="/seller/login">try again</a></h1>')
         }
         else {
             res.sellerid = row[0].seller_id;
@@ -410,27 +453,7 @@ function getSellerDetails(req,res,next) {
     })
 }
 
-function searchProperties(req,res,next) {
-    let search = req.params.a;
-    let sql = `
-        SELECT *
-        FROM listings
-        WHERE listing_address LIKE "%"?"%";
-    `
-    // run the sql query on db
-    db.query(sql, [search], (err, row) => {
-        if (err) {
-            res.json({success:false, problem:err});
-        }
-        else if (!row[0]) {
-            res.json({success:false, err:err, row:row});
-        }
-        else {
-            res.row = row;
-            next();
-        }
-    })
-}
+
 
 // =========== insert statements =========== //
 

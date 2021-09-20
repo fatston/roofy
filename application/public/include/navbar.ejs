@@ -21,7 +21,14 @@
             <li class="nav-item">
                 <a class="nav-link" target="_blank" href="https://youtu.be/dQw4w9WgXcQ">Joint</a>
             </li>
-            <span id="userProfile"></span>
+            <li class="nav-item">
+                <a class="<%= pageName == 'profile' ? 'nav-link active' : 'nav-link' %>" 
+                    href="/profile">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="<%= pageName == 'bookmarks' ? 'nav-link active' : 'nav-link' %>"
+                     href="/bookmarks">Bookmarks</a>
+            </li>
             
 
             <!-- <li class="nav-item dropdown">

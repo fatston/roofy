@@ -11,7 +11,7 @@
 
   </head>
   <body>
-    <%- include('../include/login-navbar'); %>
+    <%- include('../include/navbar'); %>
     <div style="margin-top: 40px;"></div>
     <!-- insert other things here like jquery and shit -->
     <div class="container">
@@ -19,7 +19,7 @@
         <form action="register/confirmation" method="POST">
             <div class="form-group">
                 <label>Username</label>
-                <input type="text" name="username" class="form-control" placeholder="MrYanDa0" required="required">
+                <input type="text" name="username" class="form-control" placeholder="MrYanDa0" required="required" autofocus="autofocus" onFocus="this.select()">
             </div>
             <div class="form-group">
                 <label>Password</label>

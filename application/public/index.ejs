@@ -15,51 +15,42 @@
 
     <!-- insert other things here like jquery and shit -->
     <div style="margin-top: 40px;"></div>
-    <div class="container-sm">
-        <form> <!-- action = search -->
-            <div class="row">
-                <div class="col-3"></div>
-                <div class="col-4">
-                    <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked>
-                    <label class="form-check-label" for="inlineRadio1">Buy</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                    <label class="form-check-label" for="inlineRadio2">Rent</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" disabled>
-                    <label class="form-check-label" for="inlineRadio3">Loan</label>
-                    </div>
-                </div>
-                <div class="col-3"></div>
+    <div class="container" style="margin: auto; width: fit-content;">
+      <div class="card" style="width: 22rem;">
+      <div class="card-body">
+          <form action="search" method="POST" class="row g-3">
+            <div class="col-auto">
+              <input class="form-check-input" type="radio" name="sale_or_rent" value="sale" checked>
+              <label class="form-check-label">Buy</label>
             </div>
-            <div class="row">
-                <div class="col-3"></div>
-                <div class="col-3">
-                    <input type="search" class="form-control" placeholder="Search">
-                </div>
-                <div class="col-1">
-                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Search</button>
-                </div>
-                <div class="col-3"></div>
+            <div class="col-auto">
+              <input class="form-check-input" type="radio" name="sale_or_rent" value="rent">
+              <label class="form-check-label">Rent</label>
+            </div>  
+            <div class="col-auto">
+              <input type="search" name="search" class="form-control" placeholder="Search" autofocus="autofocus" onFocus="this.select()">
             </div>
-            <div class="row">
-                <div class="col-3"></div>
-                <div class="col-1">
-                    residential
-                </div>
-                <div class="col-1">
-                    any price
-                </div>
-                <div class="col-1">
-                    any beds
-                </div>
-                <div class="col-1"></div>
-                <div class="col-3"></div>
+            <div class="col-auto">
+              <button type="submit" class="btn btn-secondary">Search</button>
             </div>
-        </form>
+            <div class="col-auto">
+              <select class="form-select" aria-label="Default select example" name="property_type">
+                <option selected>Residential</option>
+                <option value="hdb">HDB</option>
+                <option value="condo">Condo</option>
+                <option value="landed">Landed</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <input type="number" class="form-control" name="price_lower_bound" step="100000" placeholder="Min $$">
+              <input type="number" class="form-control" name="price_upper_bound" step="100000" placeholder="Max $$">
+            </div>
+            <div class="col-auto">
+              Any Beds (TODO)
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
 
     <div class="container" style="margin-top: 40px;">
@@ -120,5 +111,6 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

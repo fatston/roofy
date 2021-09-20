@@ -12,7 +12,7 @@
   </head>
   <body>
     <!-- todo alert for login fail -->
-    <%- include('../include/login-navbar'); %>
+    <%- include('../include/navbar'); %>
 
     <!-- insert other things here like jquery and shit -->
     <div style="margin-top: 40px;"></div>
@@ -21,7 +21,7 @@
         <form action="login" method="POST">
             <div class="form-group">
                 <label for="exampleInputEmail1">Username</label>
-                <input type="text" class="form-control" name="username" aria-describedby="emailHelp" placeholder="MrYanDa0" required="required">
+                <input type="text" class="form-control" name="username" aria-describedby="emailHelp" placeholder="MrYanDa0" required="required" autofocus="autofocus" onFocus="this.select()">
             </div>
             <div class="form-group">
                 <label for="exampleInputPassword1">Password</label>
@@ -33,7 +33,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
             <a href="register" class="btn btn-secondary">Register</a>
-            <a href="/login" class="btn btn-warning">Login as Buyer</a>
+            <a href="/login" class="btn btn-secondary">Login as Buyer</a>
         </form>
     </div>
 

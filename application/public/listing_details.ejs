@@ -12,8 +12,47 @@
   </head>
   <body>
     <%- include('include/navbar'); %>
-    <div style="margin-top: 40px;"></div>
-    <!-- insert other things here like jquery and shit -->
+    
+    <div class="container" style="margin-top: 40px; margin-bottom: 40px;">
+      
+      <%
+        var no = 1
+        data.data.forEach((listing) => { 
+      %>
+      <img src="/images/listings/<%= listing.image %>" width="25%" onerror="this.src='/images/spongebob.png'">
+      <img src="/images/listings/<%= listing.image %>" width="25%" onerror="this.src='/images/spongebob.png'">
+      <img src="/images/listings/<%= listing.image %>" width="25%" onerror="this.src='/images/spongebob.png'">
+      <img src="/images/listings/<%= listing.image %>" width="25%" onerror="this.src='/images/spongebob.png'">
+      <h1>LISTING DETAILS PAGE</h1>
+      listing id: <%= listing.listing_id %> </br>
+      user id: <%= listing.user_id %> </br>
+      address: <%= listing.listing_address %> </br>
+      listing pc: <%= listing.listing_pc %> </br>
+      listing date: <%= listing.listing_date %> </br>
+      sale or rent: <%= listing.sale_or_rent %> </br>
+      description: <%= listing.description %> </br>
+      image: <%= listing.image %> </br>
+      property type: <%= listing.property_type %> </br>
+      floor level: <%= listing.floor_level %> </br>
+      floor size: <%= listing.floor_size %> </br>
+      rooms: <%= listing.rooms %> </br>
+      pricing: <%= listing.pricing %> </br>
+      p negotiable: <%= listing.p_negotiable %> </br>
+      furnishings: <%= listing.furinishings %> </br>
+      facilities and amenities: <%= listing.facilities_and_amenities %> </br>
+      availability: <%= listing.availability %> </br>
+      lease term: <%= listing.lease_term %> </br>
+      price per square foot: <%= listing.price_psf %> </br>
+      tenure: <%= listing.tenure %> </br>
+
+
+      <%
+        no = no + 1
+        })
+      %>
+    </div>
+
+    
 
     <!-- javascript -->
     
