@@ -5,7 +5,7 @@ const getListings = (id, res) => {
     let sql = `
         SELECT *
         FROM listings
-        WHERE user_id = ? ORDER BY listing_date DESC;
+        WHERE seller_id = ? ORDER BY listing_date DESC;
     `;
     db.query(sql, id, (err, row) => {
         if(err) {
@@ -38,7 +38,7 @@ const addListing = (id, image, req, res) => {
     let facilities = req.body.facilities;
 
     let listingsql = `
-        INSERT INTO listings(user_id, listing_address, listing_pc, listing_date, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, facilities_and_amenities, availability, lease_term, price_psf, tenure) 
+        INSERT INTO listings(seller_id, listing_address, listing_pc, listing_date, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, facilities_and_amenities, availability, lease_term, price_psf, tenure) 
         VALUES (
             ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
         );`;
