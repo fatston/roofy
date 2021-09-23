@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.26, for macos11 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
 --
 -- Host: localhost    Database: roofy
 -- ------------------------------------------------------
@@ -16,36 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `seller`
+-- Table structure for table `listing_facilities`
 --
 
-DROP TABLE IF EXISTS `seller`;
+DROP TABLE IF EXISTS `listing_facilities`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `seller` (
-  `seller_id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) DEFAULT NULL,
-  `username` varchar(255) NOT NULL,
-  `password` char(255) NOT NULL,
-  `company` varchar(255) NOT NULL,
-  `contact_number` int NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `display_picture` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`seller_id`),
-  UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `contact_number` (`contact_number`),
-  UNIQUE KEY `email` (`email`),
-  CONSTRAINT `seller_chk_1` CHECK (((length(`CONTACT_NUMBER`) = 8) and (`EMAIL` like _utf8mb4'%@%')))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `listing_facilities` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `listing_id` int NOT NULL,
+  `facility_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `listing_id` (`listing_id`),
+  KEY `facility_id` (`facility_id`),
+  CONSTRAINT `listing_facilities_ibfk_1` FOREIGN KEY (`listing_id`) REFERENCES `listings` (`listing_id`) ON DELETE CASCADE,
+  CONSTRAINT `listing_facilities_ibfk_2` FOREIGN KEY (`facility_id`) REFERENCES `facilities` (`facility_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `seller`
+-- Dumping data for table `listing_facilities`
 --
 
-LOCK TABLES `seller` WRITE;
-/*!40000 ALTER TABLE `seller` DISABLE KEYS */;
-/*!40000 ALTER TABLE `seller` ENABLE KEYS */;
+LOCK TABLES `listing_facilities` WRITE;
+/*!40000 ALTER TABLE `listing_facilities` DISABLE KEYS */;
+INSERT INTO `listing_facilities` VALUES (6,21,1),(7,22,1),(8,22,2),(9,22,3),(10,22,4),(11,25,1),(12,25,2);
+/*!40000 ALTER TABLE `listing_facilities` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -57,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-12  0:43:38
+-- Dump completed on 2021-09-23 21:19:34

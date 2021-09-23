@@ -16,32 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `user`
+-- Table structure for table `transactions`
 --
 
-DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `transactions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
-  `user_id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) DEFAULT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` char(255) NOT NULL,
-  `display_picture` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `email` (`email`),
-  CONSTRAINT `user_chk_1` CHECK ((`EMAIL` like _utf8mb4'%@%'))
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `transactions` (
+  `property_agent_id` int NOT NULL,
+  `listing_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `date` date NOT NULL,
+  KEY `property_agent_id` (`property_agent_id`),
+  KEY `listing_id` (`listing_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `transactions_ibfk_1` FOREIGN KEY (`property_agent_id`) REFERENCES `seller` (`seller_id`) ON DELETE CASCADE,
+  CONSTRAINT `transactions_ibfk_2` FOREIGN KEY (`listing_id`) REFERENCES `listings` (`listing_id`) ON DELETE CASCADE,
+  CONSTRAINT `transactions_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user`
+-- Dumping data for table `transactions`
 --
 
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'test','a@b.c','pp',NULL);
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+LOCK TABLES `transactions` WRITE;
+/*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-22 21:16:35
+-- Dump completed on 2021-09-23 21:19:34

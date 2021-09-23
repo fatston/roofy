@@ -16,31 +16,27 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `comments`
+-- Table structure for table `facilities`
 --
 
-DROP TABLE IF EXISTS `comments`;
+DROP TABLE IF EXISTS `facilities`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `comments` (
-  `listing_id` int NOT NULL,
-  `seller_id` int NOT NULL,
-  `comments` text NOT NULL,
-  `datetime` datetime NOT NULL,
-  KEY `seller_id` (`seller_id`),
-  KEY `listing_id` (`listing_id`),
-  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`seller_id`) REFERENCES `seller` (`seller_id`) ON DELETE CASCADE,
-  CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`listing_id`) REFERENCES `listings` (`listing_id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `facilities` (
+  `facility_id` int NOT NULL AUTO_INCREMENT,
+  `facility_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`facility_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `comments`
+-- Dumping data for table `facilities`
 --
 
-LOCK TABLES `comments` WRITE;
-/*!40000 ALTER TABLE `comments` DISABLE KEYS */;
-/*!40000 ALTER TABLE `comments` ENABLE KEYS */;
+LOCK TABLES `facilities` WRITE;
+/*!40000 ALTER TABLE `facilities` DISABLE KEYS */;
+INSERT INTO `facilities` VALUES (1,'Air conditioning'),(2,'Balcony'),(3,'Gym'),(4,'Swimming Pool');
+/*!40000 ALTER TABLE `facilities` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-22 21:16:35
+-- Dump completed on 2021-09-23 21:19:34

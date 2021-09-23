@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.26, for macos11 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
 --
 -- Host: localhost    Database: roofy
 -- ------------------------------------------------------
@@ -16,31 +16,36 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `comments`
+-- Table structure for table `user_reviews`
 --
 
-DROP TABLE IF EXISTS `comments`;
+DROP TABLE IF EXISTS `user_reviews`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `comments` (
-  `listing_id` int NOT NULL,
+CREATE TABLE `user_reviews` (
+  `review_id` int NOT NULL AUTO_INCREMENT,
+  `revieweruser_id` int NOT NULL,
   `seller_id` int NOT NULL,
-  `comments` text NOT NULL,
-  `datetime` datetime NOT NULL,
+  `listing_id` int NOT NULL,
+  `ur_images` varchar(128) DEFAULT NULL,
+  `description` char(20) NOT NULL,
+  PRIMARY KEY (`review_id`),
+  KEY `revieweruser_id` (`revieweruser_id`),
   KEY `seller_id` (`seller_id`),
   KEY `listing_id` (`listing_id`),
-  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`seller_id`) REFERENCES `seller` (`seller_id`) ON DELETE CASCADE,
-  CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`listing_id`) REFERENCES `listings` (`listing_id`) ON DELETE CASCADE
+  CONSTRAINT `user_reviews_ibfk_1` FOREIGN KEY (`revieweruser_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE,
+  CONSTRAINT `user_reviews_ibfk_2` FOREIGN KEY (`seller_id`) REFERENCES `seller` (`seller_id`) ON DELETE CASCADE,
+  CONSTRAINT `user_reviews_ibfk_3` FOREIGN KEY (`listing_id`) REFERENCES `listings` (`listing_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `comments`
+-- Dumping data for table `user_reviews`
 --
 
-LOCK TABLES `comments` WRITE;
-/*!40000 ALTER TABLE `comments` DISABLE KEYS */;
-/*!40000 ALTER TABLE `comments` ENABLE KEYS */;
+LOCK TABLES `user_reviews` WRITE;
+/*!40000 ALTER TABLE `user_reviews` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_reviews` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-12  0:43:38
+-- Dump completed on 2021-09-23 21:19:35

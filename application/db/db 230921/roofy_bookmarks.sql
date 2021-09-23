@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.26, for macos11 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
 --
 -- Host: localhost    Database: roofy
 -- ------------------------------------------------------
@@ -16,31 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `user`
+-- Table structure for table `bookmarks`
 --
 
-DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `bookmarks`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
-  `user_id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) DEFAULT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` char(255) NOT NULL,
-  `display_picture` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `email` (`email`),
-  CONSTRAINT `user_chk_1` CHECK ((`EMAIL` like _utf8mb4'%@%'))
+CREATE TABLE `bookmarks` (
+  `user_id` int NOT NULL,
+  `listing_id` int NOT NULL,
+  KEY `listing_id` (`listing_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `bookmarks_ibfk_1` FOREIGN KEY (`listing_id`) REFERENCES `listings` (`listing_id`) ON DELETE CASCADE,
+  CONSTRAINT `bookmarks_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user`
+-- Dumping data for table `bookmarks`
 --
 
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+LOCK TABLES `bookmarks` WRITE;
+/*!40000 ALTER TABLE `bookmarks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `bookmarks` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-12  0:43:38
+-- Dump completed on 2021-09-23 21:19:35
