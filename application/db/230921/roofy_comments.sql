@@ -16,32 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `listing_facilities`
+-- Table structure for table `comments`
 --
 
-DROP TABLE IF EXISTS `listing_facilities`;
+DROP TABLE IF EXISTS `comments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `listing_facilities` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+CREATE TABLE `comments` (
   `listing_id` int NOT NULL,
-  `facility_id` int NOT NULL,
-  PRIMARY KEY (`id`),
+  `seller_id` int NOT NULL,
+  `comments` text NOT NULL,
+  `datetime` datetime NOT NULL,
+  KEY `seller_id` (`seller_id`),
   KEY `listing_id` (`listing_id`),
-  KEY `facility_id` (`facility_id`),
-  CONSTRAINT `listing_facilities_ibfk_1` FOREIGN KEY (`listing_id`) REFERENCES `listings` (`listing_id`) ON DELETE CASCADE,
-  CONSTRAINT `listing_facilities_ibfk_2` FOREIGN KEY (`facility_id`) REFERENCES `facilities` (`facility_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`seller_id`) REFERENCES `seller` (`seller_id`) ON DELETE CASCADE,
+  CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`listing_id`) REFERENCES `listings` (`listing_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `listing_facilities`
+-- Dumping data for table `comments`
 --
 
-LOCK TABLES `listing_facilities` WRITE;
-/*!40000 ALTER TABLE `listing_facilities` DISABLE KEYS */;
-INSERT INTO `listing_facilities` VALUES (6,21,1),(7,22,1),(8,22,2),(9,22,3),(10,22,4),(11,25,1),(12,25,2);
-/*!40000 ALTER TABLE `listing_facilities` ENABLE KEYS */;
+LOCK TABLES `comments` WRITE;
+/*!40000 ALTER TABLE `comments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `comments` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-23 21:19:34
+-- Dump completed on 2021-09-23 22:10:37

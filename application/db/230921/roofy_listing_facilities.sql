@@ -16,32 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `user`
+-- Table structure for table `listing_facilities`
 --
 
-DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `listing_facilities`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
-  `user_id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) DEFAULT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` char(255) NOT NULL,
-  `display_picture` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `email` (`email`),
-  CONSTRAINT `user_chk_1` CHECK ((`EMAIL` like _utf8mb4'%@%'))
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `listing_facilities` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `listing_id` int NOT NULL,
+  `facility_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `listing_id` (`listing_id`),
+  KEY `facility_id` (`facility_id`),
+  CONSTRAINT `listing_facilities_ibfk_1` FOREIGN KEY (`listing_id`) REFERENCES `listings` (`listing_id`) ON DELETE CASCADE,
+  CONSTRAINT `listing_facilities_ibfk_2` FOREIGN KEY (`facility_id`) REFERENCES `facilities` (`facility_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user`
+-- Dumping data for table `listing_facilities`
 --
 
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'testing','a@b.c','pp',NULL);
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+LOCK TABLES `listing_facilities` WRITE;
+/*!40000 ALTER TABLE `listing_facilities` DISABLE KEYS */;
+INSERT INTO `listing_facilities` VALUES (6,21,1),(7,22,1),(8,22,2),(9,22,3),(10,22,4),(11,25,1),(12,25,2);
+/*!40000 ALTER TABLE `listing_facilities` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-23 21:19:34
+-- Dump completed on 2021-09-23 22:10:37

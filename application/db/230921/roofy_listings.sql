@@ -55,7 +55,7 @@ CREATE TABLE `listings` (
 
 LOCK TABLES `listings` WRITE;
 /*!40000 ALTER TABLE `listings` DISABLE KEYS */;
-INSERT INTO `listings` VALUES (21,1,'21 lower Kent Ridge',1,'2021-09-19','SALE','123','1632066247010.png','hdb',1,1,'1',1,_binary '1',NULL,'2222-11-11','',1,'22','cool house bro'),(22,1,'21 kent ridge',22222,'2021-09-20','SALE','23qq','1632067264439.png','hdb',1,1,'1',1,_binary '1',NULL,'2222-11-11','',1,'22','cool house bro'),(23,1,'500 rooster lane',123789,'2021-09-22','SALE','a big fat cock','1632317079984.jpg','hdb',20,20,'4',999999,_binary '0',NULL,'2021-09-22','',49999.9,'123','cool house bro'),(24,1,'21 bbc road',123456,'2021-09-22','SALE','aopiejrapoeijrawoepirjaweporiajwerpoiaewjropaiwejroawiejraowpeirjaewpoiradsflkjnavjkzxncvkzlxnvzlkxvndspfiajer ar aejroiaewj ropaisf','1632317665513.png','hdb',1,125,'1',100000,_binary '1',NULL,'2021-09-22','',800,'99','cool house bro'),(25,1,'21 pussy lane',123999,'2021-09-22','SALE','pussy is good','1632318224713.jpg','condo',1,1,'1',999996,_binary '1',NULL,'2021-09-23','',999996,'9999999','cool house bro');
+INSERT INTO `listings` VALUES (21,1,'21 lower Kent Ridge',1,'2021-09-19','SALE','123','1632066247010.png','hdb',1,1,'1',1,_binary '1',NULL,'2222-11-11','',1,'22','cool house bro'),(22,1,'21 kent ridge',22222,'2021-09-20','SALE','23qq','1632067264439.png','hdb',1,1,'1',1,_binary '1',NULL,'2222-11-11','',1,'22','cool house bro'),(23,1,'500 rooster lane',123789,'2021-09-22','SALE','a big fat cock','1632317079984.png','hdb',20,20,'4',999999,_binary '0',NULL,'2021-09-22','',49999.9,'123','cool house bro'),(24,1,'21 bbc road',123456,'2021-09-22','SALE','aopiejrapoeijrawoepirjaweporiajwerpoiaewjropaiwejroawiejraowpeirjaewpoiradsflkjnavjkzxncvkzlxnvzlkxvndspfiajer ar aejroiaewj ropaisf','1632317665513.png','hdb',1,125,'1',100000,_binary '1',NULL,'2021-09-22','',800,'99','cool house bro'),(25,1,'21 pussy lane',123999,'2021-09-22','SALE','pussy is good','1632318224713.png','condo',1,1,'1',999996,_binary '1',NULL,'2021-09-23','',999996,'9999999','cool house bro');
 /*!40000 ALTER TABLE `listings` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -68,4 +68,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-23 21:19:35
+-- Dump completed on 2021-09-23 22:10:38

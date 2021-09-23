@@ -55,22 +55,30 @@
       </div>
     </div>
     <!-- This loop each listing and show it in the table -->
+    <div class="container" style="margin-top: 20px;">
+      <div class="row row-cols-1 row-cols-md-3 g-4">
     <% 
         var no = 1
         data.data.forEach((listing) => { 
     %>
-    <div class="container" style="margin: auto; width: 100%; margin-top: 20px;">
-        <div class="card">
-            <img src="/images/listings/<%= listing.image %>" class="card-img-top" alt="">
-            <div class="card-body">
-                <h5 class="card-title"><%= listing.listing_address %></h5>
-                <p class="card-text"><%= listing.description %></p>
+    
+        <div class="col">
+          <div class="card h-100">
+              <img src="/images/listings/<%= listing.image %>" class="card-img-top" alt="">
+              <div class="card-body">
+                  <h5 class="card-title"><%= listing.listing_address %></h5>
+                  <p class="card-text"><%= listing.description %></p>
+              </div>
+              <div class="card-footer">
                 <a href="/listing/<%= listing.listing_id %>" class="btn btn-primary">Learn More</a>
-            </div>
+              </div>
+          </div>
         </div>
-    </div>
+      
     <% no = no + 1 %>
     <% }) %>
+      </div>
+    </div>
     
     
 

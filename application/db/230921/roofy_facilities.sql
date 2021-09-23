@@ -16,37 +16,27 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `seller`
+-- Table structure for table `facilities`
 --
 
-DROP TABLE IF EXISTS `seller`;
+DROP TABLE IF EXISTS `facilities`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `seller` (
-  `seller_id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) DEFAULT NULL,
-  `username` varchar(255) NOT NULL,
-  `password` char(255) NOT NULL,
-  `company` varchar(255) NOT NULL,
-  `contact_number` int NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `display_picture` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`seller_id`),
-  UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `contact_number` (`contact_number`),
-  UNIQUE KEY `email` (`email`),
-  CONSTRAINT `seller_chk_1` CHECK (((length(`CONTACT_NUMBER`) = 8) and (`EMAIL` like _utf8mb4'%@%')))
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `facilities` (
+  `facility_id` int NOT NULL AUTO_INCREMENT,
+  `facility_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`facility_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `seller`
+-- Dumping data for table `facilities`
 --
 
-LOCK TABLES `seller` WRITE;
-/*!40000 ALTER TABLE `seller` DISABLE KEYS */;
-INSERT INTO `seller` VALUES (1,'clifton','cliftonkor','password','scammer pte ltd',92228002,'cliftonkor@gmail.com',NULL);
-/*!40000 ALTER TABLE `seller` ENABLE KEYS */;
+LOCK TABLES `facilities` WRITE;
+/*!40000 ALTER TABLE `facilities` DISABLE KEYS */;
+INSERT INTO `facilities` VALUES (1,'Air conditioning'),(2,'Balcony'),(3,'Gym'),(4,'Swimming Pool');
+/*!40000 ALTER TABLE `facilities` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -58,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-23 21:19:34
+-- Dump completed on 2021-09-23 22:10:37
