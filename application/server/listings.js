@@ -1,3 +1,4 @@
+const e = require('express');
 const db = require('./connection')
 
 
@@ -30,7 +31,6 @@ const addListing = (id, image, req, res) => {
     let pricing = req.body.pricing;
     let p_negotiable = req.body.p_negotiable;
     let furnishings = req.body.furnishings;
-    let facilities_and_amenities = req.body.facilities_and_amenities;
     let availability = req.body.availability;
     let lease_term = req.body.lease_term;
     let price_psf = pricing/floor_size;
@@ -38,20 +38,21 @@ const addListing = (id, image, req, res) => {
     let facilities = req.body.facilities;
 
     let listingsql = `
-        INSERT INTO listings(seller_id, listing_address, listing_pc, listing_date, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, facilities_and_amenities, availability, lease_term, price_psf, tenure) 
+        INSERT INTO listings(seller_id, listing_address, listing_pc, listing_date, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, availability, lease_term, price_psf, tenure) 
         VALUES (
-            ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
+            ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
         );`;
 
     let listingfacilitiessql = `
         INSERT INTO listing_facilities (listing_id, facility_id) VALUES ?
         ;`;
     
-    db.query(listingsql, [user_id,listing_address, listing_pc, listing_date, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, facilities_and_amenities, availability, lease_term, price_psf, tenure],(err, result, fields)=>{
+    db.query(listingsql, [user_id,listing_address, listing_pc, listing_date, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, availability, lease_term, price_psf, tenure],(err, result, fields)=>{
         if (err) {
+            console.log("err", err)
             res({status: false, data: [], msg: err.message})
         } else {
-            if (result.insertId) {
+            if (result.insertId && facilities) {
                 var values = []
                 for(const facility of facilities) {
                     values.push([result.insertId, facility])
@@ -63,8 +64,9 @@ const addListing = (id, image, req, res) => {
                         res({status: true, data: [], msg: 'Added new listing'})
                     }
                 })
-            }
-            
+            } else {
+                res({status: true, data: [], msg: 'Added new listing'})
+            }   
         }
     })
 }

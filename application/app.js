@@ -164,7 +164,6 @@ app.get('/seller/listings',checkSellerSession, async (req, res) => {
 
 app.post('/seller/listings', checkSellerSession, upload.single('image'), async (req, res) => {
     var fileimage = req.middlewareStorage.fileimage;
-    console.log("image name success pass to here ", fileimage)
     addListing(req.session.sellerid, fileimage, req, async function(data) {
         getFacilities(function(facilities) {
             res.render(path.resolve(__dirname,'./public/seller/seller_listings_add'), {'successAlert': data.status, 'facilities': facilities.data})
