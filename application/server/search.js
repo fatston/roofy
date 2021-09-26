@@ -2,11 +2,16 @@ const db = require('./connection')
 
 const getListingDetails = (id, res) => {
     let sql = `
-    SELECT l.*, s.name, s.contact_number, f.*
-    FROM listings l, listing_facilities lf, facilities f, seller s
-    WHERE l.listing_id = lf.listing_id AND lf.facility_id = f.facility_id AND l.seller_id = s.seller_id
-    AND l.listing_id = ?
-    ORDER BY f.facility_id ASC;
+    SELECT l.*, s.name, s.contact_number, af.facility_id, af.facility_name
+    FROM seller s, listings l
+    LEFT JOIN (
+        SELECT lf.listing_id, f.* 
+        FROM facilities f, listing_facilities lf 
+        WHERE f.facility_id = lf.facility_id
+    ) AS af
+    ON af.listing_id = l.listing_id
+    WHERE l.seller_id = s.seller_id
+    AND l.listing_id = ?;
     `
     db.query(sql, id, (err, row) => {
         if (err) {
