@@ -19,6 +19,7 @@
       <%
         var no = 1
         data.data.forEach((listing) => { 
+          
       %>
       <img src="/images/listings/<%= listing.image %>" width="25%" onerror="this.src='/images/spongebob.png'">
       <img src="/images/listings/<%= listing.image %>" width="25%" onerror="this.src='/images/spongebob.png'">
@@ -34,7 +35,7 @@
                 <b>Posted by</b><br/> 
                 <i class="bi-file-person"></i> <%= listing.seller_id %><br/> 
                 <b>Posted on</b><br/> 
-                <i class="bi-clock"></i> <%= listing.listing_date %></p> 
+                <i class="bi-clock"></i> <%= listing.listing_date.toISOString().slice(0, 10); %></p> 
               </div>
             </div>
           </div>
@@ -93,7 +94,7 @@
             <div class="card h-100">
               <div class="card-body">
                 <p><b>Furnishings</b><br/>
-                <i class="bi-check"></i> <%= listing.furinishings %><br/>
+                <i class="bi-check"></i> <%= listing.furnishings %><br/>
                 <b>Facilities</b><br/>
                   <% listing.facilities.forEach((facility) => { %>
                     <i class="bi-check"></i>
@@ -112,8 +113,8 @@
                 <i class="bi-currency-dollar"></i> <%= listing.price_psf %><br/>  
                 <b>Price Negotiable?</b><br/>
                 <i class="bi-question-circle"></i> <%= listing.p_negotiable %><br/>
-                <b>Availability</b><br/>
-                <i class="bi-clock"></i> <%= listing.availability %><br/>  
+                <b>Earliest Move In Date</b><br/>
+                <i class="bi-clock"></i> <%= listing.availability.toLocaleDateString('en-CA') %><br/>  
                 <b>Lease Term</b><br/>
                 <i class="bi-caret-right"></i> <%= listing.lease_term %><br/>
                 <b>Tenure</b><br/>

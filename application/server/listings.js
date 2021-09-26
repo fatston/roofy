@@ -70,9 +70,45 @@ const addListing = (id, image, req, res) => {
     })
 }
 
+const editListing = (id, req, res) => {
+    let listing_id = req.params.id;
+    let title = req.body.title;
+    let listing_address = req.body.address;
+    let listing_pc = req.body.listing_pc;
+    let description = req.body.description;
+    let property_type = req.body.property_type;
+    let floor_level = req.body.floor_level;
+    let rooms = req.body.rooms;
+    let furnishings = req.body.furnishings;
+    let floor_size = req.body.floor_size;
+    let tenure = req.body.tenure;
+    let pricing = req.body.pricing;
+    let availability = req.body.availability;
+    
+
+    let listingsql = `
+        UPDATE listings 
+        SET title = ?, listing_address = ?, listing_pc = ?, description = ?, property_type = ?,
+        floor_level = ?, rooms = ?, furnishings = ?, floor_size = ?, tenure = ?, pricing = ?,
+        availability = ?
+        WHERE listing_id = ?;
+    `;
+    let questionMark = [title, listing_address, listing_pc, description, property_type, floor_level, rooms, furnishings, floor_size, tenure, pricing, availability, listing_id];
+    
+    db.query(listingsql, questionMark,(err, result)=>{
+        if (err) {
+            console.log("err", err)
+            res({status: false, data: [], msg: err.message})
+        } else {
+            res({status: true, data: [], msg: 'Added new listing'})
+        }
+    })
+}
+
 module.exports = {
     getListings,
-    addListing
+    addListing,
+    editListing
 }
 
 

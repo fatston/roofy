@@ -30,7 +30,7 @@ const getListingDetails = (id, res) => {
                     listing = element;
                 }
             });
-            console.log(listing)
+            // console.log(listing)
             listing["facilities"] = facilities;
             res({success:true, data: [listing], msg:'listings details retrieved'});
         }

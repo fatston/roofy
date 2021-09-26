@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 })
 const upload = multer({storage: storage})
 
-const { getListings, addListing } = require('./server/listings');
+const { getListings, addListing, editListing } = require('./server/listings');
 const { searchListings, getListingDetails } = require('./server/search');
 const { getFacilities } = require('./server/facilities');
 
@@ -177,6 +177,24 @@ app.get('/seller/listings/add', checkSellerSession, async (req, res) => {
     })
 })
 
+//route to edit listings page
+app.get('/seller/listings/edit/:id',checkSellerSession, checkSellerListing, async (req, res) => {
+    getListingDetails(req.params.id, function(data) {
+        // console.log(data);
+        res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'pageName': 'listings'})
+    })
+})
+
+app.post('/seller/listings/edit/:id', checkSellerSession, checkSellerListing, async (req, res) => {
+    editListing(req.session.sellerid, req, async function(data) {
+        getListingDetails(req.params.id, function(data) {
+            // console.log(data);
+            res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'pageName': 'listings'})
+        })
+    })
+})
+
+
 // =========== Search =========== //
 
 // search router
@@ -192,10 +210,10 @@ app.post('/search',(req,res)=>{
     let price_lower_bound = req.body.price_lower_bound;
     let price_upper_bound = req.body.price_upper_bound;
 
-    console.log(`search: ` + search);
-    console.log(`sale_or_rent: ` + sale_or_rent);
-    console.log(`property type: ` + property_type);
-    console.log(`price: ` + price_lower_bound + ` up to ` + price_upper_bound);
+    // console.log(`search: ` + search);
+    // console.log(`sale_or_rent: ` + sale_or_rent);
+    // console.log(`property type: ` + property_type);
+    // console.log(`price: ` + price_lower_bound + ` up to ` + price_upper_bound);
     searchListings([search, sale_or_rent, property_type, price_lower_bound, price_upper_bound], function(data) {
         res.render(path.resolve(__dirname,'./public/search'), {data, 'pageName': 'home'})
     })
@@ -450,6 +468,31 @@ function getSellerDetails(req,res,next) {
             next();
         }
     })
+}
+
+function checkSellerListing(req,res,next) {
+    let sellerid = req.session.sellerid;
+    let listingid = req.params.listingid;
+
+    let sql = `
+        SELECT COUNT(*)
+        FROM listings
+        WHERE seller_id = ?
+        AND listing_id = ?
+    `
+
+    // run the sql query on db
+    db.query(sql, [sellerid, listingid], (err, row) => {
+        if (err || !row) {
+            // return false
+            res.send(`<h1>error: this listing does not belong to you... please <a href="/seller/login">login</a>.</h1>`);
+            res.end();
+        }
+        else {
+            next();
+        }
+    })
+
 }
 
 
