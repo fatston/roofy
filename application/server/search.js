@@ -41,7 +41,7 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
     let sql = `
         SELECT *
         FROM listings
-        WHERE listing_address LIKE "%"?"%"
+        WHERE (listing_address LIKE "%"?"%" OR title LIKE "%"?"%")
         AND sale_or_rent = ?
         AND property_type LIKE "%"?"%"
         AND pricing >= ? AND pricing <= ?;
@@ -56,7 +56,7 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
         price_upper_bound = price_lower_bound + 100000000;
     }
     // run the sql query on db
-    db.query(sql, [search, sale_or_rent, property_type, price_lower_bound, price_upper_bound], (err, row) => {
+    db.query(sql, [search, search, sale_or_rent, property_type, price_lower_bound, price_upper_bound], (err, row) => {
         if (err) {
             res({success:false, msg:err});
         }
