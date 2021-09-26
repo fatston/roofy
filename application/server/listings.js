@@ -19,6 +19,7 @@ const getListings = (id, res) => {
 
 const addListing = (id, image, req, res) => {
     let user_id = id;
+    let title = req.body.title;
     let listing_address = req.body.listing_address;
     let listing_pc = req.body.listing_pc;
     let listing_date = new Date();
@@ -31,23 +32,21 @@ const addListing = (id, image, req, res) => {
     let pricing = req.body.pricing;
     let p_negotiable = req.body.p_negotiable;
     let furnishings = req.body.furnishings;
-    let availability = req.body.availability;
+    let availability = req.body.availability == "" ? null : req.body.availability;
     let lease_term = req.body.lease_term;
     let price_psf = pricing/floor_size;
     let tenure = req.body.tenure;
     let facilities = req.body.facilities;
 
     let listingsql = `
-        INSERT INTO listings(seller_id, listing_address, listing_pc, listing_date, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, availability, lease_term, price_psf, tenure) 
-        VALUES (
-            ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
-        );`;
+        INSERT INTO listings(seller_id, listing_address, listing_pc, listing_date, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, availability, lease_term, price_psf, tenure, title) 
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
 
     let listingfacilitiessql = `
         INSERT INTO listing_facilities (listing_id, facility_id) VALUES ?
         ;`;
     
-    db.query(listingsql, [user_id,listing_address, listing_pc, listing_date, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, availability, lease_term, price_psf, tenure],(err, result, fields)=>{
+    db.query(listingsql, [user_id, listing_address, listing_pc, listing_date, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, availability, lease_term, price_psf, tenure, title],(err, result, fields)=>{
         if (err) {
             console.log("err", err)
             res({status: false, data: [], msg: err.message})

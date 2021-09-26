@@ -33,6 +33,10 @@
                 <input class="form-control" type="file" name="image" id="formFile">
             </div>
             <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title" placeholder="Cool house bro" name="title" required="required">
+            </div>
+            <div class="mb-3">
                 <label for="listing_address" class="form-label">Address</label>
                 <input type="text" class="form-control" id="listing_address" placeholder="21 Lower Kent Ridge" name="listing_address" required="required">
             </div>
@@ -53,7 +57,11 @@
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="property_type" id="condo" value="condo">
-                    <label class="form-check-label" for="condo">condo</label>
+                    <label class="form-check-label" for="condominium">condominium</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="property_type" id="condo" value="condo">
+                    <label class="form-check-label" for="landed">landed</label>
                 </div>
             </div>
 
@@ -74,19 +82,41 @@
 
             <div class="mb-3">
                 <label for="floor_level" class="form-label">Floor Level</label>
-                <input type="number" class="form-control" id="floor_level" placeholder="1" name="floor_level" required="required">
+                <select name="floor_level" id="floor_level" class="form-select" aria-label="Ground">
+                    <option value="ground">Ground</option>
+                    <option value="low">Low</option>
+                    <option value="mid">Mid</option>
+                    <option value="high">High</option>
+                    <option value="penthouse">Penthouse</option>
+                </select>
             </div>
+
             <div class="mb-3">
                 <label for="floor_size" class="form-label">Floor Size</label>
                 <input type="number" class="form-control" id="floor_size" placeholder="1" name="floor_size" required="required">
             </div>
+
             <div class="mb-3">
-                <label for="rooms" class="form-label">Room</label>
-                <input type="number" class="form-control" id="rooms" placeholder="1" name="rooms" required="required">
+                <label for="rooms" class="form-label">Rooms</label>
+                <select name="rooms" id="rooms" class="form-select" aria-label="1 Room">
+                    <option value="1 Room" selected>1 Room</option>
+                    <option value="2 Room">2 Room</option>
+                    <option value="3 Room">3 Room</option>
+                    <option value="4 Room">4 Room</option>
+                    <option value="5+ Room">5+ Room</option>
+                </select>
             </div>
             <div class="mb-3">
                 <label for="pricing" class="form-label">Pricing</label>
                 <input type="number" class="form-control" id="pricing" placeholder="1" name="pricing" required="required">
+            </div>
+            <div class="mb-3">
+                <label for="furnishings" class="form-label">Furnishings</label>
+                <select name="furnishings" id="furnishings" class="form-select" aria-label="Fully Furnished">
+                    <option value="Fully Furnished" selected>Fully Furnished</option>
+                    <option value="Partially Furnished">Partially Furnished</option>
+                    <option value="Unfurnished">Unfurnished</option>
+                </select>
             </div>
 
             <div class="mb-3">
@@ -101,14 +131,20 @@
                 </div>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-3 RENT">
                 <label for="availability" class="form-label">Earliest Move In Date</label>
                 <input type="date" class="form-control" id="availability" name="availability" placeholder="1">
             </div>
 
             <div class="mb-3 RENT">
-                <label for="lease_term" class="form-label">Lease term (Year)</label>
-                <input type="number" class="form-control" id="lease_term" name="lease_term" placeholder="1">
+                <label for="lease_term" class="form-label">Lease term</label>
+                <select name="lease_term" id="lease_term" class="form-select" aria-label="">
+                    <option seleted></option>
+                    <option value="Short Term">Short Term</option>
+                    <option value="1 Year">1 Year</option>
+                    <option value="2 Years">2 Years</option>
+                    <option value="Flexible">Flexible</option>
+                </select>
             </div>
 
             <div class="mb-3 SALE">
