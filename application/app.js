@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 })
 const upload = multer({storage: storage})
 
-const { getListings, addListing, editListing } = require('./server/listings');
+const { getListings, addListing, editListing, editListingImage } = require('./server/listings');
 const { searchListings, getListingDetails } = require('./server/search');
 const { getFacilities } = require('./server/facilities');
 
@@ -174,6 +174,17 @@ app.post('/seller/listings', checkSellerSession, upload.single('image'), async (
 app.get('/seller/listings/add', checkSellerSession, async (req, res) => {
     getFacilities(function(facilities) {
         res.render(path.resolve(__dirname,'./public/seller/seller_listings_add'), {'facilities': facilities.data})
+    })
+})
+
+app.post('/seller/listings/edit/edit_image/:id', checkSellerSession, checkSellerListing, upload.single('image'), async (req,res) => {
+    var fileimage = req.middlewareStorage.fileimage;
+    // res.send("hello world");
+    editListingImage(req.params.id, fileimage, req, async function(data) {
+        getListingDetails(req.params.id, function(data) {
+            // console.log(data);
+            res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'pageName': 'listings'})
+        })
     })
 })
 

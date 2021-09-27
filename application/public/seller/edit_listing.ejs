@@ -14,24 +14,25 @@
     <%- include('../include/seller-navbar'); %>
     <!-- insert other things here like jquery and shit -->
     <% 
-        data.data.forEach((listing) => { 
+        const listing = data.data[0];
     %>
     <div class="container" style="margin-top: 40px;">
     <h1>Edit <%= listing.title %></h1>
     <div class="card" style="margin-top: 20px;">
     
     <div class="card-body">
+        <form class="row gy-2 gx-3 align-items-center" action="" method="POST">
         <div class="mb-3" id= "saleOrRent">
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="sale_or_rent" id="SALE" value="SALE" <%= listing.sale_or_rent=="SALE" ? 'checked' : ''; %>>
-                <label class="form-check-label" for="SALE">sale</label>
+                <input class="form-check-input" type="radio" name="sale_or_rent" id="sale_or_rent" value="SALE" <%= listing.sale_or_rent=="SALE" ? 'checked' : ''; %>>
+                <label class="form-check-label">sale</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="sale_or_rent" id="RENT" value="RENT"<%= listing.sale_or_rent=="RENT" ? 'checked' : ''; %>>
-                <label class="form-check-label" for="RENT">rent</label>
+                <input class="form-check-input" type="radio" name="sale_or_rent" id="sale_or_rent" value="RENT" <%= listing.sale_or_rent=="RENT" ? 'checked' : ''; %>>
+                <label class="form-check-label">rent</label>
             </div>
         </div>
-        <form class="row gy-2 gx-3 align-items-center" action="" method="POST">
+        
             <div class="col-md-5 mb-3">
                 <label for="title">Title</label>
                 <input type="text" name="title" id="title" class="form-control" required="required" value="<%= listing.title %>" placeholder="<%= listing.title %>">
@@ -99,17 +100,16 @@
                 <label for="floor_size" class="form-label">Floor Size (SQUARE FEET)</label>
                 <input type="number" name="floor_size" id="floor_size" class="form-control" required="required" value="<%= listing.floor_size %>" min="0">
             </div>
-            <div class="col-md-4 mb-3 SALE">
-                <label for="tenure" class="form-label">Tenure</label>
-                <input type="number" class="form-control" id="tenure" name="tenure" value="<%= listing.tenure %>">
-            </div>
             
             <div class="col-md-4 mb-3">
                 <label for="pricing" class="form-label">Pricing</label>
                 <input type="number" class="form-control" id="pricing" name="pricing" required="required" value="<%= listing.pricing %>">
             </div>
 
-
+            <div class="col-md-4 mb-3 SALE">
+                <label for="tenure" class="form-label">Tenure</label>
+                <input type="number" class="form-control" id="tenure" name="tenure" value="<%= listing.tenure %>">
+            </div>
             
             <div class="col-md-4 mb-3 RENT">
                 <label for="availability" class="form-label">Earliest Move In Date</label>
@@ -119,11 +119,11 @@
             <div class="col-md-4 mb-3 RENT">
                 <label for="lease_term" class="form-label">Lease term</label>
                 <select name="lease_term" id="lease_term" class="form-select form-control" aria-label="">
-                    <option seleted></option>
-                    <option value="Short Term">Short Term</option>
-                    <option value="1 Year">1 Year</option>
-                    <option value="2 Years">2 Years</option>
-                    <option value="Flexible">Flexible</option>
+                    <option></option>
+                    <option value="Short Term" <%= listing.lease_term=="Short Term" ? 'selected' : ''; %>>Short Term</option>
+                    <option value="1 Year"<%= listing.lease_term=="1 Year" ? 'selected' : ''; %>>1 Year</option>
+                    <option value="2 Years" <%= listing.lease_term=="2 Years" ? 'selected' : ''; %>>2 Years</option>
+                    <option value="Flexible" <%= listing.lease_term=="Flexible" ? 'selected' : ''; %>>Flexible</option>
                 </select>
             </div>
             
@@ -132,17 +132,91 @@
         <div style="margin-top: 40px; margin-bottom: 40px;">
             
                 <h1>TODO</h1>
-                <h3>sale or rent toggle</h3>
-                <h3>edit image</h3>
                 <h3>edit facilities</h3>
                 <h3>add facility</h3>
-                <img src="/images/listings/<%= listing.image %>" alt="">
-            
         </div>
-        <% }) %>
     </div>
     </div>
+
+    <div style="margin-top: 40px;">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+              <div class="card h-100">
+                <img src="/images/listings/<%= listing.image %>" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <form action="/seller/listings/edit/edit_image/<%= listing.listing_id %>" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label">Change Image</label>
+                            <input class="form-control" type="file" name="image" id="formFile" required>
+                        </div>
+                        
+                    <button type="submit" class="btn btn-primary">Confirm</button>
+                    <a class="btn btn-danger" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Delete</a>
+                    </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+                <div class="card h-100">
+                  <img src="/images/listings/<%= listing.image %>" class="card-img-top" alt="...">
+                  <div class="card-body">
+                      <form action="/seller/listings/edit/edit_image/<%= listing.listing_id %>" method="POST" enctype="multipart/form-data">
+                          <div class="mb-3">
+                              <label for="formFile" class="form-label">Change Image</label>
+                              <input class="form-control" type="file" name="image" id="formFile" required>
+                          </div>
+                          
+                      <button type="submit" class="btn btn-primary">Confirm</button>
+                      <a class="btn btn-danger" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Delete</a>
+                      </form>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col">
+                <div class="card h-100">
+                  <img src="/images/listings/<%= listing.image %>" class="card-img-top" alt="...">
+                  <div class="card-body">
+                      <form action="/seller/listings/edit/edit_image/<%= listing.listing_id %>" method="POST" enctype="multipart/form-data">
+                          <div class="mb-3">
+                              <label for="formFile" class="form-label">Change Image</label>
+                              <input class="form-control" type="file" name="image" id="formFile" required>
+                          </div>
+                          
+                      <button type="submit" class="btn btn-primary">Confirm</button>
+                      <a class="btn btn-danger" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Delete</a>
+                      </form>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col">
+                <div class="card h-100">
+                  <img src="/images/listings/<%= listing.image %>" class="card-img-top" alt="...">
+                  <div class="card-body">
+                      <form action="/seller/listings/edit/edit_image/<%= listing.listing_id %>" method="POST" enctype="multipart/form-data">
+                          <div class="mb-3">
+                              <label for="formFile" class="form-label">Change Image</label>
+                              <input class="form-control" type="file" name="image" id="formFile" required>
+                          </div>
+                          
+                      <button type="submit" class="btn btn-primary">Confirm</button>
+                      <a class="btn btn-danger" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Delete</a>
+                      </form>
+                  </div>
+                </div>
+              </div>
+            
+            
+            
+
+          </div>
+        </div>
+
+
     </div>
+
     </body>
 
     <!--when form is submitted it will redirect back to this page with a status, if status is true means submit successfully -->
@@ -155,9 +229,9 @@
     <% } %>
     <!-- javascript -->
     <script>
-        //hide rent fields
-        updateForm("RENT", "none")
-
+        
+        updateForm("<%= listing.sale_or_rent=='SALE' ? 'RENT' : 'SALE' %>", "none")
+        
         let saleOrRent = document.querySelector("#saleOrRent");
         saleOrRent.addEventListener('change', function(e) {
             let elem = event.target;
@@ -165,7 +239,8 @@
             let oppType = type == "RENT" ? "SALE" : "RENT";
             updateForm(oppType, "none")
             updateForm(type, "block")
-        } )
+        })
+        
         
         function updateForm(type, display) {
             const divsToHide = document.getElementsByClassName(type)
@@ -173,6 +248,7 @@
                 divsToHide[i].style.display = display;
             }
         }
+
     </script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

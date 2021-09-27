@@ -70,8 +70,28 @@ const addListing = (id, image, req, res) => {
     })
 }
 
+const editListingImage = (id, image, req, res) => {
+    console.log("got here!" + "\n\n\n\n\n\n\n\n")
+    let sql = `
+        UPDATE listings
+        SET image = ?
+        WHERE listing_id = ?;
+    `
+
+    db.query(sql, [image, id], (err,result,fields) => {
+        if (err) {
+            console.log("err", err)
+            res({status: false, data: [], msg: err.message})
+        } else {
+            res({status: true, data: [], msg: 'Updated Image'})
+        }
+    })
+
+}
+
 const editListing = (id, req, res) => {
     let listing_id = req.params.id;
+    let sale_or_rent = req.body.sale_or_rent;
     let title = req.body.title;
     let listing_address = req.body.address;
     let listing_pc = req.body.listing_pc;
@@ -84,16 +104,16 @@ const editListing = (id, req, res) => {
     let tenure = req.body.tenure;
     let pricing = req.body.pricing;
     let availability = req.body.availability;
-    
+    let lease_term = req.body.lease_term;
 
     let listingsql = `
         UPDATE listings 
-        SET title = ?, listing_address = ?, listing_pc = ?, description = ?, property_type = ?,
+        SET sale_or_rent = ?, title = ?, listing_address = ?, listing_pc = ?, description = ?, property_type = ?,
         floor_level = ?, rooms = ?, furnishings = ?, floor_size = ?, tenure = ?, pricing = ?,
-        availability = ?
+        availability = ?, lease_term = ?
         WHERE listing_id = ?;
     `;
-    let questionMark = [title, listing_address, listing_pc, description, property_type, floor_level, rooms, furnishings, floor_size, tenure, pricing, availability, listing_id];
+    let questionMark = [sale_or_rent, title, listing_address, listing_pc, description, property_type, floor_level, rooms, furnishings, floor_size, tenure, pricing, availability, lease_term, listing_id];
     
     db.query(listingsql, questionMark,(err, result)=>{
         if (err) {
@@ -108,7 +128,8 @@ const editListing = (id, req, res) => {
 module.exports = {
     getListings,
     addListing,
-    editListing
+    editListing,
+    editListingImage
 }
 
 
