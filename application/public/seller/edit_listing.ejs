@@ -21,7 +21,16 @@
     <div class="card" style="margin-top: 20px;">
     
     <div class="card-body">
-        
+        <div class="mb-3" id= "saleOrRent">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sale_or_rent" id="SALE" value="SALE" <%= listing.sale_or_rent=="SALE" ? 'checked' : ''; %>>
+                <label class="form-check-label" for="SALE">sale</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sale_or_rent" id="RENT" value="RENT"<%= listing.sale_or_rent=="RENT" ? 'checked' : ''; %>>
+                <label class="form-check-label" for="RENT">rent</label>
+            </div>
+        </div>
         <form class="row gy-2 gx-3 align-items-center" action="" method="POST">
             <div class="col-md-5 mb-3">
                 <label for="title">Title</label>
@@ -40,7 +49,6 @@
                 <textarea name="description" id="description" class="form-control" required="required" rows="10" placeholder="<%= listing.description %>"><%= listing.description %></textarea>
             </div>
             <div class="col-md-15 mb-3">
-                <label for="property_type">Property Type</label>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="property_type" id="hdb" value="hdb" <%= listing.property_type=="hdb" ? 'checked' : ''; %>>
                     <label class="form-check-label" for="hdb">hdb</label>
@@ -91,7 +99,7 @@
                 <label for="floor_size" class="form-label">Floor Size (SQUARE FEET)</label>
                 <input type="number" name="floor_size" id="floor_size" class="form-control" required="required" value="<%= listing.floor_size %>" min="0">
             </div>
-            <div class="col-md-4 mb-3">
+            <div class="col-md-4 mb-3 SALE">
                 <label for="tenure" class="form-label">Tenure</label>
                 <input type="number" class="form-control" id="tenure" name="tenure" value="<%= listing.tenure %>">
             </div>
@@ -103,9 +111,20 @@
 
 
             
-            <div class="col-md-4 mb-3">
-                <label>Earliest Move In Date</label>
-                <input type="date" name="availability" id="availability" class="form-control" required="required" value="<%= listing.availability.toLocaleDateString('en-CA') %>">
+            <div class="col-md-4 mb-3 RENT">
+                <label for="availability" class="form-label">Earliest Move In Date</label>
+                <input type="date" class="form-control" name="availability" id="availability" class="form-control" required="required" value="<%= listing.availability.toLocaleDateString('en-CA') %>">
+            </div>
+
+            <div class="col-md-4 mb-3 RENT">
+                <label for="lease_term" class="form-label">Lease term</label>
+                <select name="lease_term" id="lease_term" class="form-select form-control" aria-label="">
+                    <option seleted></option>
+                    <option value="Short Term">Short Term</option>
+                    <option value="1 Year">1 Year</option>
+                    <option value="2 Years">2 Years</option>
+                    <option value="Flexible">Flexible</option>
+                </select>
             </div>
             
             <button type="submit" class="btn btn-primary">Confirm</button>
@@ -135,6 +154,26 @@
         <% } %>
     <% } %>
     <!-- javascript -->
+    <script>
+        //hide rent fields
+        updateForm("RENT", "none")
+
+        let saleOrRent = document.querySelector("#saleOrRent");
+        saleOrRent.addEventListener('change', function(e) {
+            let elem = event.target;
+            let type = elem.value;
+            let oppType = type == "RENT" ? "SALE" : "RENT";
+            updateForm(oppType, "none")
+            updateForm(type, "block")
+        } )
+        
+        function updateForm(type, display) {
+            const divsToHide = document.getElementsByClassName(type)
+            for(var i = 0; i < divsToHide.length; i++){
+                divsToHide[i].style.display = display;
+            }
+        }
+    </script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
