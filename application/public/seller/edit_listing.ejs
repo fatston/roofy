@@ -14,7 +14,11 @@
     <%- include('../include/seller-navbar'); %>
     <!-- insert other things here like jquery and shit -->
     <% 
+<<<<<<< Updated upstream
         const listing = data.data[0];
+=======
+        let listing = data.data[0]; 
+>>>>>>> Stashed changes
     %>
     <div class="container" style="margin-top: 40px;">
     <h1>Edit <%= listing.title %></h1>
@@ -111,6 +115,7 @@
                 <input type="number" class="form-control" id="tenure" name="tenure" value="<%= listing.tenure %>">
             </div>
             
+<<<<<<< Updated upstream
             <div class="col-md-4 mb-3 RENT">
                 <label for="availability" class="form-label">Earliest Move In Date</label>
                 <input type="date" class="form-control" name="availability" id="availability" class="form-control" required="required" value="<%= listing.availability.toLocaleDateString('en-CA') %>">
@@ -125,6 +130,12 @@
                     <option value="2 Years" <%= listing.lease_term=="2 Years" ? 'selected' : ''; %>>2 Years</option>
                     <option value="Flexible" <%= listing.lease_term=="Flexible" ? 'selected' : ''; %>>Flexible</option>
                 </select>
+=======
+            <div class="col-md-4 mb-3">
+                <label>Earliest Move In Date</label>
+                <input type="date" name="availability" id="availability" class="form-control" required="required" value="<%= 
+                    listing.availability ? listing.availability.toLocaleDateString('en-CA') : ''; %>">
+>>>>>>> Stashed changes
             </div>
             
             <button type="submit" class="btn btn-primary">Confirm</button>
@@ -134,6 +145,11 @@
                 <h1>TODO</h1>
                 <h3>edit facilities</h3>
                 <h3>add facility</h3>
+<<<<<<< Updated upstream
+=======
+                <img src="/images/listings/<%= listing.image ? listing.image : ''; %>" alt="">
+            
+>>>>>>> Stashed changes
         </div>
     </div>
     </div>
