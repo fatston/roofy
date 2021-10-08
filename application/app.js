@@ -26,6 +26,7 @@ const upload = multer({storage: storage})
 const { getListings, addListing, editListing, editListingImage } = require('./server/listings');
 const { searchListings, getListingDetails } = require('./server/search');
 const { getFacilities } = require('./server/facilities');
+const { createBookmark, deleteBookmark, getBookmarks } = require('./server/bookmark.js');
 
 
 // using dependencies I guess
@@ -122,7 +123,9 @@ app.get('/profile',checkSession,(req,res)=>{
 
 // bookmarks page
 app.get('/bookmarks',checkSession,(req,res)=>{
-    res.render(path.resolve(__dirname,'./public/bookmarks'), {pageName: 'bookmarks'})
+    getBookmarks(req.session.userid, function(data) {
+        res.render(path.resolve(__dirname,'./public/bookmarks'), {data, pageName: 'bookmarks'})
+    })
 })
 
 // listing details page
@@ -246,6 +249,14 @@ app.get('/logout',(req,res)=>{
 
 // =========== APIs =========== //
 
+// check if user is logged in
+app.get('/api/user/checkLogin', (req,res) => {
+    if (req.session.userid)
+        res.json({success: true});
+    else
+        res.json({success: false});
+})
+
 // get profile details
 app.get('/api/user', checkSession, getProfileDetails,(req,res)=>{
     res.json({success:true, userid:req.session.userid, email:res.email, name:res.name, password:res.password});
@@ -254,6 +265,19 @@ app.get('/api/user', checkSession, getProfileDetails,(req,res)=>{
 // get seller details
 app.get('/api/seller', checkSellerSession, getSellerDetails, (req,res)=>{
     
+})
+
+// create bookmark
+app.get('/api/bookmark/create/:listing_id', checkSession, (req,res) => {
+    createBookmark(req.session.userid, req.params.listing_id, async function(data) {
+        res.json({"success":true});
+    })
+})
+
+app.get('/api/bookmark/delete/:listing_id', checkSession, (req,res) => {
+    deleteBookmark(req.session.userid, req.params.listing_id, async function(data) {
+        res.json({"success":true});
+    })
 })
 
 // get search details

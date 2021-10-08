@@ -17,15 +17,14 @@
     <div class="container" style="margin-top: 40px; margin-bottom: 40px;">
             
       <%
-        var no = 1
-        data.data.forEach((listing) => { 
-          
+        let listing = data.data[0];
       %>
-      <img src="/images/listings/<%= listing.image %>" width="25%" onerror="this.src='/images/spongebob.png'">
-      <img src="/images/listings/<%= listing.image %>" width="25%" onerror="this.src='/images/spongebob.png'">
-      <img src="/images/listings/<%= listing.image %>" width="25%" onerror="this.src='/images/spongebob.png'">
-      <img src="/images/listings/<%= listing.image %>" width="25%" onerror="this.src='/images/spongebob.png'">
-      <h1><%= listing.title %></h1>
+      <img src="/images/listings/<%= listing.image ? listing.image : 'default.png'; %>" width="25%">
+      <img src="/images/listings/<%= listing.image ? listing.image : 'default.png'; %>" width="25%">
+      <img src="/images/listings/<%= listing.image ? listing.image : 'default.png'; %>" width="25%">
+      <img src="/images/listings/<%= listing.image ? listing.image : 'default.png'; %>" width="25%">
+      <h1><%= listing.title %> for <%= listing.sale_or_rent %></h1>
+      <h3><%= listing.rooms == "Studio" ? "Studio Apartment" : listing.rooms %>, <%= listing.property_type %></h3>
         <div class="row row-cols-1 row-cols-md-2 g-4">
           <div class="col">
             <div class="card h-100">
@@ -35,7 +34,7 @@
                 <b>Posted by</b><br/> 
                 <i class="bi-file-person"></i> <%= listing.seller_id %><br/> 
                 <b>Posted on</b><br/> 
-                <i class="bi-clock"></i> <%= listing.listing_date.toISOString().slice(0, 10); %></p> 
+                <i class="bi-clock"></i> <%= listing.listing_datetime ? listing.listing_datetime.toISOString().slice(0, 10) : ''; %></p> 
               </div>
             </div>
           </div>
@@ -134,10 +133,6 @@
           </div>
         </div>
 
-        <%
-        no = no + 1
-        })
-      %>
     </div>
 
     

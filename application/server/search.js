@@ -44,7 +44,8 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
         WHERE (listing_address LIKE "%"?"%" OR title LIKE "%"?"%")
         AND sale_or_rent = ?
         AND property_type LIKE "%"?"%"
-        AND pricing >= ? AND pricing <= ?;
+        AND pricing >= ? AND pricing <= ?
+        ORDER BY listing_datetime DESC;
     `
     if (property_type != "hdb" && property_type != "condo" && property_type != "landed") {
         property_type = "";

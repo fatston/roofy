@@ -105,7 +105,7 @@
             
             <div class="col-md-4 mb-3">
                 <label for="pricing" class="form-label">Pricing</label>
-                <input type="number" class="form-control" id="pricing" name="pricing" required="required" value="<%= listing.pricing %>">
+                <input type="number" class="form-control" id="pricing" name="pricing" required="required" value="<%= listing.pricing %>" step=".01">
             </div>
 
             <div class="col-md-4 mb-3 SALE">
@@ -126,7 +126,6 @@
                 <h1>TODO</h1>
                 <h3>edit facilities</h3>
                 <h3>add facility</h3>
-                <img src="/images/listings/<%= listing.image ? listing.image : ''; %>" alt="">
             
         </div>
     </div>
