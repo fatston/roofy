@@ -396,9 +396,11 @@ function authLogin(req, res, next) {
     db.query(sql, [email], (err, row) => {
         if (err) {
             res.send('login failed. <a href="/login">try again</a>')
+            res.end();
         }
         else if (!row[0] || password != row[0].password) {
             res.send(`wrong email or password. <a href="/login">try again</a>`)
+            res.end();
         }
         else {
             res.userid = row[0].user_id;
@@ -421,7 +423,7 @@ function authSellerLogin(req, res, next) {
         if (err) {
             res.send('<h1>login failed. <a href="/seller/login">try again</a></h1>')
         }
-        else if (!row || password != row[0].password) {
+        else if (!row || !row[0] || password != row[0].password) {
             res.send('<h1>wrong username or password. <a href="/seller/login">try again</a></h1>')
         }
         else {
