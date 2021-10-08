@@ -14,11 +14,7 @@
     <%- include('../include/seller-navbar'); %>
     <!-- insert other things here like jquery and shit -->
     <% 
-<<<<<<< Updated upstream
-        const listing = data.data[0];
-=======
         let listing = data.data[0]; 
->>>>>>> Stashed changes
     %>
     <div class="container" style="margin-top: 40px;">
     <h1>Edit <%= listing.title %></h1>
@@ -80,7 +76,9 @@
             </div>
             <div class="col-md-4 mb-3">
                 <label for="rooms" class="form-label">Number of Rooms</label>
-                <select name="rooms" id="rooms" class="form-select" aria-label="1 Room">
+                <select name="rooms" id="rooms" class="form-select">
+                    <option class="RENT" value="Room Rental" <%= listing.rooms=="Room Rental" ? 'selected' : ''; %>>Room Rental</option>
+                    <option value="Studio" <%= listing.rooms=="Studio" ? 'selected' : ''; %>>Studio</option>
                     <option value="1 Room" <%= listing.rooms=="1 Room" ? 'selected' : ''; %>>1 Room</option>
                     <option value="2 Room"<%= listing.rooms=="2 Room" ? 'selected' : ''; %>>2 Room</option>
                     <option value="3 Room"<%= listing.rooms=="3 Room" ? 'selected' : ''; %>>3 Room</option>
@@ -115,27 +113,10 @@
                 <input type="number" class="form-control" id="tenure" name="tenure" value="<%= listing.tenure %>">
             </div>
             
-<<<<<<< Updated upstream
-            <div class="col-md-4 mb-3 RENT">
-                <label for="availability" class="form-label">Earliest Move In Date</label>
-                <input type="date" class="form-control" name="availability" id="availability" class="form-control" required="required" value="<%= listing.availability.toLocaleDateString('en-CA') %>">
-            </div>
-
-            <div class="col-md-4 mb-3 RENT">
-                <label for="lease_term" class="form-label">Lease term</label>
-                <select name="lease_term" id="lease_term" class="form-select form-control" aria-label="">
-                    <option></option>
-                    <option value="Short Term" <%= listing.lease_term=="Short Term" ? 'selected' : ''; %>>Short Term</option>
-                    <option value="1 Year"<%= listing.lease_term=="1 Year" ? 'selected' : ''; %>>1 Year</option>
-                    <option value="2 Years" <%= listing.lease_term=="2 Years" ? 'selected' : ''; %>>2 Years</option>
-                    <option value="Flexible" <%= listing.lease_term=="Flexible" ? 'selected' : ''; %>>Flexible</option>
-                </select>
-=======
             <div class="col-md-4 mb-3">
                 <label>Earliest Move In Date</label>
                 <input type="date" name="availability" id="availability" class="form-control" required="required" value="<%= 
                     listing.availability ? listing.availability.toLocaleDateString('en-CA') : ''; %>">
->>>>>>> Stashed changes
             </div>
             
             <button type="submit" class="btn btn-primary">Confirm</button>
@@ -145,11 +126,8 @@
                 <h1>TODO</h1>
                 <h3>edit facilities</h3>
                 <h3>add facility</h3>
-<<<<<<< Updated upstream
-=======
                 <img src="/images/listings/<%= listing.image ? listing.image : ''; %>" alt="">
             
->>>>>>> Stashed changes
         </div>
     </div>
     </div>
