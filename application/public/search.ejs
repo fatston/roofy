@@ -14,19 +14,16 @@
     <%- include('include/navbar'); %>
 
     <!-- insert other things here like jquery and shit -->
-    <div style="margin-top: 10px;"></div>
-    <div class="container" style="margin: auto; width: fit-content;">
+    <div class="container" style="margin: auto; width: fit-content; margin-top:10px;">
       <div class="card">
       <div class="card-body">
           <form action="search" method="POST" class="row g-3">
-            <div class="col-auto">
-              <input class="form-check-input" type="radio" name="sale_or_rent" value="sale" checked>
-              <label class="form-check-label">Buy</label>
+            <div class="col-auto" id="saleOrRent">
+                <input class="form-check-input" type="radio" name="sale_or_rent" value="SALE" id="SALE" checked>
+                <label class="form-check-label">Buy</label>
+                <input class="form-check-input" type="radio" name="sale_or_rent" value="RENT" id="RENT">
+                <label class="form-check-label">Rent</label>
             </div>
-            <div class="col-auto">
-              <input class="form-check-input" type="radio" name="sale_or_rent" value="rent">
-              <label class="form-check-label">Rent</label>
-            </div>  
             <div class="col-auto">
               <input type="search" name="search" class="form-control" placeholder="Search" autofocus="autofocus" onFocus="this.select()">
             </div>
@@ -48,7 +45,85 @@
               <input type="number" class="form-control" name="price_upper_bound" placeholder="Max $$" min="0">
             </div>
             <div class="col-auto">
-              Beds
+              <div class="btn-group">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuClickable" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
+                  Rooms
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuClickable">
+                  <li class="RENT">
+                    <div class="dropdown-item">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="room_rental" id="room-rental">
+                        <label class="form-check-label" for="room-rental">
+                          Room Rental
+                        </label>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="dropdown-item">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="studio" id="studio">
+                        <label class="form-check-label" for="studio">
+                          Studio
+                        </label>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="dropdown-item">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="_1room" id="1room">
+                        <label class="form-check-label" for="1room">
+                          1 Room
+                        </label>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="dropdown-item">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="_2room" id="2room">
+                        <label class="form-check-label" for="2room">
+                          2 Rooms
+                        </label>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="dropdown-item">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="_3room" id="3room">
+                        <label class="form-check-label" for="3room">
+                          3 Rooms
+                        </label>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="dropdown-item">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="_4room" id="4room">
+                        <label class="form-check-label" for="4room">
+                          4 Rooms
+                        </label>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="dropdown-item">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="_5room" id="5room">
+                        <label class="form-check-label" for="5room">
+                          5+ Rooms
+                        </label>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+
             </div>
           </form>
         </div>
@@ -90,6 +165,26 @@
     
 
     <!-- javascript -->
+    <script>
+        //hide rent fields
+        updateForm("RENT", "none")
+
+        let saleOrRent = document.querySelector("#saleOrRent");
+        saleOrRent.addEventListener('change', function(e) {
+            let elem = event.target;
+            let type = elem.value;
+            let oppType = type == "RENT" ? "SALE" : "RENT";
+            updateForm(oppType, "none")
+            updateForm(type, "block")
+        } )
+        
+        function updateForm(type, display) {
+            const divsToHide = document.getElementsByClassName(type)
+            for(var i = 0; i < divsToHide.length; i++){
+                divsToHide[i].style.display = display;
+            }
+        }
+    </script>
     <script src="js/user.js"></script>
     <script src="js/bookmark.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

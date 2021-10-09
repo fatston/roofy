@@ -37,9 +37,10 @@ const getListingDetails = (id, res) => {
     })
 }
 
-const searchListings = ([search, sale_or_rent, property_type, price_lower_bound, price_upper_bound], userid, res) => {
+const searchListings = ([search, sale_or_rent, property_type, price_lower_bound, price_upper_bound, room_rental, studio, _1room, _2room, _3room, _4room, _5room], userid, res) => {
     let sql;
     let question_mark;
+    let and_inputted = false;
 
     if (property_type != "hdb" && property_type != "condo" && property_type != "landed") {
         property_type = "";
@@ -60,23 +61,121 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
             AND l.sale_or_rent = ?
             AND l.property_type LIKE "%"?"%"
             AND l.pricing >= ? AND pricing <= ?
-            ORDER BY listing_datetime DESC;
         `
         question_mark = [userid, search, search, sale_or_rent, property_type, price_lower_bound, price_upper_bound];
-        console.log('got here!');
     }
     else {
         sql = `
             SELECT *
-            FROM listings
-            WHERE (listing_address LIKE "%"?"%" OR title LIKE "%"?"%")
-            AND sale_or_rent = ?
-            AND property_type LIKE "%"?"%"
-            AND pricing >= ? AND pricing <= ?
-            ORDER BY listing_datetime DESC;
+            FROM listings l
+            WHERE (l.listing_address LIKE "%"?"%" OR l.title LIKE "%"?"%")
+            AND l.sale_or_rent = ?
+            AND l.property_type LIKE "%"?"%"
+            AND l.pricing >= ? AND l.pricing <= ?
         `
         question_mark = [search, search, sale_or_rent, property_type, price_lower_bound, price_upper_bound];
     }
+    if (room_rental) {
+        if (and_inputted) {
+            sql += `
+                OR l.rooms LIKE 'Room Rental'
+            `
+        }
+        else {
+            sql += `
+                AND l.rooms LIKE 'Room Rental'
+            `
+            and_inputted = true;
+        }
+    }
+
+    if (studio) {
+        if (and_inputted) {
+            sql += `
+                OR l.rooms LIKE 'studio'
+            `
+        }
+        else {
+            sql += `
+                AND l.rooms LIKE 'studio'
+            `
+            and_inputted = true;
+        }
+    }
+
+    if (_1room) {
+        if (and_inputted) {
+            sql += `
+                OR l.rooms LIKE '1'
+            `
+        }
+        else {
+            sql += `
+                AND l.rooms LIKE '1'
+            `
+            and_inputted = true;
+        }
+    }
+
+    if (_2room) {
+        if (and_inputted) {
+            sql += `
+                OR l.rooms LIKE '2'
+            `
+        }
+        else {
+            sql += `
+                AND l.rooms LIKE '2'
+            `
+            and_inputted = true;
+        }
+    }
+
+    if (_3room) {
+        if (and_inputted) {
+            sql += `
+                OR l.rooms LIKE '3'
+            `
+        }
+        else {
+            sql += `
+                AND l.rooms LIKE '3'
+            `
+            and_inputted = true;
+        }
+    }
+
+    if (_4room) {
+        if (and_inputted) {
+            sql += `
+                OR l.rooms LIKE '4'
+            `
+        }
+        else {
+            sql += `
+                AND l.rooms LIKE '4'
+            `
+            and_inputted = true;
+        }
+    }
+
+    if (_5room) {
+        if (and_inputted) {
+            sql += `
+                OR l.rooms LIKE '5'
+            `
+        }
+        else {
+            sql += `
+                AND l.rooms LIKE '5'
+            `
+            and_inputted = true;
+        }
+    }
+
+    sql += `
+        ORDER BY l.listing_datetime DESC;
+    `
     
        
     

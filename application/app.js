@@ -223,12 +223,61 @@ app.post('/search',(req,res)=>{
     let property_type = req.body.property_type;
     let price_lower_bound = req.body.price_lower_bound;
     let price_upper_bound = req.body.price_upper_bound;
+    
+    let room_rental = req.body.room_rental;
+    let studio = req.body.studio;
+    let _1room = req.body._1room;
+    let _2room = req.body._2room;
+    let _3room = req.body._3room;
+    let _4room = req.body._4room;
+    let _5room = req.body._5room;
 
     // console.log(`search: ` + search);
     // console.log(`sale_or_rent: ` + sale_or_rent);
     // console.log(`property type: ` + property_type);
     // console.log(`price: ` + price_lower_bound + ` up to ` + price_upper_bound);
-    searchListings([search, sale_or_rent, property_type, price_lower_bound, price_upper_bound], req.session.userid, function(data) {
+    // if (room_rental) {
+    //     console.log('room rental checked');
+    // }
+    // else
+    //     console.log('room rental not checked');
+
+    // if (studio) {
+    //     console.log('studio checked');
+    // }
+    // else
+    //     console.log('studio not checked');
+
+    // if (_1room) {
+    //     console.log('_1room checked');
+    // }
+    // else
+    //     console.log('_1room not checked');
+
+    // if (_2room) {
+    //     console.log('_2room checked');
+    // }
+    // else
+    //     console.log('_2room not checked');
+
+    // if (_3room) {
+    //     console.log('_3room checked');
+    // }
+    // else
+    //     console.log('_3room not checked');
+
+    // if (_4room) {
+    //     console.log('_4room checked');
+    // }
+    // else
+    //     console.log('_4room not checked');
+    // if (_5room) {
+    //     console.log('_5room checked');
+    // }
+    // else
+    //     console.log('_5room not checked');
+
+    searchListings([search, sale_or_rent, property_type, price_lower_bound, price_upper_bound, room_rental, studio, _1room, _2room, _3room, _4room, _5room], req.session.userid, function(data) {
         res.render(path.resolve(__dirname,'./public/search'), {data, 'pageName': 'home'})
         // res.send(data);
     })
