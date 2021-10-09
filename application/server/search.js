@@ -83,7 +83,7 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
         }
         else {
             sql += `
-                AND l.rooms LIKE 'Room Rental'
+                AND (l.rooms LIKE 'Room Rental'
             `
             and_inputted = true;
         }
@@ -97,7 +97,7 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
         }
         else {
             sql += `
-                AND l.rooms LIKE 'studio'
+                AND (l.rooms LIKE 'studio'
             `
             and_inputted = true;
         }
@@ -111,7 +111,7 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
         }
         else {
             sql += `
-                AND l.rooms LIKE '1'
+                AND (l.rooms LIKE '1'
             `
             and_inputted = true;
         }
@@ -125,7 +125,7 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
         }
         else {
             sql += `
-                AND l.rooms LIKE '2'
+                AND (l.rooms LIKE '2'
             `
             and_inputted = true;
         }
@@ -139,7 +139,7 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
         }
         else {
             sql += `
-                AND l.rooms LIKE '3'
+                AND (l.rooms LIKE '3'
             `
             and_inputted = true;
         }
@@ -153,7 +153,7 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
         }
         else {
             sql += `
-                AND l.rooms LIKE '4'
+                AND (l.rooms LIKE '4'
             `
             and_inputted = true;
         }
@@ -167,11 +167,14 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
         }
         else {
             sql += `
-                AND l.rooms LIKE '5'
+                AND (l.rooms LIKE '5'
             `
             and_inputted = true;
         }
     }
+
+    if (and_inputted)
+        sql += `)`;
 
     sql += `
         ORDER BY l.listing_datetime DESC;
