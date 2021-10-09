@@ -6,7 +6,7 @@ const getListings = (id, res) => {
     let sql = `
         SELECT *
         FROM listings
-        WHERE seller_id = ? ORDER BY listing_date DESC;
+        WHERE seller_id = ? ORDER BY listing_datetime DESC;
     `;
     db.query(sql, id, (err, row) => {
         if(err) {

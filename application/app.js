@@ -194,8 +194,9 @@ app.post('/seller/listings/edit/edit_image/:id', checkSellerSession, checkSeller
 //route to edit listings page
 app.get('/seller/listings/edit/:id',checkSellerSession, checkSellerListing, async (req, res) => {
     getListingDetails(req.params.id, function(data) {
-        // console.log(data);
-        res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'pageName': 'listings'})
+        getFacilities(function(facilities) {
+            res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
+        })
     })
 })
 
