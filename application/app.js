@@ -27,6 +27,7 @@ const { getListings, addListing, editListing, editListingImage } = require('./se
 const { searchListings, getListingDetails } = require('./server/search');
 const { getFacilities } = require('./server/facilities');
 const { createBookmark, deleteBookmark, getBookmarks } = require('./server/bookmark.js');
+const { getAllComments, addComment, replyComment } = require('./server/comment');
 
 
 // using dependencies I guess
@@ -330,6 +331,32 @@ app.get('/api/bookmark/delete/:listing_id', checkSession, (req,res) => {
         res.json({"success":true});
     })
 })
+
+//get all comment by id
+app.get('/api/comment/:listing_id',(req,res)=>{
+    getAllComments(req.params.listing_id, async function(data) {
+        res.json(data)
+    })
+})
+
+//post a comment or reply a comment
+app.post('/api/comment', (req, res) => {
+    let listing_id = req.body.listing_id
+    let comments = req.body.comments
+    let user_id = req.session.userid
+    let reply_id = req.body.reply_id
+    if(reply_id !== undefined) {
+        replyComment(listing_id, reply_id, comments, user_id, function(data){
+            res.send(data)
+        })
+    } else {
+        addComment(listing_id, comments, user_id, function(data){
+            res.send(data)
+        })
+    }
+})
+
+
 
 // get search details
 app.post('/api/search', (req,res)=>{

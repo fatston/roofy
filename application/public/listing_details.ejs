@@ -132,9 +132,61 @@
               </div>
           </div>
         </div>
-
     </div>
-
+    <div id="comment">
+      <section>
+        <div class="container my-5 py-5">
+          <div class="rod d-flex justify-content-center" id="new-comment">
+            <div class="col-md-12 col-lg-12 col-xl-8">
+              <div class="card">
+                <div class="card-body">
+                  <h3>New Comment</h3>
+                  <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
+                    <form action="/api/comment" method="POST" id="comment-form" onsubmit="return commentSubmitFunction(event)">
+                    <div class="d-flex flex-start w-100">
+                      <img
+                        class="rounded-circle shadow-1-strong me-3"
+                        src="/images/LinkZelda.png"
+                        alt="avatar"
+                        width="40"
+                        height="40"
+                      />
+                      
+                        <div class="form-outline w-100">
+                          <textarea
+                            class="form-control"
+                            id="comments"
+                            rows="4"
+                            style="background: #fff;"
+                            name="comments"
+                          ></textarea>
+                          <label class="form-label" for="textAreaExample">Message</label>
+                        </div>
+                        <input type="hidden" name="listing_id" id="listing_id" value="<%= listing.listing_id %>"/>
+                      </div>
+                      <div class="float-end mt-2 pt-1">
+                        <button type="submit" class="btn btn-primary btn-sm">Post comment</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row d-flex justify-content-center">
+            <div class="col-md-12 col-lg-10 col-xl-8" id="allComments">
+              <div class="card">
+                <div class="card-body">
+                    <h3>Such emptiness</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    </div>
     
 
     <!-- javascript -->
@@ -142,5 +194,21 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="../js/user.js"></script>
+    <script src="../js/comment.js"></script>
+    <script>
+      document.getElementById('new-comment').style.display = "none"
+      const check = checkUserLogin();
+      check.then((status) => {
+        if(status === false ){
+          document.getElementById('new-comment').style.display = "none"
+          document.getElementById('new-comment').classList.remove("d-flex")
+        }
+      })
+      const allComments = getAllComments("<%= listing.listing_id %>")
+      allComments.then((comments) => {
+        document.getElementById('allComments').innerHTML = populateComments(comments)
+      })
+    </script>
   </body>
 </html>
