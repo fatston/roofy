@@ -185,9 +185,10 @@ app.post('/seller/listings/edit/edit_image/:id', checkSellerSession, checkSeller
     var fileimage = req.middlewareStorage.fileimage;
     // res.send("hello world");
     editListingImage(req.params.id, fileimage, req, async function(data) {
-        getListingDetails(req.params.id, function(data) {
-            // console.log(data);
-            res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'pageName': 'listings'})
+        getListingDetails(req.params.id, async function(data) {
+            getFacilities(async function(facilities) {
+                res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
+            })
         })
     })
 })
@@ -197,6 +198,8 @@ app.get('/seller/listings/edit/:id',checkSellerSession, checkSellerListing, asyn
     getListingDetails(req.params.id, function(data) {
         getFacilities(function(facilities) {
             res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
+            
+            // res.send({data, 'facilities': facilities.data, 'pageName': 'listings'});
         })
     })
 })
@@ -204,8 +207,9 @@ app.get('/seller/listings/edit/:id',checkSellerSession, checkSellerListing, asyn
 app.post('/seller/listings/edit/:id', checkSellerSession, checkSellerListing, async (req, res) => {
     editListing(req.session.sellerid, req, async function(data) {
         getListingDetails(req.params.id, function(data) {
-            // console.log(data);
-            res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'pageName': 'listings'})
+            getFacilities(function(facilities) {
+                res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
+            })
         })
     })
 })

@@ -64,21 +64,6 @@
                 </div>
             </div>
             
-            <div class="mb-3">
-                <label>Facilities</label>
-                <% 
-                    facilities.forEach((facility) => {
-                    var no = facility.facility_id 
-                %>
-                <div class="form-check">
-                    <input class="form-check-input" name="facilities" type="checkbox" value="<%= facility.facility_id %>" id="facility<%= no %>">
-                    <label class="form-check-label" for="facility<%= no %>">
-                        <%= facility.facility_name %>
-                    </label>
-                </div>
-                <% }) %>
-            </div>
-            
             <div class="col-md-4 mb-3">
                 <label for="floor_level" class="form-label">Floor Level</label>
                 <select name="floor_level" id="floor_level" class="form-select" aria-label="Ground">
@@ -148,6 +133,39 @@
 
     <div style="margin-top: 40px;">
         <div class="row row-cols-1 row-cols-md-3 g-4">
+
+            <div class="col">
+                <div class="card h-100">
+                  
+                  <div class="card-body">
+                      <form action="/seller/listings/edit/edit_facility/<%= listing.listing_id %>" method="POST">
+                        <label>Facilities</label>
+                        <%
+                            facilities.forEach((facility) => {
+                            var no = facility.facility_id                    
+                            let f_check = false;
+                            for (let i in listing.facilities) {
+                                if (listing.facilities[i].facility_id == no) {
+                                    f_check = true;
+                                    break;
+                                }
+                            }
+                            %>
+                        %>
+                        <div class="form-check">
+                            <input class="form-check-input" name="facilities" type="checkbox" value="<%= facility.facility_id %>" id="facility<%= no %>" <%= f_check ? 'checked' : '' %>>
+                            <label class="form-check-label" for="facility<%= no %>">
+                                <%= facility.facility_name %>
+                            </label>
+                        </div>
+                        <% }) %>
+                        <button type="submit" class="btn btn-primary">Confirm</button>
+                        <button class="btn btn-danger">Add Facility</button>
+                      </form>
+                  </div>
+                </div>
+              </div>
+
             <div class="col">
               <div class="card h-100">
                 <img src="/images/listings/<%= listing.image %>" class="card-img-top" alt="...">
