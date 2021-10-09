@@ -228,8 +228,9 @@ app.post('/search',(req,res)=>{
     // console.log(`sale_or_rent: ` + sale_or_rent);
     // console.log(`property type: ` + property_type);
     // console.log(`price: ` + price_lower_bound + ` up to ` + price_upper_bound);
-    searchListings([search, sale_or_rent, property_type, price_lower_bound, price_upper_bound], function(data) {
+    searchListings([search, sale_or_rent, property_type, price_lower_bound, price_upper_bound], req.session.userid, function(data) {
         res.render(path.resolve(__dirname,'./public/search'), {data, 'pageName': 'home'})
+        // res.send(data);
     })
 })
 

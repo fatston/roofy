@@ -42,10 +42,10 @@
               </select>
             </div>
             <div class="col-auto">
-              <input type="number" class="form-control" name="price_lower_bound" step="100000" placeholder="Min $$">
+              <input type="number" class="form-control" name="price_lower_bound" placeholder="Min $$" min="0">
             </div>
               <div class="col-auto">
-              <input type="number" class="form-control" name="price_upper_bound" step="100000" placeholder="Max $$">
+              <input type="number" class="form-control" name="price_upper_bound" placeholder="Max $$" min="0">
             </div>
             <div class="col-auto">
               Beds
@@ -72,8 +72,8 @@
                   <p class="card-text"><%= listing.description %></p>
               </div>
               <div class="card-footer">
-                <a href="/listing/<%= listing.listing_id %>" class="btn btn-primary">Learn More</a>
-                <button onclick = "createBookmark('<%= listing.listing_id %>');" class="btn btn-outline-danger" id="bookmark_<%= listing.listing_id %>">&hearts;</button>
+                <a href="/listing/<%= listing.listing_id %>" class="btn btn-primary">Learn More</a>                
+                <button onclick = "<%= listing.user_id ? 'deleteBookmark' : 'createBookmark'; %>('<%= listing.listing_id %>');" class="btn btn<%= listing.user_id ? '' : '-outline' %>-danger" id="bookmark_<%= listing.listing_id %>">&hearts;</button>
               </div>
           </div>
         </div>
