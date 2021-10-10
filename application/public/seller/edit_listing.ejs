@@ -17,8 +17,9 @@
         let listing = data.data[0]; 
     %>
     <div class="container" style="margin-top: 40px;">
+
     <h1>Edit <%= listing.title %></h1>
-    <div class="card" style="margin-top: 20px;">
+    <div class="card mb-3" style="margin-top: 20px;">
     
     <div class="card-body">
         <form class="row gy-2 gx-3 align-items-center" action="/seller/listings/edit/<%= listing.listing_id %>" method="POST">
@@ -94,6 +95,7 @@
                     <option value="Unfurnished" <%= listing.furnishings=="Unfurnished" ? 'selected' : ''; %>>Unfurnished</option>
                 </select>
             </div>
+            
         
             
             
@@ -110,7 +112,22 @@
 
             <div class="col-md-4 mb-3 SALE">
                 <label for="tenure" class="form-label">Tenure</label>
-                <input type="number" class="form-control" id="tenure" name="tenure" value="<%= listing.tenure %>">
+                <select name="tenure" id="tenure" class="form-select" aria-label="">
+                    <option value="99-year Leasehold" <%= listing.tenure == "99-year Leasehold" ? 'selected' : ''; %>>99-year Leasehold</option>
+                    <option value="999-year Leasehold" <%= listing.tenure == "999-year Leasehold" ? 'selected' : ''; %>>999-year Leasehold</option>
+                    <option value="Freehold" <%= listing.tenure == "Freehold" ? 'selected' : ''; %>>Freehold</option>
+                    <option value="Unknown Tenure" <%= listing.tenure == "Unknown Tenure" ? 'selected' : ''; %>>Unknown Tenure</option>
+                </select>
+            </div>
+
+            <div class="col-md-4 mb-3 RENT">
+                <label for="lease_term" class="form-label">Lease term</label>
+                <select name="lease_term" id="lease_term" class="form-select" aria-label="">
+                    <option value="Short Term" <%= listing.lease_term == "Short Term" ? 'selected' : ''; %>>Short Term</option>
+                    <option value="1 Year"<%= listing.lease_term == "1 Year" ? 'selected' : ''; %>>1 Year</option>
+                    <option value="2 Years"<%= listing.lease_term == "2 Years" ? 'selected' : ''; %>>2 Years</option>
+                    <option value="Flexible"<%= listing.lease_term == "Flexible" ? 'selected' : ''; %>>Flexible</option>
+                </select>
             </div>
             
             <div class="col-md-4 mb-3">
@@ -131,17 +148,18 @@
     </div>
     </div>
 
-    <div style="margin-top: 40px;">
-        <div class="row row-cols-1 row-cols-md-3 g-4">
+    
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-3">
 
-            <div class="col">
-                <div class="card h-100">
-                  
-                  <div class="card-body">
-                      <form action="/seller/listings/edit/edit_facility/<%= listing.listing_id %>" method="POST">
-                        <label>Facilities</label>
+        <div class="col">
+            <div class="card h-100">
+                
+                <div class="card-body">
+                    <h5 class="card-title">Edit Facilites</h5>
+                    <form action="/seller/listings/edit/<%= listing.listing_id %>/edit_facility" method="POST">
+
                         <%
-                            facilities.forEach((facility) => {
+                        facilities.forEach((facility) => {
                             var no = facility.facility_id                    
                             let f_check = false;
                             for (let i in listing.facilities) {
@@ -150,50 +168,57 @@
                                     break;
                                 }
                             }
-                            %>
+                        %>
                         %>
                         <div class="form-check">
                             <input class="form-check-input" name="facilities" type="checkbox" value="<%= facility.facility_id %>" id="facility<%= no %>" <%= f_check ? 'checked' : '' %>>
                             <label class="form-check-label" for="facility<%= no %>">
-                                <%= facility.facility_name %>
+                            <%= facility.facility_name %>
                             </label>
                         </div>
                         <% }) %>
-                        <button type="submit" class="btn btn-primary">Confirm</button>
-                        <button class="btn btn-danger">Add Facility</button>
-                      </form>
-                  </div>
+                        <button type="submit" class="btn btn-primary">Confirm</button>                        
+                    </form>
                 </div>
-              </div>
+            </div>
+        </div>
 
-            <div class="col">
-              <div class="card h-100">
+        <div class="col">
+            <div class="card h-100">
+            
+                <div class="card-body">
+                    <h5 class="card-title">Add Facility</h5>
+                    <form action="/seller/listings/edit/<%= listing.listing_id %>/add_facility" method="POST">
+                        <input type="text" class="form-control mb-3" name="new_facility" placeholder="facility name">
+                        <button type="submit" class="btn btn-primary mb-3">Confirm</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100">
                 <img src="/images/listings/<%= listing.image %>" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <form action="/seller/listings/edit/edit_image/<%= listing.listing_id %>" method="POST" enctype="multipart/form-data">
+                    <form action="/seller/listings/edit/<%= listing.listing_id %>/edit_image" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="formFile" class="form-label">Change Image</label>
                             <input class="form-control" type="file" name="image" id="formFile" required>
                         </div>
-                        
-                    <button type="submit" class="btn btn-primary">Confirm</button>
-                    <a class="btn btn-danger" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Delete</a>
+                        <button type="submit" class="btn btn-primary">Confirm</button>
+                        <a class="btn btn-danger" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Delete</a>
                     </form>
                 </div>
-              </div>
             </div>
-
-            
-            
-            
-            
-
-          </div>
         </div>
 
-
     </div>
+        
 
+
+    </div> <!-- end of container -->
+
+    <%- include('../include/footer'); %>
     </body>
 
     <!--when form is submitted it will redirect back to this page with a status, if status is true means submit successfully -->

@@ -141,7 +141,7 @@
             <div class="mb-3 RENT">
                 <label for="lease_term" class="form-label">Lease term</label>
                 <select name="lease_term" id="lease_term" class="form-select" aria-label="">
-                    <option seleted></option>
+                    <option selected></option>
                     <option value="Short Term">Short Term</option>
                     <option value="1 Year">1 Year</option>
                     <option value="2 Years">2 Years</option>
@@ -151,13 +151,18 @@
 
             <div class="mb-3 SALE">
                 <label for="tenure" class="form-label">Tenure</label>
-                <input type="number" class="form-control" id="tenure" name="tenure" placeholder="99">
+                <select name="tenure" id="tenure" class="form-select" aria-label="">
+                    <option value="Unknown Tenure">Unknown Tenure</option>    
+                    <option value="99-year Leasehold">99-year Leasehold</option>
+                    <option value="999-year Leasehold">999-year Leasehold</option>
+                    <option value="Freehold">Freehold</option>
+                </select>
             </div>
             
             <button type="submit" class="btn btn-primary">Add</button>
         </form>
     </div>
-
+    <%- include('../include/footer'); %>
    
     <!--when form is submitted it will redirect back to this page with a status, if status is true means submit successfully -->
     <% if(locals.successAlert){ %>

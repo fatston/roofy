@@ -25,7 +25,7 @@ const upload = multer({storage: storage})
 
 const { getListings, addListing, editListing, editListingImage } = require('./server/listings');
 const { searchListings, getListingDetails } = require('./server/search');
-const { getFacilities } = require('./server/facilities');
+const { getFacilities, addFacility } = require('./server/facilities');
 const { createBookmark, deleteBookmark, getBookmarks } = require('./server/bookmark.js');
 const { getAllComments, addComment, replyComment } = require('./server/comment');
 
@@ -181,12 +181,27 @@ app.get('/seller/listings/add', checkSellerSession, async (req, res) => {
     })
 })
 
-app.post('/seller/listings/edit/edit_image/:id', checkSellerSession, checkSellerListing, upload.single('image'), async (req,res) => {
+// add facility form post request
+app.post('/seller/listings/edit/:id/add_facility', checkSellerSession, async(req,res) => {
+    addFacility(req.body.new_facility, async function() {
+        // if (data.status == false) res.send('failed... press back and try again');
+        // else {
+            getListingDetails(req.params.id, async function(data) {
+                getFacilities(function(facilities) {
+                    res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
+                    // res.send({data, 'facilities': facilities.data, 'pageName': 'listings'})
+                })
+            })
+        // }
+    })
+})
+
+app.post('/seller/listings/edit/:id/edit_image', checkSellerSession, checkSellerListing, upload.single('image'), async (req,res) => {
     try {
         var fileimage = req.middlewareStorage.fileimage;
         editListingImage(req.params.id, fileimage, req, async function() {
             getListingDetails(req.params.id, async function(data) {
-                getFacilities(function(facilities) {
+                getFacilities(async function(facilities) {
                     res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
                 })
             })
@@ -194,7 +209,7 @@ app.post('/seller/listings/edit/edit_image/:id', checkSellerSession, checkSeller
     }
     catch {
         getListingDetails(req.params.id, async function(data) {
-            getFacilities(function(facilities) {
+            getFacilities(async function(facilities) {
                 res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
             })
         })
@@ -202,9 +217,9 @@ app.post('/seller/listings/edit/edit_image/:id', checkSellerSession, checkSeller
 })
 
 //route to edit listings page
-app.get('/seller/listings/edit/:id',checkSellerSession, checkSellerListing, async (req, res) => {
-    getListingDetails(req.params.id, function(data) {
-        getFacilities(function(facilities) {
+app.get('/seller/listings/edit/:id*',checkSellerSession, checkSellerListing, async (req, res) => {
+    getListingDetails(req.params.id, async function(data) {
+        getFacilities(async function(facilities) {
             res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
             
             // res.send({data, 'facilities': facilities.data, 'pageName': 'listings'});
@@ -214,8 +229,8 @@ app.get('/seller/listings/edit/:id',checkSellerSession, checkSellerListing, asyn
 
 app.post('/seller/listings/edit/:id', checkSellerSession, checkSellerListing, async (req, res) => {
     editListing(req.session.sellerid, req, async function(data) {
-        getListingDetails(req.params.id, function(data) {
-            getFacilities(function(facilities) {
+        getListingDetails(req.params.id, async function(data) {
+            getFacilities(async function(facilities) {
                 res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
             })
         })
