@@ -21,7 +21,7 @@
     <div class="card" style="margin-top: 20px;">
     
     <div class="card-body">
-        <form class="row gy-2 gx-3 align-items-center" action="" method="POST">
+        <form class="row gy-2 gx-3 align-items-center" action="/seller/listings/edit/<%= listing.listing_id %>" method="POST">
         <div class="mb-3" id= "saleOrRent">
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="sale_or_rent" id="sale_or_rent" value="SALE" <%= listing.sale_or_rent=="SALE" ? 'checked' : ''; %>>
@@ -183,56 +183,7 @@
               </div>
             </div>
 
-            <div class="col">
-                <div class="card h-100">
-                  <img src="/images/listings/<%= listing.image %>" class="card-img-top" alt="...">
-                  <div class="card-body">
-                      <form action="/seller/listings/edit/edit_image/<%= listing.listing_id %>" method="POST" enctype="multipart/form-data">
-                          <div class="mb-3">
-                              <label for="formFile" class="form-label">Change Image</label>
-                              <input class="form-control" type="file" name="image" id="formFile" required>
-                          </div>
-                          
-                      <button type="submit" class="btn btn-primary">Confirm</button>
-                      <a class="btn btn-danger" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Delete</a>
-                      </form>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col">
-                <div class="card h-100">
-                  <img src="/images/listings/<%= listing.image %>" class="card-img-top" alt="...">
-                  <div class="card-body">
-                      <form action="/seller/listings/edit/edit_image/<%= listing.listing_id %>" method="POST" enctype="multipart/form-data">
-                          <div class="mb-3">
-                              <label for="formFile" class="form-label">Change Image</label>
-                              <input class="form-control" type="file" name="image" id="formFile" required>
-                          </div>
-                          
-                      <button type="submit" class="btn btn-primary">Confirm</button>
-                      <a class="btn btn-danger" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Delete</a>
-                      </form>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col">
-                <div class="card h-100">
-                  <img src="/images/listings/<%= listing.image %>" class="card-img-top" alt="...">
-                  <div class="card-body">
-                      <form action="/seller/listings/edit/edit_image/<%= listing.listing_id %>" method="POST" enctype="multipart/form-data">
-                          <div class="mb-3">
-                              <label for="formFile" class="form-label">Change Image</label>
-                              <input class="form-control" type="file" name="image" id="formFile" required>
-                          </div>
-                          
-                      <button type="submit" class="btn btn-primary">Confirm</button>
-                      <a class="btn btn-danger" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Delete</a>
-                      </form>
-                  </div>
-                </div>
-              </div>
+            
             
             
             

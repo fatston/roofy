@@ -182,15 +182,23 @@ app.get('/seller/listings/add', checkSellerSession, async (req, res) => {
 })
 
 app.post('/seller/listings/edit/edit_image/:id', checkSellerSession, checkSellerListing, upload.single('image'), async (req,res) => {
-    var fileimage = req.middlewareStorage.fileimage;
-    // res.send("hello world");
-    editListingImage(req.params.id, fileimage, req, async function(data) {
+    try {
+        var fileimage = req.middlewareStorage.fileimage;
+        editListingImage(req.params.id, fileimage, req, async function() {
+            getListingDetails(req.params.id, async function(data) {
+                getFacilities(function(facilities) {
+                    res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
+                })
+            })
+        })
+    }
+    catch {
         getListingDetails(req.params.id, async function(data) {
-            getFacilities(async function(facilities) {
+            getFacilities(function(facilities) {
                 res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
             })
         })
-    })
+    }
 })
 
 //route to edit listings page
