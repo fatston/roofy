@@ -170,14 +170,14 @@ app.post('/seller/listings', checkSellerSession, upload.single('image'), async (
     var fileimage = req.middlewareStorage.fileimage;
     addListing(req.session.sellerid, fileimage, req, async function(data) {
         getFacilities(function(facilities) {
-            res.render(path.resolve(__dirname,'./public/seller/seller_listings_add'), {'successAlert': data.status, 'facilities': facilities.data})
+            res.render(path.resolve(__dirname,'./public/seller/seller_listings_add'), {'successAlert': data.status, 'facilities': facilities.data, 'pageName': 'listings'})
         })
     })
 })
 
 app.get('/seller/listings/add', checkSellerSession, async (req, res) => {
     getFacilities(function(facilities) {
-        res.render(path.resolve(__dirname,'./public/seller/seller_listings_add'), {'facilities': facilities.data})
+        res.render(path.resolve(__dirname,'./public/seller/seller_listings_add'), {'facilities': facilities.data, 'pageName': 'listings'});
     })
 })
 
