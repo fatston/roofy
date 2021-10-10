@@ -16,7 +16,7 @@ const getFacilities = (res) => {
 }
 
 const addFacility = (new_facility, res) => {
-    console.log("new facility name: " + new_facility);
+    // console.log("new facility name: " + new_facility);
     let sql = `
         INSERT INTO facilities(facility_name)
         VALUES (?);
@@ -31,9 +31,48 @@ const addFacility = (new_facility, res) => {
     })
 }
 
+const deleteFacilitiesFromListing = (listing_id, res) => {
+    let sql = `
+        DELETE FROM listing_facilities
+        WHERE listing_id = ?;
+    `
+    db.query(sql, listing_id, function(err, data){
+        
+        if (err) {
+            res({status: false, data: [], msg: err.message})
+        }
+        else {
+            res({status: true, data: data, msg: 'list of facilities'})
+        }
+    })
+}
+
+
+const addFacilities = (listing_id, facilities, res) => {
+    let sql = `
+        INSERT INTO listing_facilities (listing_id, facility_id) 
+        VALUES ?;
+    `
+    var values = []
+    for(const facility of facilities) {
+        values.push([listing_id, facility])
+    }
+    db.query(sql, [values], function(err, data){
+        
+        if (err) {
+            res({status: false, data: [], msg: err.message})
+        }
+        else {
+            res({status: true, data: data, msg: 'added facilities'})
+        }
+    })
+}
+
 module.exports = {
     getFacilities,
-    addFacility
+    addFacility,
+    deleteFacilitiesFromListing,
+    addFacilities
 }
 
 
