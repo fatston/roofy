@@ -112,12 +112,18 @@
                 <i class="bi-currency-dollar"></i> <%= listing.price_psf %><br/>  
                 <b>Price Negotiable?</b><br/>
                 <i class="bi-question-circle"></i> <%= listing.p_negotiable %><br/>
-                <b>Earliest Move In Date</b><br/>
-                <i class="bi-clock"></i> <%= listing.availability %><br/>  
-                <b>Lease Term</b><br/>
-                <i class="bi-caret-right"></i> <%= listing.lease_term %><br/>
-                <b>Tenure</b><br/>
-                <i class="bi-caret-right"></i> <%= listing.tenure %></p> 
+               
+                <% if(listing.sale_or_rent == "SALE") { %>
+                  <b>Tenure</b><br/>
+                  <i class="bi-caret-right"></i> <%= listing.tenure %></p> 
+                <% } %>
+                <% if(listing.sale_or_rent == "RENT") { %>
+                  <b>Earliest Move In Date</b><br/>
+                  <i class="bi-clock"></i> <%= listing.availability %><br/>  
+                  <b>Lease Term</b><br/>
+                  <i class="bi-caret-right"></i> <%= listing.lease_term %><br/>
+                <% } %>
+                
               </div>
             </div>
           </div>
