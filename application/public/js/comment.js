@@ -56,10 +56,10 @@ function populateComments(comments) {
     '<div class="small d-flex justify-content-start">' +
       '<a href="#!" class="d-flex align-items-center me-3" onclick = "toggleReplyForm('+element.comment_id+', '+element.listing_id+');">' +
         '<i class="far fa-comment-dots me-2"></i>' +
-        '<p class="mb-0" id="reply-text">Reply</p>' +
+        '<p class="mb-0" id="reply-text'+element.comment_id+'">Reply</p>' +
       '</a>' + 
     '</div>' +
-    '<div id="reply-div"></div>';
+    '<div id="reply-div'+element.comment_id+'"></div>';
 
     if(element.replies ){
       element.replies.forEach(reply => {
@@ -97,14 +97,15 @@ async function toggleReplyForm(reply_id, listing_id) {
         alert("you need to login to reply comment")
         return
     }
-    let reply_div = document.getElementById('reply-div')
-    let reply_text = document.getElementById('reply-text')
+    let reply_div = document.getElementById('reply-div'+reply_id)
+    let reply_text = document.getElementById('reply-text'+reply_id)
     if(reply_div.innerHTML == "") {
-    reply_text.innerHTML = "Hide"
-    reply_div.innerHTML = populateReplyForm(reply_id, listing_id)
+        reply_text.innerHTML = "Hide"
+        reply_div.innerHTML = populateReplyForm(reply_id, listing_id)
+        getProfilePicture("reply_profile")
     } else {
-    reply_text.innerHTML = "Reply"
-    reply_div.innerHTML = ""
+        reply_text.innerHTML = "Reply"
+        reply_div.innerHTML = ""
     }
     
 }
@@ -141,7 +142,7 @@ function populateReplyForm(reply_id, listing_id) {
             '<div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">'+
             '<form action="/api/comment" method="POST" id="reply-form" onsubmit="return replySubmitFunction(event)">'+
                 '<div class="d-flex flex-start w-100">'+
-                    '<img class="rounded-circle shadow-1-strong me-3"'+
+                    '<img class="rounded-circle shadow-1-strong me-3" id="reply_profile"'+
                     'src="/images/LinkZelda.png"'+
                     'alt="avatar" width="40" height="40"/>'+
                     

@@ -152,6 +152,7 @@
                     <div class="d-flex flex-start w-100">
                       <img
                         class="rounded-circle shadow-1-strong me-3"
+                        id="user_profile"
                         src="/images/LinkZelda.png"
                         alt="avatar"
                         width="40"
@@ -201,8 +202,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="../js/user.js"></script>
+    <!-- troll.js must be on top of comment due to comment using some feature available in troll.js -->
+    <script src="../js/troll.js"></script> 
     <script src="../js/comment.js"></script>
+    
     <script>
+      getProfilePicture("user_profile")
       document.getElementById('new-comment').style.display = "none"
       const check = checkUserLogin();
       check.then((status) => {

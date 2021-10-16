@@ -1,5 +1,23 @@
 // used in profile page
 
+//get profile picture is used in listing_details.ejs for posting a comment
+async function getProfilePicture(target) {
+    const profile_data_url = '/api/user/';
+    const response = await fetch(profile_data_url);
+    const profileData = await response.json();
+    if (profileData.success === true) {
+        let image = profileData.display_picture
+        if(image === null){
+            image = "/images/LinkZelda.png";
+        } else {
+            image = "/images/" + image
+        }
+        document.getElementById(target).src = image
+    } else {
+        document.getElementById(target).src = "/images/LinkZelda.png";
+    }
+}
+
 async function getName(target) {
     const profile_data_url = '/api/user/';
     const response = await fetch(profile_data_url);

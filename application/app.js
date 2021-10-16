@@ -355,7 +355,7 @@ app.get('/api/user/checkLogin', (req,res) => {
 
 // get profile details
 app.get('/api/user', checkSession, getProfileDetails,(req,res)=>{
-    res.json({success:true, userid:req.session.userid, email:res.email, name:res.name, password:res.password});
+    res.json({success:true, userid:req.session.userid, email:res.email, name:res.name, password:res.password, display_picture: res.display_picture});
 })
 
 // get seller details
@@ -594,9 +594,11 @@ function getProfileDetails(req,res,next) {
             res.json({success:false})
         }
         else {
+            console.log("asdasd", row[0].display_picture);
             res.email = row[0].email;
             res.name = row[0].name;
             res.password = row[0].password;
+            res.display_picture = row[0].display_picture;
             next();
         }
     })
