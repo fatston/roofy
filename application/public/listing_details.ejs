@@ -7,7 +7,7 @@
     
     <!-- styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="/styles/styles.css;" /> -->
+    <link rel="stylesheet" href="/styles/styles.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
   </head>
@@ -152,6 +152,13 @@
           </div>
         </div>
     </div>
+    <% if(listing.sale_or_rent == "SALE") { %>
+    <div class="container transactions-group my-5 py-5">
+      <h3 style='text-align:center'>Recent <%= listing.rooms %> Room Flat Transactions</h3>
+      <div class="row text-center" id="sale-transactions">
+      </div>
+    </div>
+    <% } %>
     <div id="comment">
       <section>
         <div class="container my-5 py-5">
@@ -214,12 +221,17 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch-jsonp/1.2.1/fetch-jsonp.js" integrity="sha512-Gys8+rULabLrKdkcher/Qg8hbN6RpNghG0tn1OA3gjlWxE8b5LDSQHEO396eeVlmD9t55pKHslRAKwyWquog9w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <script src="../js/user.js"></script>
     <!-- troll.js must be on top of comment due to comment using some feature available in troll.js -->
     <script src="../js/troll.js"></script> 
     <script src="../js/comment.js"></script>
+    <script src="../js/data-gov-api.js"></script>
     
     <script>
+      getRecentSaleByRoom("<%= listing.rooms %>")
       getProfilePicture("user_profile")
       document.getElementById('new-comment').style.display = "none"
       const check = checkUserLogin();

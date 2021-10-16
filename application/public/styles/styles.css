@@ -2,3 +2,20 @@
     color:blue;
 }
 
+#sale-transactions {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.transactions-group > .row {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+.transactions-group > .row > .col-4 {
+    display: inline-block;
+}
+
+.transactions-group > .row > .col-4 > .card {
+    border-radius: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
