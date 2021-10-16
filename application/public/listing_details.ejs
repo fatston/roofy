@@ -57,7 +57,11 @@
                   <img src="/images/LinkZelda.png" alt="Avatar" width="96" height="96">
                   <%= listing.name %>
                 </div><br/> 
-                <i class="bi-telephone"></i> +65<%= listing.contact_number %>
+                <div id="phone-detail">
+                  <i class="bi-telephone"></i> +65<%= listing.contact_number %></br>
+                  <i class="bi-whatsapp"></i> <a href="https://wa.me/+65<%= listing.contact_number %>">+65<%= listing.contact_number %></a>
+                </div>
+                
                 <div><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
                   Ratings
                   <style> .checked {color: rgb(252, 235, 7);}
@@ -239,6 +243,8 @@
         if(status === false ){
           document.getElementById('new-comment').style.display = "none"
           document.getElementById('new-comment').classList.remove("d-flex")
+          let loginpage = '<a href="/login">Login to view phone number</a>'
+          document.getElementById('phone-detail').innerHTML = loginpage
         }
       })
       const allComments = getAllComments("<%= listing.listing_id %>")
