@@ -8,14 +8,15 @@ function getRecentSaleByRoom(room) {
       .then(function(response) {
         return response.json()
       }).then(function(json) {
-        let transactions = "No recent transactions"
+        let transactions = ""
         let records = json.result.records
         records.forEach(record => {
             transactions += generateTransaction(record.floor_area_sqm, record.flat_model, record.resale_price, record.block, record.street_name, record.remaining_lease, record.storey_range)
         });
-        document.getElementById('sale-transactions').innerHTML = transactions
+        document.getElementById('sale-transactions').innerHTML = transactions == "" ? "No recent transactions" : transactions;
       }).catch(function(ex) {
         console.log('parsing failed', ex)
+        document.getElementById('sale-transactions').innerHTML = "No recent transactions";
       })
 }
 
