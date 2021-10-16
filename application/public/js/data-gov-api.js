@@ -8,7 +8,7 @@ function getRecentSaleByRoom(room) {
       .then(function(response) {
         return response.json()
       }).then(function(json) {
-        let transactions = ""
+        let transactions = "No recent transactions"
         let records = json.result.records
         records.forEach(record => {
             transactions += generateTransaction(record.floor_area_sqm, record.flat_model, record.resale_price, record.block, record.street_name, record.remaining_lease, record.storey_range)
