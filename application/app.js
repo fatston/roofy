@@ -50,29 +50,47 @@ const db = require('./server/connection');
 
 // =========== paths =========== //
 
+// admin page
+app.get('/admin',(req,res)=>{
+    if (req.session.alcohol == "yamazaki")
+        res.render(path.resolve(__dirname,'./public/admin'))
+})
+
 // home page
 app.get('/',(req,res)=>{
-    res.render(path.resolve(__dirname,'./public/index'), {pageName: 'home'})
+    if (req.session.userid)
+        res.render(path.resolve(__dirname,'./public/index'), {pageName: 'home', loggedIn: true})
+    else
+        res.render(path.resolve(__dirname,'./public/index'), {pageName: 'home'})
 })
 
 // about page
 app.get('/about',(req,res)=>{
-    res.render(path.resolve(__dirname,'./public/about'), {pageName: 'about'})
+    if (req.session.userid)
+        res.render(path.resolve(__dirname,'./public/about'), {pageName: 'about', loggedIn: true})
+    else
+        res.render(path.resolve(__dirname,'./public/about'), {pageName: 'about'})
 })
 
 // contact page
 app.get('/contact',(req,res)=>{
-    res.render(path.resolve(__dirname,'./public/contact'), {pageName: 'contact'})
+    if (req.session.userid)
+        res.render(path.resolve(__dirname,'./public/contact'), {pageName: 'contact', loggedIn: true})
+    else
+        res.render(path.resolve(__dirname,'./public/contact'), {pageName: 'contact'})
 })
 
 // route to login page
 app.get('/login',(req,res)=>{
-    res.render(path.resolve(__dirname,'./public/login'), {pageName: 'login'})
+    if (req.session.userid)
+        res.render(path.resolve(__dirname,'./public/login'), {pageName: 'login', loggedIn: true})
+    else
+        res.render(path.resolve(__dirname,'./public/login'), {pageName: 'login'})
 })
 
 // post login request
 app.post('/login', authLogin, createSession, (req,res)=>{
-    res.render(path.resolve(__dirname,'./public/buyer/profile'), {pageName: 'profile'})
+    res.render(path.resolve(__dirname,'./public/buyer/profile'), {pageName: 'profile', loggedIn: true})
 });
 
 // route to seller login page
@@ -81,7 +99,7 @@ app.get('/seller/login',(req,res)=>{
 })
 
 // post seller login request
-app.post('/seller/login', authSellerLogin, createSellerSession, (req,res)=>{
+app.post('/seller/login', checkAuthAdminLogin, authSellerLogin, createSellerSession, (req,res)=>{
     res.render(path.resolve(__dirname,'./public/seller/seller_home'), {'pageName': 'home'})
 });
 
@@ -98,7 +116,10 @@ app.post('/register',registerUser,(req,res)=>{
 
 // route to edit profile page
 app.get('/profile/edit',checkSession, (req,res)=>{
-    res.render(path.resolve(__dirname,'./public/buyer/edit_profile'), {pageName:'profile'})
+    if (req.session.userid)
+        res.render(path.resolve(__dirname,'./public/buyer/edit_profile'), {pageName:'profile', loggedIn: true})
+    else
+        res.render(path.resolve(__dirname,'./public/buyer/edit_profile'), {pageName:'profile'})
 })
 
 // post request for profile page
@@ -119,21 +140,21 @@ app.post('/seller/register/confirmation',registerSeller,(req,res)=>{
 
 // profile page
 app.get('/profile',checkSession,(req,res)=>{
-    res.render(path.resolve(__dirname,'./public/buyer/profile'), {pageName: 'profile'})
+    res.render(path.resolve(__dirname,'./public/buyer/profile'), {pageName: 'profile', loggedIn: true})
 })
 
 // bookmarks page
 app.get('/bookmarks',checkSession,(req,res)=>{
     getBookmarks(req.session.userid, function(data) {
-        res.render(path.resolve(__dirname,'./public/bookmarks'), {data, pageName: 'bookmarks'})
+        res.render(path.resolve(__dirname,'./public/bookmarks'), {data, pageName: 'bookmarks', loggedIn: true})
     })
 })
 
 // listing details page
 app.get('/listing/:id', (req,res)=>{
     getListingDetails(req.params.id, function(data) {
-        //res.send(data);
-        res.render(path.resolve(__dirname,'./public/listing_details'), {data, 'pageName': 'home'})
+        // res.send(data);
+        res.render(path.resolve(__dirname,'./public/listing_details'), {data, 'pageName': 'home', loggedIn: true})
     })
 })
 
@@ -259,7 +280,10 @@ app.post('/seller/listings/edit/:id', checkSellerSession, checkSellerListing, as
 
 // search router
 app.get('/search',(req,res)=>{
-    res.render(path.resolve(__dirname,'./public/search'))
+    if (req.session.userid)
+        res.render(path.resolve(__dirname,'./public/search'), {'pageName':'home',loggedIn:true})
+    else
+    res.render(path.resolve(__dirname,'./public/search'), {'pageName':'home'})
 })
 
 // search post request
@@ -324,7 +348,10 @@ app.post('/search',(req,res)=>{
     //     console.log('_5room not checked');
 
     searchListings([search, sale_or_rent, property_type, price_lower_bound, price_upper_bound, room_rental, studio, _1room, _2room, _3room, _4room, _5room], req.session.userid, function(data) {
-        res.render(path.resolve(__dirname,'./public/search'), {data, 'pageName': 'home'})
+        if (req.session.userid)
+            res.render(path.resolve(__dirname,'./public/search'), {data, 'pageName': 'home', loggedIn:true})
+        else
+            res.render(path.resolve(__dirname,'./public/search'), {data, 'pageName': 'home'})
         // res.send(data);
     })
 })
@@ -577,6 +604,14 @@ function authSellerLogin(req, res, next) {
             next();
         }
     })
+}
+
+function checkAuthAdminLogin(req, res, next) {
+    if (req.body.username == "alcohol" && req.body.password == "alcohol") { // process admin login
+        req.session.alcohol = "yamazaki";
+        console.log("got here admin")
+        res.send("<h1>welcome back admin</h1><h1><a href='/admin'>proceed</a></h1>");
+    }
 }
 
 function getProfileDetails(req,res,next) {

@@ -29,7 +29,6 @@
                 <a class="<%= pageName == 'bookmarks' ? 'nav-link active' : 'nav-link' %>"
                      href="/bookmarks">Bookmarks</a>
             </li>
-            
 
             <!-- <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -48,6 +47,10 @@
             
         </ul>
     </div>
-    <a href="/login" class="btn">Login</a>
-    <a href="/register" class="btn">Register</a>
+    <% if (locals.loggedIn) { %>
+        <a href="/logout" class="btn">Logout</a>
+    <% } else { %>        
+        <a href="/login" class="btn">Login</a>
+        <a href="/register" class="btn">Register</a>
+    <% } %>
 </nav>

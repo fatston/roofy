@@ -36,7 +36,7 @@
                     <b>Posted by</b><br/> 
                     <i class="bi-file-person"></i> <%= listing.seller_id %><br/> 
                     <b>Posted on</b><br/> 
-                    <i class="bi-clock"></i> <%= listing.listing_datetime ? listing.listing_datetime.toISOString().slice(0, 10) : ''; %></p> 
+                    <i class="bi-clock"></i> <%= listing.niceD8 ? listing.niceD8 : ''; %></p> 
                   </div>
                   <div class="col-8 col-sm-6">
                     <b>Status</b><br/>
@@ -136,7 +136,7 @@
                 <% } %>
                 <% if(listing.sale_or_rent == "RENT") { %>
                 <b>Earliest Move In Date</b><br/>
-                <i class="bi-clock"></i> <%= listing.availability %><br/>  
+                <i class="bi-clock"></i> <%= listing.niceDate ? listing.niceDate : ''; %><br/>  
                 <b>Lease Term</b><br/>
                 <i class="bi-caret-right"></i> <%= listing.lease_term %><br/>
                 <% } %>

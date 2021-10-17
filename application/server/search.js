@@ -2,7 +2,7 @@ const db = require('./connection')
 
 const getListingDetails = (id, res) => {
     let sql = `
-    SELECT l.*, s.name, s.contact_number, af.facility_id, af.facility_name
+    SELECT l.*, s.name, s.contact_number, af.facility_id, af.facility_name, DATE_FORMAT(l.availability,'%d %b %Y') AS niceDate, DATE_FORMAT(l.listing_datetime, '%d %b %Y') AS niceD8
     FROM seller s, listings l
     LEFT JOIN (
         SELECT lf.listing_id, f.* 
