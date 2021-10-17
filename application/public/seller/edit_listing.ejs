@@ -206,7 +206,7 @@
         %>
         <div class="col">
             <div class="card h-100">
-                <img src="/images/listings/<%= image %>" class="card-img-top" alt="...">
+                <img src="/images/listings/<%= image %>" class="card-img-top" onerror="this.onerror=null;this.src='/images/listings/default.png';">
                 <div class="card-body">
                     <form action="/seller/listings/edit/<%= listing.listing_id %>/delete_image/<%= count %>" method="POST" enctype="multipart/form-data">
                         <a class="btn btn-danger" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Delete</a>
@@ -221,7 +221,7 @@
 
         <div class="col">
             <div class="card h-100">
-                <img src="/images/listings/<%= str %>" class="card-img-top" alt="...">
+                <img src="/images/listings/<%= str %>" class="card-img-top" onerror="this.onerror=null;this.src='/images/listings/default.png';">
                 <div class="card-body">
                     <form action="/seller/listings/edit/<%= listing.listing_id %>/delete_image/<%= count %>" method="POST" enctype="multipart/form-data">
                         <a class="btn btn-danger" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Delete</a>
@@ -239,6 +239,16 @@
                             <input class="form-control" type="file" name="image" id="formFile" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Confirm</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <form action="/seller/listings/edit/<%= listing.listing_id %>/delete_all_images" method="POST" enctype="multipart/form-data">
+                        <button type="submit" class="btn btn-primary">DELETE ALL IMAGES</button>
                     </form>
                 </div>
             </div>

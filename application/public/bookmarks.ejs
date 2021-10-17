@@ -28,7 +28,7 @@
     
         <div class="col">
           <div class="card h-100">
-              <img src="/images/listings/<%= listing.image %>" class="card-img-top" alt="">
+              <img src="/images/listings/<%= listing.image %>" class="card-img-top" onerror="this.onerror=null;this.src='/images/listings/default.png';">
               <div class="card-body">
                   <h5 class="card-title"><%= listing.title %></h5>
                   <p class="card-text"><%= listing.listing_address %></p>
