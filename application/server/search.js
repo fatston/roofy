@@ -55,7 +55,7 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
 
     if (userid) { // get bookmarks too
         sql = `
-            SELECT l.*, b.user_id
+            SELECT l.*, b.user_id, COUNT(b1.listing_id) AS countbookmarks
             FROM listings l
             LEFT JOIN bookmarks b ON l.listing_id = b.listing_id AND b.user_id = ?
             LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id

@@ -273,8 +273,7 @@
         document.getElementById('map'), {zoom: 15}
       );
 
-      let pc = 'singapore ' + '<%= listing.listing_pc %>';
-      // alert("pc: " + pc);
+      let pc = '<%= listing.listing_address %>';
       var request = {
         query: pc,
         fields: ['name', 'geometry'],
