@@ -611,6 +611,8 @@ function checkAuthAdminLogin(req, res, next) {
         console.log("got here admin")
         res.send("<h1>welcome back admin</h1><h1><a href='/admin'>proceed</a></h1>");
     }
+    else 
+        next();
 }
 
 function getProfileDetails(req,res,next) {
