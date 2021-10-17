@@ -2,7 +2,8 @@ const db = require('./connection')
 
 const getListingDetails = (id, res) => {
     let sql = `
-    SELECT l.*, s.name, s.contact_number, af.facility_id, af.facility_name, DATE_FORMAT(l.availability,'%d %b %Y') AS niceDate, DATE_FORMAT(l.listing_datetime, '%d %b %Y') AS niceD8
+    SELECT l.*, s.name, s.contact_number, af.facility_id, af.facility_name, DATE_FORMAT(l.availability,'%d %b %Y') AS niceDate, 
+    DATE_FORMAT(l.listing_datetime, '%d %b %Y') AS niceD8
     FROM seller s, listings l
     LEFT JOIN (
         SELECT lf.listing_id, f.* 
@@ -57,6 +58,7 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
             SELECT l.*, b.user_id
             FROM listings l
             LEFT JOIN bookmarks b ON l.listing_id = b.listing_id AND b.user_id = ?
+            LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
             WHERE (l.listing_address LIKE "%"?"%" OR l.title LIKE "%"?"%")
             AND l.sale_or_rent = ?
             AND l.property_type LIKE "%"?"%"
@@ -66,8 +68,9 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
     }
     else {
         sql = `
-            SELECT *
+            SELECT l.*, COUNT(b1.listing_id) AS countbookmarks
             FROM listings l
+            LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
             WHERE (l.listing_address LIKE "%"?"%" OR l.title LIKE "%"?"%")
             AND l.sale_or_rent = ?
             AND l.property_type LIKE "%"?"%"
@@ -177,6 +180,7 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
         sql += `)`;
 
     sql += `
+        GROUP BY l.listing_id
         ORDER BY l.listing_datetime DESC;
     `
     

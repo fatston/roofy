@@ -1,4 +1,3 @@
-
 async function createBookmark(id) {
     let check = await checkUserLogin();
     if (check == false) {        

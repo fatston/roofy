@@ -149,10 +149,13 @@
               </div>
               <div class="card-footer">
                 <a href="/listing/<%= listing.listing_id %>" class="btn btn-primary">Learn More</a>                
-                <button onclick = "<%= listing.user_id ? 'deleteBookmark' : 'createBookmark'; %>('<%= listing.listing_id %>');" class="btn btn<%= listing.user_id ? '' : '-outline' %>-danger" id="bookmark_<%= listing.listing_id %>">&hearts;</button>
+                <button onclick = "<%= listing.user_id ? 'deleteBookmark' : 'createBookmark'; %>('<%= listing.listing_id %>');" class="btn btn<%= listing.user_id ? '' : '-outline' %>-danger" id="bookmark_<%= listing.listing_id %>">&hearts; <%= listing.countbookmarks %></button>
+                
               </div>
           </div>
         </div>
+
+        
       
     <% 
       no = no + 1

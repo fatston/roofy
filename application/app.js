@@ -352,7 +352,6 @@ app.post('/search',(req,res)=>{
             res.render(path.resolve(__dirname,'./public/search'), {data, 'pageName': 'home', loggedIn:true})
         else
             res.render(path.resolve(__dirname,'./public/search'), {data, 'pageName': 'home'})
-        // res.send(data);
     })
 })
 
