@@ -140,7 +140,39 @@
     
         <div class="col">
           <div class="card h-100">
-              <img src="/images/listings/<%= listing.image %>" class="card-img-top" alt="">
+            <div id="carousel_<%= listing.listing_id %>" class="carousel slide" data-bs-ride="carousel">
+              
+              <div class="carousel-inner">
+                <%
+                  let str = listing.image; 
+                  let image = "";
+                  while (str.indexOf(",") > 0) {
+                  image = str.slice(0, str.indexOf(","));
+                  str = str.slice(str.indexOf(",")+1);
+                  
+                %>
+                <div class="carousel-item">
+                  <img src="/images/listings/<%= image %>" class="card-img-top" alt="">
+                </div>
+                <%
+                  }
+                %>
+                <div class="carousel-item active">
+                  <img src="/images/listings/<%= str %>" class="card-img-top" alt="">
+                </div>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carousel_<%= listing.listing_id %>" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carousel_<%= listing.listing_id %>" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+            
+            
+              
               <div class="card-body">
                   <h5 class="card-title"><%= listing.title %></h5>
                   <p class="card-text"><%= listing.listing_address %></p>

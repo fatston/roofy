@@ -195,21 +195,55 @@
             </div>
         </div>
 
+        <%
+        let str = listing.image; 
+        let image = "";
+        let count = 1;
+        while (str.indexOf(",") > 0) {
+        image = str.slice(0, str.indexOf(","));
+        str = str.slice(str.indexOf(",")+1);
+        
+        %>
         <div class="col">
             <div class="card h-100">
-                <img src="/images/listings/<%= listing.image %>" class="card-img-top" alt="...">
+                <img src="/images/listings/<%= image %>" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <form action="/seller/listings/edit/<%= listing.listing_id %>/edit_image" method="POST" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label for="formFile" class="form-label">Change Image</label>
-                            <input class="form-control" type="file" name="image" id="formFile" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Confirm</button>
+                    <form action="/seller/listings/edit/<%= listing.listing_id %>/delete_image/<%= count %>" method="POST" enctype="multipart/form-data">
                         <a class="btn btn-danger" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Delete</a>
                     </form>
                 </div>
             </div>
         </div>
+        <%
+            count++;
+            }
+        %>
+
+        <div class="col">
+            <div class="card h-100">
+                <img src="/images/listings/<%= str %>" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <form action="/seller/listings/edit/<%= listing.listing_id %>/delete_image/<%= count %>" method="POST" enctype="multipart/form-data">
+                        <a class="btn btn-danger" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Delete</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <form action="/seller/listings/edit/<%= listing.listing_id %>/add_image" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label">Add Image</label>
+                            <input class="form-control" type="file" name="image" id="formFile" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Confirm</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
 
     </div>
         

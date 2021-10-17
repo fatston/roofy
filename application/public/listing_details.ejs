@@ -26,10 +26,20 @@
       <%
         let listing = data.data[0];
       %>
-      <img src="/images/listings/<%= listing.image ? listing.image : 'default.png'; %>" width="25%">
-      <img src="/images/listings/<%= listing.image ? listing.image : 'default.png'; %>" width="25%">
-      <img src="/images/listings/<%= listing.image ? listing.image : 'default.png'; %>" width="25%">
-      <img src="/images/listings/<%= listing.image ? listing.image : 'default.png'; %>" width="25%">
+
+      <%
+        let str = listing.image; 
+        let image = "";
+        while (str.indexOf(",") > 0) {
+        image = str.slice(0, str.indexOf(","));
+        str = str.slice(str.indexOf(",")+1);
+        
+      %>
+      <img src="/images/listings/<%= image %>" width="45%">
+      <%
+        }
+      %>
+      <img src="/images/listings/<%= str %>" width="45%">
       <h1><%= listing.title %> for <%= listing.sale_or_rent %></h1>
       <h3><%= listing.rooms == "Studio" ? "Studio Apartment" : listing.rooms %>, <%= listing.property_type %></h3>
         <div class="row row-cols-1 row-cols-md-2 g-4">

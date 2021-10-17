@@ -70,22 +70,42 @@ const addListing = (id, image, req, res) => {
     })
 }
 
-const editListingImage = (id, image, req, res) => {
-    console.log("got here!" + "\n\n\n\n\n\n\n\n")
+const addListingImage = (id, image, req, res) => {
     let sql = `
-        UPDATE listings
-        SET image = ?
+        SELECT image
+        FROM listings
         WHERE listing_id = ?;
     `
 
-    db.query(sql, [image, id], (err,result,fields) => {
+    db.query(sql, id, (err,row) => {
         if (err) {
             console.log("err", err)
             res({status: false, data: [], msg: err.message})
         } else {
-            res({status: true, data: [], msg: 'Updated Image'})
+            // res({status: true, data: [], msg: 'Updated Image'})
+            console.log("row: " + row[0].image);
+            // res({row});
+            
+            let newImageString = row[0].image + ',' + image;
+            sql = `
+                UPDATE listings
+                SET image = ?
+                WHERE listing_id = ?;
+            `
+            db.query(sql, [newImageString, id], (err,result,fields) => {
+                if (err) {
+                    console.log("err", err)
+                    res({status: false, data: [], msg: err.message})
+                } else {
+                    res({status: true, data: [], msg: 'Added Image'})
+                }
+            })
         }
     })
+
+    
+
+    
 
 }
 
@@ -129,7 +149,7 @@ module.exports = {
     getListings,
     addListing,
     editListing,
-    editListingImage
+    addListingImage
 }
 
 

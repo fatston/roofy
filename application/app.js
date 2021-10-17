@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 })
 const upload = multer({storage: storage})
 
-const { getListings, addListing, editListing, editListingImage } = require('./server/listings');
+const { getListings, addListing, editListing, addListingImage } = require('./server/listings');
 const { searchListings, getListingDetails } = require('./server/search');
 const { getFacilities, addFacility, deleteFacilitiesFromListing, addFacilities } = require('./server/facilities');
 const { createBookmark, deleteBookmark, getBookmarks } = require('./server/bookmark.js');
@@ -233,10 +233,10 @@ app.post('/seller/listings/edit/:id/add_facility', checkSellerSession, async(req
 })
 
 // edit image form post request
-app.post('/seller/listings/edit/:id/edit_image', checkSellerSession, checkSellerListing, upload.single('image'), async (req,res) => {
+app.post('/seller/listings/edit/:id/add_image', checkSellerSession, checkSellerListing, upload.single('image'), async (req,res) => {
     try {
         var fileimage = req.middlewareStorage.fileimage;
-        editListingImage(req.params.id, fileimage, req, async function() {
+        addListingImage(req.params.id, fileimage, req, async function() {
             getListingDetails(req.params.id, async function(data) {
                 getFacilities(async function(facilities) {
                     res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
@@ -352,6 +352,7 @@ app.post('/search',(req,res)=>{
             res.render(path.resolve(__dirname,'./public/search'), {data, 'pageName': 'home', loggedIn:true})
         else
             res.render(path.resolve(__dirname,'./public/search'), {data, 'pageName': 'home'})
+        // res.send(data);
     })
 })
 
