@@ -86,7 +86,12 @@ const addListingImage = (id, image, req, res) => {
             console.log("row: " + row[0].image);
             // res({row});
             
-            let newImageString = row[0].image + ',' + image;
+            
+            let newImageString;
+            if (row[0].image == '')
+                newImageString = image;
+            else
+                newImageString = row[0].image + ',' + image;
             sql = `
                 UPDATE listings
                 SET image = ?
