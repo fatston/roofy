@@ -128,7 +128,7 @@ const deleteAllImages = (id, res) => {
     })
 }
 
-const editListing = (id, req, res) => {
+const editListing = (req, res) => {
     let listing_id = req.params.listingid;
     let sale_or_rent = req.body.sale_or_rent;
     let title = req.body.title;
@@ -144,6 +144,7 @@ const editListing = (id, req, res) => {
     let pricing = req.body.pricing;
     let availability = req.body.availability;
     let lease_term = req.body.lease_term;
+    let town = req.body.town;
 
     if (availability == '') { availability = null; }
 
@@ -151,13 +152,11 @@ const editListing = (id, req, res) => {
         UPDATE listings 
         SET sale_or_rent = ?, title = ?, listing_address = ?, listing_pc = ?, description = ?, property_type = ?,
         floor_level = ?, rooms = ?, furnishings = ?, floor_size = ?, tenure = ?, pricing = ?,
-        availability = ?, lease_term = ?
+        availability = ?, lease_term = ?, town = ?
         WHERE listing_id = ?;
     `;
-    let questionMark = [sale_or_rent, title, listing_address, listing_pc, description, property_type, floor_level, rooms, furnishings, floor_size, tenure, pricing, availability, lease_term, listing_id];
-    for(let i in questionMark) {
-        console.log("i: " + questionMark[i]);
-    }
+    let questionMark = [sale_or_rent, title, listing_address, listing_pc, description, property_type, floor_level, rooms, furnishings, floor_size, tenure, pricing, availability, lease_term, town, listing_id];
+    
     db.query(listingsql, questionMark,(err, result)=>{
         if (err) {
             console.log("err", err)

@@ -277,7 +277,7 @@ app.post('/seller/listings/edit/:listingid/delete_all_images', checkSellerSessio
 // edit listing form post request
 app.post('/seller/listings/edit/:listingid', checkSellerSession, checkSellerListing, async (req, res) => {
     console.log("got here")
-    editListing(req.session.sellerid, req, async function(data) {
+    editListing(req, async function(data) {
         getListingDetails(req.params.listingid, async function(data) {
             getFacilities(async function(facilities) {
                 res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'home'});
