@@ -1,7 +1,11 @@
-function getRecentSaleByRoom(room) {
+function getRecentSaleByRoom(room, town) {
+    let q = {
+      "flat_type": room,
+      "town": town
+    }
     let url = "https://data.gov.sg/api/action/datastore_search"
     url += "?resource_id=f1765b54-a209-4718-8d38-a39237f502b3"
-    url += "&q=" + room
+    url += "&q=" + JSON.stringify(q)
     url += "&sort=month desc"
     url += "&limit=15"
     fetchJsonp(url)

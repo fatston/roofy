@@ -175,7 +175,7 @@
     </div>
     <% if(listing.sale_or_rent == "SALE") { %>
     <div class="container transactions-group my-5 py-5">
-      <h3 style='text-align:center'>Recent <%= listing.rooms %> Rooms Flat Transactions</h3>
+      <h3 style='text-align:center'>Recent Nearby <%= listing.rooms %> Rooms Flat Transactions</h3>
       <div class="row text-center" id="sale-transactions">
       </div>
     </div>
@@ -252,7 +252,7 @@
     <script src="../js/data-gov-api.js"></script>
     
     <script>
-      getRecentSaleByRoom("<%= listing.rooms %>")
+      getRecentSaleByRoom("<%= listing.rooms %>", "<%= listing.town %>")
       getProfilePicture("user_profile")
       document.getElementById('new-comment').style.display = "none"
       const check = checkUserLogin();
