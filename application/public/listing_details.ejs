@@ -175,7 +175,7 @@
     </div>
     <% if(listing.sale_or_rent == "SALE") { %>
     <div class="container transactions-group my-5 py-5">
-      <h3 style='text-align:center'>Recent <%= listing.rooms %> Rooms Flat Transactions</h3>
+      <h3 style='text-align:center'>Recent Nearby <%= listing.rooms %> Rooms Flat Transactions</h3>
       <div class="row text-center" id="sale-transactions">
       </div>
     </div>
@@ -245,6 +245,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch-jsonp/1.2.1/fetch-jsonp.js" integrity="sha512-Gys8+rULabLrKdkcher/Qg8hbN6RpNghG0tn1OA3gjlWxE8b5LDSQHEO396eeVlmD9t55pKHslRAKwyWquog9w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
     <script src="../js/user.js"></script>
     <!-- troll.js must be on top of comment due to comment using some feature available in troll.js -->
     <script src="../js/troll.js"></script> 
@@ -252,7 +255,7 @@
     <script src="../js/data-gov-api.js"></script>
     
     <script>
-      getRecentSaleByRoom("<%= listing.rooms %>")
+      getRecentSaleByRoom("<%= listing.rooms %>", "<%= listing.town %>")
       getProfilePicture("user_profile")
       document.getElementById('new-comment').style.display = "none"
       const check = checkUserLogin();

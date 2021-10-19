@@ -3,7 +3,7 @@ const db = require('./connection')
 const getAllComments = (listing_id, res) => {
     //cu standfor combined-user between seller and user
     let sql = `
-    SELECT c.listing_id, c.comment_id, c.reply_id, c.comments, c.datetime, cu.name, cu.display_picture
+    SELECT c.listing_id, c.comment_id, c.reply_id, c.comments, c.datetime, c.seller_id, cu.name, cu.display_picture
     FROM comments c
     INNER JOIN
     (
