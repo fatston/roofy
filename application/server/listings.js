@@ -144,6 +144,8 @@ const editListing = (id, req, res) => {
     let availability = req.body.availability;
     let lease_term = req.body.lease_term;
 
+    if (availability == '') { availability = null; }
+
     let listingsql = `
         UPDATE listings 
         SET sale_or_rent = ?, title = ?, listing_address = ?, listing_pc = ?, description = ?, property_type = ?,

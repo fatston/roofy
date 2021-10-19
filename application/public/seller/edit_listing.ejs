@@ -133,7 +133,7 @@
             <div class="col-md-4 mb-3 RENT">
                 <label>Earliest Move In Date</label>
                 <input type="date" name="availability" id="availability" class="form-control" <%= listing.availability ? 'required="required"' : ''; %> value="<%= 
-                    listing.availability ? listing.availability.toLocaleDateString('en-CA') : '1995-12-26'; %>">
+                    listing.availability ? listing.availability.toLocaleDateString('en-CA') : ''; %>">
             </div>
             
             <button type="submit" class="btn btn-primary">Confirm</button>
