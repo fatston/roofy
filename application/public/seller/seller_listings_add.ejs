@@ -166,7 +166,7 @@
 
             <div class="mb-3 RENT">
                 <label for="availability" class="form-label">Earliest Move In Date</label>
-                <input type="date" class="form-control" id="availability" name="availability">
+                <input type="date" class="form-control" id="availability" name="availability" value="<%= new Date().toLocaleDateString('en-CA'); %>">
             </div>
 
             <div class="mb-3 RENT">
@@ -237,6 +237,19 @@
                 alert("postal code must be numbers");
                 return false;
             }
+
+            let rooms = document.forms["editListingForm"]["rooms"].value;
+            let saleOrRent = document.forms["editListingForm"]["sale_or_rent"].value;
+
+            if (rooms === "Room Rental" && saleOrRent === "SALE") {
+                alert("you cannot rent a room when you are selling a house")
+                return false;
+            }
+            if (saleOrRent === "RENT" && (!availability || availability == "")) {
+                alert("please enter your earliest available date")
+                return false;
+            }
+
             return true;
         }
 

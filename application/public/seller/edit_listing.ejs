@@ -112,11 +112,11 @@
                 <select name="rooms" id="rooms" class="form-select">
                     <option class="RENT" value="Room Rental" <%= listing.rooms=="Room Rental" ? 'selected' : ''; %>>Room Rental</option>
                     <option value="Studio" <%= listing.rooms=="Studio" ? 'selected' : ''; %>>Studio</option>
-                    <option value="1" <%= listing.rooms=="1 Room" ? 'selected' : ''; %>>1 Room</option>
-                    <option value="2"<%= listing.rooms=="2 Room" ? 'selected' : ''; %>>2 Room</option>
-                    <option value="3"<%= listing.rooms=="3 Room" ? 'selected' : ''; %>>3 Room</option>
-                    <option value="4"<%= listing.rooms=="4 Room" ? 'selected' : ''; %>>4 Room</option>
-                    <option value="5"<%= listing.rooms=="5+ Room" ? 'selected' : ''; %>>5+ Room</option>
+                    <option value="1 Room" <%= listing.rooms=="1 Room" ? 'selected' : ''; %>>1 Room</option>
+                    <option value="2 Room"<%= listing.rooms=="2 Room" ? 'selected' : ''; %>>2 Room</option>
+                    <option value="3 Room"<%= listing.rooms=="3 Room" ? 'selected' : ''; %>>3 Room</option>
+                    <option value="4 Room"<%= listing.rooms=="4 Room" ? 'selected' : ''; %>>4 Room</option>
+                    <option value="5+ Room"<%= listing.rooms=="5+ Room" ? 'selected' : ''; %>>5+ Room</option>
                 </select>
             </div>
             <div class="col-md-4 mb-3">
@@ -164,8 +164,7 @@
             
             <div class="col-md-4 mb-3 RENT">
                 <label>Earliest Move In Date</label>
-                <input type="date" name="availability" id="availability" class="form-control" <%= listing.availability ? 'required="required"' : ''; %> value="<%= 
-                    listing.availability ? listing.availability.toLocaleDateString('en-CA') : ''; %>">
+                <input type="date" name="availability" id="availability" class="form-control" value="<%= listing.availability ? listing.availability.toLocaleDateString('en-CA') : new Date().toLocaleDateString('en-CA'); %>">
             </div>
             
             <button type="submit" class="btn btn-primary">Confirm</button>
@@ -333,6 +332,19 @@
                 alert("postal code must be numbers");
                 return false;
             }
+
+            let rooms = document.forms["editListingForm"]["rooms"].value;
+            let saleOrRent = document.forms["editListingForm"]["sale_or_rent"].value;
+
+            if (rooms === "Room Rental" && saleOrRent === "SALE") {
+                alert("you cannot rent a room when you are selling a house")
+                return false;
+            }
+            if (saleOrRent === "RENT" && (!availability || availability === "")) {
+                alert("please enter your earliest available date")
+                return false;
+            }
+
             return true;
         }
 
