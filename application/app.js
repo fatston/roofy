@@ -196,6 +196,7 @@ app.get('/seller/listings',checkSellerSession, async (req, res) => {
     })
 })
 
+// post request for seller to create listings seller listings page
 app.post('/seller/listings', checkSellerSession, upload.single('image'), async (req, res) => {
     var fileimage = req.middlewareStorage.fileimage;
     addListing(req.session.sellerid, fileimage, req, async function(data) {

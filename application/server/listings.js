@@ -37,16 +37,17 @@ const addListing = (id, image, req, res) => {
     let price_psf = pricing/floor_size;
     let tenure = req.body.tenure;
     let facilities = req.body.facilities;
+    let town = req.body.town;
 
     let listingsql = `
-        INSERT INTO listings(seller_id, listing_address, listing_pc, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, availability, lease_term, price_psf, tenure, title) 
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
+        INSERT INTO listings(seller_id, listing_address, listing_pc, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, availability, lease_term, price_psf, tenure, title, town) 
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
 
     let listingfacilitiessql = `
         INSERT INTO listing_facilities (listing_id, facility_id) VALUES ?
         ;`;
     
-    db.query(listingsql, [user_id, listing_address, listing_pc, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, availability, lease_term, price_psf, tenure, title],(err, result, fields)=>{
+    db.query(listingsql, [user_id, listing_address, listing_pc, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, availability, lease_term, price_psf, tenure, title, town],(err, result, fields)=>{
         if (err) {
             console.log("err", err)
             res({status: false, data: [], msg: err.message})
