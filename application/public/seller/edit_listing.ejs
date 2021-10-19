@@ -22,7 +22,7 @@
     <div class="card mb-3" style="margin-top: 20px;">
     
     <div class="card-body">
-        <form class="row gy-2 gx-3 align-items-center" action="/seller/listings/edit/<%= listing.listing_id %>" method="POST">
+        <form name="editListingForm" class="row gy-2 gx-3 align-items-center" action="/seller/listings/edit/<%= listing.listing_id %>" onsubmit="return validateEditListingForm()" method="POST">
         <div class="mb-3" id= "saleOrRent">
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="sale_or_rent" id="sale_or_rent" value="SALE" <%= listing.sale_or_rent=="SALE" ? 'checked' : ''; %>>
@@ -132,18 +132,12 @@
             
             <div class="col-md-4 mb-3 RENT">
                 <label>Earliest Move In Date</label>
-                <input type="date" name="availability" id="availability" class="form-control" required="required" value="<%= 
-                    listing.availability ? listing.availability.toLocaleDateString('en-CA') : ''; %>">
+                <input type="date" name="availability" id="availability" class="form-control" <%= listing.availability ? 'required="required"' : ''; %> value="<%= 
+                    listing.availability ? listing.availability.toLocaleDateString('en-CA') : '1995-12-26'; %>">
             </div>
             
             <button type="submit" class="btn btn-primary">Confirm</button>
         </form>
-        <div style="margin-top: 40px; margin-bottom: 40px;">
-            
-                <h1>TODO</h1>
-                <h3>edit facilities</h3>
-            
-        </div>
     </div>
     </div>
 
@@ -247,8 +241,8 @@
         <div class="col">
             <div class="card h-100">
                 <div class="card-body">
-                    <form action="/seller/listings/edit/<%= listing.listing_id %>/delete_all_images" method="POST" enctype="multipart/form-data">
-                        <button type="submit" class="btn btn-primary">DELETE ALL IMAGES</button>
+                    <form name="deleteAllImages" action="/seller/listings/edit/<%= listing.listing_id %>/delete_all_images" onsubmit="return confirmDeleteAllImages();" method="POST" enctype="multipart/form-data">
+                        <button type="submit" class="btn btn-danger">Delete All Images</button>
                     </form>
                 </div>
             </div>
@@ -292,6 +286,31 @@
             for(var i = 0; i < divsToHide.length; i++){
                 divsToHide[i].style.display = display;
             }
+        }
+
+        function validateEditListingForm() {
+            let pc = document.forms["editListingForm"]["listing_pc"].value;
+            
+            if (pc.length != 6) {
+                alert("postal code needs to have 6 digits")
+                return false;
+            }
+            for (let i = 0; i < pc.length; i++) {
+                if (pc[i] == '0' || pc[i] == '1' || pc[i] == '2' || pc[i] == '3' || pc[i] == '4' || pc[i] == '5' || pc[i] == '6' || pc[i] == '7' || pc[i] == '8' || pc[i] == '9')
+                    continue;
+                alert("postal code must be numbers");
+                return false;
+            }
+            return true;
+        }
+
+        function confirmDeleteAllImages () {
+            if (confirm('Are you sure you want to delete all images?')) {
+                if (confirm('WARNING: THIS ACTION WILL PERMANENTLY DELETE ALL IMAGES. ARE YOU SURE?')) {
+                    return true;
+                }
+            }
+            return false;
         }
 
     </script>

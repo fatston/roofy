@@ -128,7 +128,7 @@ const deleteAllImages = (id, res) => {
 }
 
 const editListing = (id, req, res) => {
-    let listing_id = req.params.id;
+    let listing_id = req.params.listingid;
     let sale_or_rent = req.body.sale_or_rent;
     let title = req.body.title;
     let listing_address = req.body.address;
@@ -152,7 +152,9 @@ const editListing = (id, req, res) => {
         WHERE listing_id = ?;
     `;
     let questionMark = [sale_or_rent, title, listing_address, listing_pc, description, property_type, floor_level, rooms, furnishings, floor_size, tenure, pricing, availability, lease_term, listing_id];
-    
+    for(let i in questionMark) {
+        console.log("i: " + questionMark[i]);
+    }
     db.query(listingsql, questionMark,(err, result)=>{
         if (err) {
             console.log("err", err)

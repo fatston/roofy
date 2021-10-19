@@ -16,7 +16,7 @@
     <!-- insert other things here like jquery and shit -->
     <div class="container">
         <h1>New Listing</h1>
-        <form action="/seller/listings" method="POST" enctype="multipart/form-data">
+        <form name="editListingForm" action="/seller/listings" method="POST" enctype="multipart/form-data" onsubmit="return validateEditListingForm()">
             <div class="mb-3" id= "saleOrRent">
                 <label>Listing Type</label>
                 <div class="form-check form-check-inline">
@@ -30,7 +30,7 @@
             </div>
             <div class="mb-3">
                 <label for="formFile" class="form-label">Image</label>
-                <input class="form-control" type="file" name="image" id="formFile">
+                <input class="form-control" type="file" name="image" id="formFile" required>
             </div>
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
@@ -42,7 +42,7 @@
             </div>
             <div class="mb-3">
                 <label for="listing_pc" class="form-label">Postal Code</label>
-                <input type="number" class="form-control" id="listing_pc" placeholder="119077" name="listing_pc" required="required">
+                <input type="text" class="form-control" id="listing_pc" name="listing_pc" required="required">
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
@@ -135,7 +135,7 @@
 
             <div class="mb-3 RENT">
                 <label for="availability" class="form-label">Earliest Move In Date</label>
-                <input type="date" class="form-control" id="availability" name="availability" placeholder="1">
+                <input type="date" class="form-control" id="availability" name="availability">
             </div>
 
             <div class="mb-3 RENT">
@@ -192,8 +192,25 @@
                 divsToHide[i].style.display = display;
             }
         }
+
+        function validateEditListingForm() {
+            let pc = document.forms["editListingForm"]["listing_pc"].value;
+            
+            if (pc.length != 6) {
+                alert("postal code needs to have 6 digits")
+                return false;
+            }
+            for (let i = 0; i < pc.length; i++) {
+                if (pc[i] == '0' || pc[i] == '1' || pc[i] == '2' || pc[i] == '3' || pc[i] == '4' || pc[i] == '5' || pc[i] == '6' || pc[i] == '7' || pc[i] == '8' || pc[i] == '9')
+                    continue;
+                alert("postal code must be numbers");
+                return false;
+            }
+            return true;
+        }
+
+        
     </script>
-    
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
