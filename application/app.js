@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage})
 
 const { getListings, addListing, editListing, addListingImage, deleteAllImages } = require('./server/listings');
-const { searchListings, getListingDetails } = require('./server/search');
+const { searchListings, getListingDetails, getHomeListings } = require('./server/search');
 const { getFacilities, addFacility, deleteFacilitiesFromListing, addFacilities } = require('./server/facilities');
 const { createBookmark, deleteBookmark, getBookmarks } = require('./server/bookmark.js');
 const { getAllComments, addComment, replyComment } = require('./server/comment');
@@ -58,10 +58,14 @@ app.get('/admin',(req,res)=>{
 
 // home page
 app.get('/',(req,res)=>{
-    if (req.session.userid)
-        res.render(path.resolve(__dirname,'./public/index'), {pageName: 'home', loggedIn: true})
-    else
-        res.render(path.resolve(__dirname,'./public/index'), {pageName: 'home'})
+    getHomeListings(req, function(data) {
+        if (req.session.userid)
+            res.render(path.resolve(__dirname,'./public/index'), {data, pageName: 'home', loggedIn: true})
+            // res.send({data})
+        else
+            res.render(path.resolve(__dirname,'./public/index'), {data, pageName: 'home'})
+            // res.send({data})
+    })
 })
 
 // about page

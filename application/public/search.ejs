@@ -179,6 +179,7 @@
                   <p class="card-text"><%= listing.description %></p>
                   <p class="card-text">rooms: <%= listing.rooms %></p>
                   <p class="card-text">SGD$<%= listing.pricing %> <%= listing.sale_or_rent === "RENT" ? "per month" : '' %></p>
+                  <p class="card-text">posted on <%= listing.niceD8 %></p>
                   
               </div>
               <div class="card-footer">
