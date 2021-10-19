@@ -8,6 +8,7 @@
     <!-- styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   </head>
   <body>
@@ -130,14 +131,17 @@
       </div>
     </div>
     <!-- This loop each listing and show it in the table -->
-    <div class="container" style="margin-top: 20px;">
-      <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="container" style="margin-top: 40px; margin-bottom: 40px;">
+      <div class="row mb-3">
+        <h1 style="text-align: center;">Search Results</h1>
+      </div>
+      <div class="row row-cols-1 row-cols-md-3 g-4" style="margin-bottom: 40px;">
     <%
-        var no = 1
+        let no = 1
         try {
         data.data.forEach((listing) => { 
-    %>
-    
+          %>
+        
         <div class="col">
           <div class="card h-100">
             <div id="carousel_<%= listing.listing_id %>" class="carousel slide" data-bs-ride="carousel">
@@ -174,17 +178,37 @@
             
               
               <div class="card-body">
-                  <h5 class="card-title"><%= listing.title %> [<%= listing.property_type %>]</h5>
-                  <p class="card-text"><%= listing.listing_address %></p>
-                  <p class="card-text"><%= listing.description %></p>
-                  <p class="card-text">rooms: <%= listing.rooms %></p>
-                  <p class="card-text">SGD$<%= listing.pricing %> <%= listing.sale_or_rent === "RENT" ? "per month" : '' %></p>
-                  <p class="card-text">posted on <%= listing.niceD8 %></p>
-                  
+                  <h4 class="card-title"><%= listing.title %></h4>
+                  <p class="card-text"><%= listing.description %> </p>
               </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <b><%= listing.rooms %> <%= listing.property_type %> for <%= listing.sale_or_rent === "RENT" ? "Rent" : "Sale" %></b><br>
+                  Address: <%= listing.listing_address %><br>
+                  Price: $<%= listing.pricing %> <%= listing.sale_or_rent === "RENT" ? "per month" : '' %>
+                </li>
+                <li class="list-group-item">
+                  <!-- share on facebook: change google.com to location.href -->
+                  <a href="#" 
+                    onclick="
+                      window.open(
+                        'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('https://www.google.com.sg'), 
+                        'facebook-share-dialog', 
+                        'width=626,height=436'); 
+                      return false;" class="btn btn-dark">
+                    <i class="fa fa-facebook-f"></i> 
+                  </a>
+                  <button onclick = "<%= listing.user_id ? 'deleteBookmark' : 'createBookmark'; %>('<%= listing.listing_id %>');" class="btn btn<%= listing.user_id ? '' : '-outline' %>-danger" id="bookmark_<%= listing.listing_id %>">&hearts; <%= listing.countbookmarks %></button>
+                </li>
+                <li class="list-group-item">
+                  <a href="/listing/<%= listing.listing_id %>" class="btn btn-primary">Learn More</a>
+                </li>
+              </ul>
               <div class="card-footer">
-                <a href="/listing/<%= listing.listing_id %>" class="btn btn-primary">Learn More</a>                
-                <button onclick = "<%= listing.user_id ? 'deleteBookmark' : 'createBookmark'; %>('<%= listing.listing_id %>');" class="btn btn<%= listing.user_id ? '' : '-outline' %>-danger" id="bookmark_<%= listing.listing_id %>">&hearts; <%= listing.countbookmarks %></button>
+                <small class="text-muted">posted on <%= listing.niceD8 %></small>
+                
+                
+                
                 
               </div>
           </div>

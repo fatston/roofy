@@ -180,12 +180,12 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
     if (_1room) {
         if (and_inputted) {
             sql += `
-                OR l.rooms LIKE '1'
+                OR l.rooms LIKE '1%'
             `
         }
         else {
             sql += `
-                AND (l.rooms LIKE '1'
+                AND (l.rooms LIKE '1%'
             `
             and_inputted = true;
         }
@@ -194,12 +194,12 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
     if (_2room) {
         if (and_inputted) {
             sql += `
-                OR l.rooms LIKE '2'
+                OR l.rooms LIKE '2%'
             `
         }
         else {
             sql += `
-                AND (l.rooms LIKE '2'
+                AND (l.rooms LIKE '2%'
             `
             and_inputted = true;
         }
@@ -208,12 +208,12 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
     if (_3room) {
         if (and_inputted) {
             sql += `
-                OR l.rooms LIKE '3'
+                OR l.rooms LIKE '3%'
             `
         }
         else {
             sql += `
-                AND (l.rooms LIKE '3'
+                AND (l.rooms LIKE '3%'
             `
             and_inputted = true;
         }
@@ -222,12 +222,12 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
     if (_4room) {
         if (and_inputted) {
             sql += `
-                OR l.rooms LIKE '4'
+                OR l.rooms LIKE '4%'
             `
         }
         else {
             sql += `
-                AND (l.rooms LIKE '4'
+                AND (l.rooms LIKE '4%'
             `
             and_inputted = true;
         }
@@ -236,12 +236,12 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
     if (_5room) {
         if (and_inputted) {
             sql += `
-                OR l.rooms LIKE '5'
+                OR l.rooms LIKE '5%'
             `
         }
         else {
             sql += `
-                AND (l.rooms LIKE '5'
+                AND (l.rooms LIKE '5%'
             `
             and_inputted = true;
         }
