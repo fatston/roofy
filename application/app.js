@@ -23,11 +23,12 @@ const storage = multer.diskStorage({
 })
 const upload = multer({storage: storage})
 
-const { getListings, addListing, editListing, addListingImage, deleteAllImages } = require('./server/listings');
+const { getListings, addListing, editListing, addListingImage, deleteAllImages, deleteListing } = require('./server/listings');
 const { searchListings, getListingDetails, getHomeListings } = require('./server/search');
 const { getFacilities, addFacility, deleteFacilitiesFromListing, addFacilities } = require('./server/facilities');
 const { createBookmark, deleteBookmark, getBookmarks } = require('./server/bookmark.js');
 const { getAllComments, addComment, replyComment } = require('./server/comment');
+const { getListingStats } = require('./server/admin');
 
 
 // using dependencies I guess
@@ -50,10 +51,18 @@ const db = require('./server/connection');
 
 // =========== paths =========== //
 
+
 // admin page
 app.get('/admin',(req,res)=>{
-    if (req.session.alcohol == "yamazaki")
-        res.render(path.resolve(__dirname,'./public/admin'))
+    if (!req.session.alcohol || req.session.alcohol != "yamazaki") {
+        res.send('You are not the admin.')
+    }
+    else {
+        getListingStats(function(listingData) {
+            res.render(path.resolve(__dirname,'./public/admin'), {listingData})
+            // res.send(listingData)
+        })
+    }
 })
 
 // home page
@@ -61,10 +70,8 @@ app.get('/',(req,res)=>{
     getHomeListings(req, function(data) {
         if (req.session.userid)
             res.render(path.resolve(__dirname,'./public/index'), {data, pageName: 'home', loggedIn: true})
-            // res.send({data})
         else
             res.render(path.resolve(__dirname,'./public/index'), {data, pageName: 'home'})
-            // res.send({data})
     })
 })
 
@@ -298,6 +305,16 @@ app.get('/seller/listings/edit/:listingid*',checkSellerSession, checkSellerListi
             
             // res.send({data, 'facilities': facilities.data, 'pageName': 'home'});
         })
+    })
+})
+
+// post delete listing page
+app.post('/seller/listings/delete/:listingid', checkSellerSession, checkSellerListing, async (req,res) => {
+    deleteListing(req.params.listingid, async function(data) {
+        res.send(`
+            listing has been deleted.<br>
+            <a href='/seller'>continue</a>
+        `)
     })
 })
 

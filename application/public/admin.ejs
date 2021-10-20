@@ -12,6 +12,21 @@
   </head>
   <body>
 
+    <!-- navbar for admin -->
+        <nav class="navbar navbar-expand-md navbar-light bg-light">
+            <a class="navbar-brand" href="/admin"><img src="/logo.png" style="height: 40px; padding-left:10px"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto nav-tabs">
+                   
+                    
+                </ul>
+            </div>
+            <a href="/logout" class="btn">Logout</a>
+        </nav>
+
     <div class="container mb-3" style="margin-top: 40px;">
         <h1>Welcome back to the Admin Page you wanker!</h1><br>
         <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -88,12 +103,19 @@
             <div class="col">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="card-title">Number of Listings This Past Week</h5>
+                        <h5 class="card-title">No of New Listings This Month</h5>
                         <canvas id="ListingsChart" style="width:100%;max-width:600px"></canvas>
+                        <% 
+                            let ld = listingData.data; 
+                            let maximum_listings = Math.max(ld[0].last_week, ld[1].last_week, ld[2].last_week, ld[3].last_week) * 1.1
+                            maximum_listings = Math.ceil(maximum_listings / 10) * 10
+                        %>
                         <script>
                             //xValues = listing_datetime, yValues = count(listing_id)
-                            var xValues = [1,2,3,4,5,6,7];
-                            var yValues = [55, 49, 44, 24, 15, 12, 32];
+                            
+                            var xValues = [1,2,3,4];
+                            var yValues = [<%= ld[0].last_week+','+ld[1].last_week+','+ld[2].last_week+','+ld[3].last_week %>];
+                            let maximum_listings = <%= maximum_listings %>
 
                             new Chart("ListingsChart", {
                             type: "bar",
@@ -108,8 +130,8 @@
                                 legend: {display: false},
                                 title: {display: false},
                                 scales: {
-                                    xAxes: [{scaleLabel: {display: true, labelString: 'Date'}}],
-                                    yAxes: [{ticks: {min: 0, max:60}, scaleLabel: {display: true, labelString: 'Number of Listings'}}],
+                                    xAxes: [{scaleLabel: {display: true, labelString: 'No of Weeks Ago'}}],
+                                    yAxes: [{ticks: {min: 0, max:maximum_listings}, scaleLabel: {display: true, labelString: 'No of New Listings'}}],
                                 }
                             }
                             });
@@ -123,27 +145,7 @@
         </div>
     </div>
 
-    <!-- javascript -->
-    <script>
-        //hide rent fields
-        updateForm("RENT", "none")
-  
-        let saleOrRent = document.querySelector("#saleOrRent");
-        saleOrRent.addEventListener('change', function(e) {
-            let elem = event.target;
-            let type = elem.value;
-            let oppType = type == "RENT" ? "SALE" : "RENT";
-            updateForm(oppType, "none")
-            updateForm(type, "block")
-        } )
-        
-        function updateForm(type, display) {
-            const divsToHide = document.getElementsByClassName(type)
-            for(var i = 0; i < divsToHide.length; i++){
-                divsToHide[i].style.display = display;
-            }
-        }
-    </script>
+    
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
