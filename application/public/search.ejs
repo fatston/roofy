@@ -14,36 +14,39 @@
   <body>
     <%- include('include/navbar'); %>
 
+    
+
     <!-- insert other things here like jquery and shit -->
     <div class="container" style="margin: auto; width: fit-content; margin-top:10px;">
       <div class="card">
       <div class="card-body">
+          <% let s = searchQuery; %>
           <form action="search" method="POST" class="row g-3">
             <div class="col-auto" id="saleOrRent">
-                <input class="form-check-input" type="radio" name="sale_or_rent" value="SALE" id="SALE" checked>
+                <input class="form-check-input" type="radio" name="sale_or_rent" value="SALE" id="SALE" <%= s.sale_or_rent === 'SALE' ? 'checked' : '' %> >
                 <label class="form-check-label">Buy</label>
-                <input class="form-check-input" type="radio" name="sale_or_rent" value="RENT" id="RENT">
+                <input class="form-check-input" type="radio" name="sale_or_rent" value="RENT" id="RENT" <%= s.sale_or_rent === 'RENT' ? 'checked' : '' %> >
                 <label class="form-check-label">Rent</label>
             </div>
             <div class="col-auto">
-              <input type="search" name="search" class="form-control" placeholder="Search" autofocus="autofocus" onFocus="this.select()">
+              <input type="search" name="search" class="form-control" placeholder="Search" autofocus="autofocus" value='<%= s.search %>'>
             </div>
             <div class="col-auto">
               <button type="submit" class="btn btn-secondary">Search</button>
             </div>
             <div class="col-auto">
               <select class="form-select" aria-label="Default select example" name="property_type">
-                <option selected>Residential</option>
-                <option value="hdb">HDB</option>
-                <option value="condo">Condo</option>
-                <option value="landed">Landed</option>
+                <option>Residential</option>
+                <option value="hdb" <%= s.property_type === 'hdb' ? 'selected' : '' %> >HDB</option>
+                <option value="condo" <%= s.property_type === 'condo' ? 'selected' : '' %> >Condo</option>
+                <option value="landed" <%= s.property_type === 'landed' ? 'selected' : '' %> >Landed</option>
               </select>
             </div>
             <div class="col-auto">
-              <input type="number" class="form-control" name="price_lower_bound" placeholder="Min $$" min="0">
+              <input type="number" class="form-control" name="price_lower_bound" placeholder="Min $$" min="0" value='<%= s.price_lower_bound %>'>
             </div>
               <div class="col-auto">
-              <input type="number" class="form-control" name="price_upper_bound" placeholder="Max $$" min="0">
+              <input type="number" class="form-control" name="price_upper_bound" placeholder="Max $$" min="0" value='<%= s.price_upper_bound %>'>
             </div>
             <div class="col-auto">
               <div class="btn-group">
@@ -54,7 +57,7 @@
                   <li class="RENT">
                     <div class="dropdown-item">
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="room_rental" id="room-rental">
+                        <input class="form-check-input" type="checkbox" name="room_rental" id="room-rental" <%= s.room_rental ? 'checked' : '' %> >
                         <label class="form-check-label" for="room-rental">
                           Room Rental
                         </label>
@@ -64,7 +67,7 @@
                   <li>
                     <div class="dropdown-item">
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="studio" id="studio">
+                        <input class="form-check-input" type="checkbox" name="studio" id="studio" <%= s.studio ? 'checked' : '' %> >
                         <label class="form-check-label" for="studio">
                           Studio
                         </label>
@@ -74,7 +77,7 @@
                   <li>
                     <div class="dropdown-item">
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="_1room" id="1room">
+                        <input class="form-check-input" type="checkbox" name="_1room" id="1room" <%= s._1room ? 'checked' : '' %> >
                         <label class="form-check-label" for="1room">
                           1 Room
                         </label>
@@ -84,7 +87,7 @@
                   <li>
                     <div class="dropdown-item">
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="_2room" id="2room">
+                        <input class="form-check-input" type="checkbox" name="_2room" id="2room" <%= s._2room ? 'checked' : '' %> >
                         <label class="form-check-label" for="2room">
                           2 Rooms
                         </label>
@@ -94,7 +97,7 @@
                   <li>
                     <div class="dropdown-item">
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="_3room" id="3room">
+                        <input class="form-check-input" type="checkbox" name="_3room" id="3room" <%= s._3room ? 'checked' : '' %> >
                         <label class="form-check-label" for="3room">
                           3 Rooms
                         </label>
@@ -104,7 +107,7 @@
                   <li>
                     <div class="dropdown-item">
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="_4room" id="4room">
+                        <input class="form-check-input" type="checkbox" name="_4room" id="4room" <%= s._4room ? 'checked' : '' %> >
                         <label class="form-check-label" for="4room">
                           4 Rooms
                         </label>
@@ -114,7 +117,7 @@
                   <li>
                     <div class="dropdown-item">
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="_5room" id="5room">
+                        <input class="form-check-input" type="checkbox" name="_5room" id="5room" <%= s._5room ? 'checked' : '' %> >
                         <label class="form-check-label" for="5room">
                           5+ Rooms
                         </label>
@@ -225,12 +228,17 @@
       </div>
     </div>
     
-    
+    <% if (s.sale_or_rent === "SALE") {%>
+      <script>
+        //hide rent fields
+        updateForm("RENT", "none")
+      </script>  
+    <%} %>
 
     <!-- javascript -->
     <script>
-        //hide rent fields
-        updateForm("RENT", "none")
+        
+        
 
         let saleOrRent = document.querySelector("#saleOrRent");
         saleOrRent.addEventListener('change', function(e) {

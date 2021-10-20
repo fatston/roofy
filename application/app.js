@@ -307,10 +307,11 @@ app.get('/seller/listings/edit/:listingid*',checkSellerSession, checkSellerListi
 
 // search router
 app.get('/search',(req,res)=>{
+    let searchJSON = {'search':'', 'sale_or_rent':'SALE',property_type:'',price_lower_bound:'',price_upper_bound:'',room_rental:''}
     if (req.session.userid)
-        res.render(path.resolve(__dirname,'./public/search'), {'pageName':'home',loggedIn:true})
+        res.render(path.resolve(__dirname,'./public/search'), {'pageName':'home',loggedIn:true, 'searchQuery':searchJSON})
     else
-    res.render(path.resolve(__dirname,'./public/search'), {'pageName':'home'})
+        res.render(path.resolve(__dirname,'./public/search'), {'pageName':'home', 'searchQuery':searchJSON})
 })
 
 // search post request
@@ -329,12 +330,15 @@ app.post('/search',(req,res)=>{
     let _4room = req.body._4room;
     let _5room = req.body._5room;
 
-    searchListings([search, sale_or_rent, property_type, price_lower_bound, price_upper_bound, room_rental, studio, _1room, _2room, _3room, _4room, _5room], req.session.userid, function(data) {
+    let searchObject = [search, sale_or_rent, property_type, price_lower_bound, price_upper_bound, room_rental, studio, _1room, _2room, _3room, _4room, _5room];
+    let searchJSON = {'search':search, 'sale_or_rent':sale_or_rent,property_type:property_type,price_lower_bound:price_lower_bound,price_upper_bound:price_upper_bound,room_rental:room_rental,studio:studio,_1room:_1room, _2room:_2room, _3room:_3room, _4room:_4room, _5room:_5room}
+
+    searchListings(searchObject, req.session.userid, function(data) {
         if (req.session.userid)
-            res.render(path.resolve(__dirname,'./public/search'), {data, 'pageName': 'home', loggedIn:true})
+            res.render(path.resolve(__dirname,'./public/search'), {'searchQuery': searchJSON, data, 'pageName': 'home', loggedIn:true})
         else
-            res.render(path.resolve(__dirname,'./public/search'), {data, 'pageName': 'home'})
-        // res.send(data);
+            res.render(path.resolve(__dirname,'./public/search'), {'searchQuery': searchJSON, data, 'pageName': 'home'})
+            // res.send({data, 'searchQuery': searchJSON});
     })
 })
 
