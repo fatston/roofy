@@ -8,6 +8,7 @@
     <!-- styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   </head>
   <body>
@@ -26,20 +27,77 @@
         data.data.forEach((listing) => { 
     %>
     
-        <div class="col">
-          <div class="card h-100">
-              <img src="/images/listings/<%= listing.image %>" class="card-img-top" onerror="this.onerror=null;this.src='/images/listings/default.png';">
-              <div class="card-body">
-                  <h5 class="card-title"><%= listing.title %></h5>
-                  <p class="card-text"><%= listing.listing_address %></p>
-                  <p class="card-text"><%= listing.description %></p>
-              </div>
-              <div class="card-footer">
-                <a href="/listing/<%= listing.listing_id %>" class="btn btn-primary">Learn More</a>
-                <button onclick = "deleteBookmark('<%= listing.listing_id %>');" class="btn btn-danger" id="bookmark_<%= listing.listing_id %>">&hearts;</button>
-              </div>
+    <div class="col">
+      <div class="card h-100">
+        <div id="carousel_<%= listing.listing_id %>" class="carousel slide" data-bs-ride="carousel">
+          
+          <div class="carousel-inner">
+            <%
+              let str = listing.image; 
+              let image = "";
+              while (str.indexOf(",") > 0) {
+              image = str.slice(0, str.indexOf(","));
+              str = str.slice(str.indexOf(",")+1);
+              
+            %>
+            <div class="carousel-item">
+              <img src="/images/listings/<%= image %>" class="card-img-top" onerror="this.onerror=null;this.src='/images/listings/default.png';">
+            </div>
+            <%
+              }
+            %>
+            <div class="carousel-item active">
+              <img src="/images/listings/<%= str %>" class="card-img-top" onerror="this.onerror=null;this.src='/images/listings/default.png';">
+            </div>
           </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carousel_<%= listing.listing_id %>" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carousel_<%= listing.listing_id %>" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
         </div>
+        
+        
+          
+          <div class="card-body">
+              <h4 class="card-title"><%= listing.title %></h4>
+              <p class="card-text"><%= listing.description %> </p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <b><%= listing.rooms %> <%= listing.property_type %> for <%= listing.sale_or_rent === "RENT" ? "Rent" : "Sale" %></b><br>
+              Address: <%= listing.listing_address %><br>
+              Price: $<%= listing.pricing %> <%= listing.sale_or_rent === "RENT" ? "per month" : '' %>
+            </li>
+            <li class="list-group-item">
+              <!-- share on facebook: change google.com to location.href -->
+              <a href="#" 
+                onclick="
+                  window.open(
+                    'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('https://www.google.com.sg'), 
+                    'facebook-share-dialog', 
+                    'width=626,height=436'); 
+                  return false;" class="btn btn-dark">
+                <i class="fa fa-facebook-f"></i> 
+              </a>
+              <button onclick = "<%= listing.user_id ? 'deleteBookmark' : 'createBookmark'; %>('<%= listing.listing_id %>');" class="btn btn<%= listing.user_id ? '' : '-outline' %>-danger" id="bookmark_<%= listing.listing_id %>">&hearts; <%= listing.countbookmarks %></button>
+            </li>
+            <li class="list-group-item">
+              <a href="/listing/<%= listing.listing_id %>" class="btn btn-primary">Learn More</a>
+            </li>
+          </ul>
+          <div class="card-footer">
+            <small class="text-muted">posted on <%= listing.niceD8 %></small>
+            
+            
+            
+            
+          </div>
+      </div>
+    </div>
       
     <% 
       no = no + 1
@@ -57,5 +115,6 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

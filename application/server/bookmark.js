@@ -36,10 +36,12 @@ const deleteBookmark = (user_id, listing_id, res) => {
 
 const getBookmarks = (user_id, res) => {
     let sql = `
-        SELECT *
-        FROM roofy.listings l
-        INNER JOIN roofy.bookmarks b ON b.listing_id = l.listing_id
-        WHERE b.user_id = ?;
+        SELECT l.*, b.user_id, COUNT(b1.listing_id) AS countbookmarks, DATE_FORMAT(l.listing_datetime, '%d %b %Y at %h:%i %p') AS niceD8
+        FROM listings l
+        INNER JOIN bookmarks b ON b.listing_id = l.listing_id
+        LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
+        WHERE b.user_id = ?
+        GROUP BY l.listing_id;
     `
     // run the sql query on db
     db.query(sql, user_id, (err, row) => {
