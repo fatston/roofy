@@ -8,48 +8,118 @@
     <!-- styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="stylesheet" href="./styles.css" />
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>  
   </head>
   <body>
 
     <div class="container mb-3" style="margin-top: 40px;">
-        <h1>Welcome back to the Admin Page you wanker!</h1>
+        <h1>Welcome back to the Admin Page you wanker!</h1><br>
         <div class="row row-cols-1 row-cols-md-3 g-4">
             <div class="col">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">views in the past month</h5>
-                    <p class="card-text">insert some graph here or something</p>
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Views in the Past Month</h5>  
+                        <canvas id="ViewsChart" style="width:100%;max-width:600px"></canvas>
+                        <script>
+                            //xValues = listing_datetime(date), yValues = count(views)
+                            var xValues = [1,2,3,4,5,6,7,8,9,10,11];
+                            var yValues = [7,8,3,9,5,9,10,11,8,14,15];
+
+                            new Chart("ViewsChart", {
+                            type: "line",
+                            data: {
+                                labels: xValues,                                    
+                                datasets: [{
+                                fill: false,
+                                lineTension: 0,
+                                backgroundColor: "rgba(0,0,255,1.0)",
+                                borderColor: "rgba(0,0,255,0.1)",
+                                data: yValues
+                                }]
+                            },
+                            options: {
+                                legend: {display: false},
+                                scales: {
+                                    xAxes: [{scaleLabel: {display: true, labelString: 'Date'}}],
+                                    yAxes: [{ticks: {min: 0, max:16}, scaleLabel: {display: true, labelString: 'Number of Views'}}],
+                                }
+                            }
+                            });
+                        </script>
+                    </div>
+                    <div class="card-footer">
+                        <a href="/admin/views" class="btn btn-primary">Learn More</a>
+                    </div>
                 </div>
-                <div class="card-footer">
-                    <a href="/admin/views" class="btn btn-primary">Learn More</a>
-                </div>
-            </div>
             </div>
 
             <div class="col">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="card-title">new users over time</h5>
-                        <p class="card-text">insert some graph here or something</p>
+                        <h5 class="card-title">New Users in the Past Week</h5>
+                        <canvas id="UsersChart" style="width:100%;max-width:600px"></canvas>
+                        <script>
+                            // xValues = count(user_id), yValues = count(seller_id)
+                            var xValues = ["Seller", "User"];
+                            var yValues = [5, 200];
+                            var barColors = ["red","orange"];
+
+                            new Chart("UsersChart", {
+                            type: "pie",
+                            data: {
+                                labels: xValues,
+                                datasets: [{
+                                backgroundColor: barColors,
+                                data: yValues
+                                }]
+                            },
+                            options: {
+                                title: {display: false},
+                                legend: {display: true},
+                            }
+                            });
+                        </script>
                     </div>
                     <div class="card-footer">
                         <a href="/admin/purchases" class="btn btn-primary">Learn More</a>
                     </div>
                 </div>
-                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Number of Listings This Past Week</h5>
+                        <canvas id="ListingsChart" style="width:100%;max-width:600px"></canvas>
+                        <script>
+                            //xValues = listing_datetime, yValues = count(listing_id)
+                            var xValues = [1,2,3,4,5,6,7];
+                            var yValues = [55, 49, 44, 24, 15, 12, 32];
 
-                <div class="col">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">number of listings this past week</h5>
-                            <p class="card-text">insert some graph here or something</p>
-                        </div>
-                        <div class="card-footer">
-                            <a href="/admin/bookmarks" class="btn btn-primary">Learn More</a>
-                        </div>
+                            new Chart("ListingsChart", {
+                            type: "bar",
+                            data: {
+                                labels: xValues,
+                                datasets: [{
+                                backgroundColor: "green",
+                                data: yValues
+                                }]
+                            },
+                            options: {
+                                legend: {display: false},
+                                title: {display: false},
+                                scales: {
+                                    xAxes: [{scaleLabel: {display: true, labelString: 'Date'}}],
+                                    yAxes: [{ticks: {min: 0, max:60}, scaleLabel: {display: true, labelString: 'Number of Listings'}}],
+                                }
+                            }
+                            });
+                        </script>                            
                     </div>
+                    <div class="card-footer">
+                        <a href="/admin/bookmarks" class="btn btn-primary">Learn More</a>
                     </div>
+                </div>
+            </div>
         </div>
     </div>
 
