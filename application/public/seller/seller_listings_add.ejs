@@ -16,7 +16,7 @@
     <!-- insert other things here like jquery and shit -->
     <div class="container">
         <h1>New Listing</h1>
-        <form action="/seller/listings" method="POST" enctype="multipart/form-data">
+        <form name="editListingForm" action="/seller/listings" method="POST" enctype="multipart/form-data" onsubmit="return validateEditListingForm()">
             <div class="mb-3" id= "saleOrRent">
                 <label>Listing Type</label>
                 <div class="form-check form-check-inline">
@@ -30,7 +30,7 @@
             </div>
             <div class="mb-3">
                 <label for="formFile" class="form-label">Image</label>
-                <input class="form-control" type="file" name="image" id="formFile">
+                <input class="form-control" type="file" name="image" id="formFile" required>
             </div>
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
@@ -42,7 +42,38 @@
             </div>
             <div class="mb-3">
                 <label for="listing_pc" class="form-label">Postal Code</label>
-                <input type="number" class="form-control" id="listing_pc" placeholder="119077" name="listing_pc" required="required">
+                <input type="text" class="form-control" id="listing_pc" name="listing_pc" required="required">
+            </div>
+            <div class="mb-3">
+                <label for="town" class="form-label">HDB Town</label>
+                <select name="town" id="town" class="form-select" aria-label="" required="required">
+                    <option value="">Select One</option>
+                    <option value="ang mo kio">Ang Mo Kio</option>
+                    <option value="bedok">Bedok</option>
+                    <option value="bishan">Bishan</option>
+                    <option value="bukit batok">Bukit Batok</option>
+                    <option value="bukit merah">Bukit Merah</option>
+                    <option value="central area">Central Area</option>
+                    <option value="choa chu kang">Choa Chu Kang</option>
+                    <option value="clementi">Clementi</option>
+                    <option value="geylang">Geylang</option>
+                    <option value="hougang">Hougang</option>
+                    <option value="jurong east">Jurong East</option>
+                    <option value="jurong west">Jurong West</option>
+                    <option value="kallang/whampoa">Kallang/Whampoa</option>
+                    <option value="marine parade">Marine Parade</option>
+                    <option value="pasir ris">Pasir Ris</option>
+                    <option value="punggol">Punggol</option>
+                    <option value="queenstown">Queenstown</option>
+                    <option value="sembawang">Sembawang</option>
+                    <option value="sengkang">Sengkang</option>
+                    <option value="serangoon">Serangoon</option>
+                    <option value="tampines">Tampines</option>
+                    <option value="tengah">Tengah</option>
+                    <option value="toa payoh">Toa Payoh</option>
+                    <option value="woodlands">Woodlands</option>
+                    <option value="yishun">Yishun</option>
+                </select>
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
@@ -101,11 +132,11 @@
                 <select name="rooms" id="rooms" class="form-select" aria-label="1 Room">
                     <option value="Room Rental" class="RENT">Room Rental</option>
                     <option value="Studio">Studio</option>
-                    <option value="1" selected>1 Room</option>
-                    <option value="2">2 Rooms</option>
-                    <option value="3">3 Rooms</option>
-                    <option value="4">4 Rooms</option>
-                    <option value="5">5+ Rooms</option>
+                    <option value="1 Room" selected>1 Room</option>
+                    <option value="2 Room">2 Room</option>
+                    <option value="3 Room">3 Room</option>
+                    <option value="4 Room">4 Room</option>
+                    <option value="5+ Room">5+ Room</option>
                 </select>
             </div>
             <div class="mb-3">
@@ -135,7 +166,7 @@
 
             <div class="mb-3 RENT">
                 <label for="availability" class="form-label">Earliest Move In Date</label>
-                <input type="date" class="form-control" id="availability" name="availability" placeholder="1">
+                <input type="date" class="form-control" id="availability" name="availability" value="<%= new Date().toLocaleDateString('en-CA'); %>">
             </div>
 
             <div class="mb-3 RENT">
@@ -192,8 +223,38 @@
                 divsToHide[i].style.display = display;
             }
         }
+
+        function validateEditListingForm() {
+            let pc = document.forms["editListingForm"]["listing_pc"].value;
+            
+            if (pc.length != 6) {
+                alert("postal code needs to have 6 digits")
+                return false;
+            }
+            for (let i = 0; i < pc.length; i++) {
+                if (pc[i] == '0' || pc[i] == '1' || pc[i] == '2' || pc[i] == '3' || pc[i] == '4' || pc[i] == '5' || pc[i] == '6' || pc[i] == '7' || pc[i] == '8' || pc[i] == '9')
+                    continue;
+                alert("postal code must be numbers");
+                return false;
+            }
+
+            let rooms = document.forms["editListingForm"]["rooms"].value;
+            let saleOrRent = document.forms["editListingForm"]["sale_or_rent"].value;
+
+            if (rooms === "Room Rental" && saleOrRent === "SALE") {
+                alert("you cannot rent a room when you are selling a house")
+                return false;
+            }
+            if (saleOrRent === "RENT" && (!availability || availability == "")) {
+                alert("please enter your earliest available date")
+                return false;
+            }
+
+            return true;
+        }
+
+        
     </script>
-    
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

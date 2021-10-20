@@ -22,7 +22,7 @@
     <div class="card mb-3" style="margin-top: 20px;">
     
     <div class="card-body">
-        <form class="row gy-2 gx-3 align-items-center" action="/seller/listings/edit/<%= listing.listing_id %>" method="POST">
+        <form name="editListingForm" class="row gy-2 gx-3 align-items-center" action="/seller/listings/edit/<%= listing.listing_id %>" onsubmit="return validateEditListingForm()" method="POST">
         <div class="mb-3" id= "saleOrRent">
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="sale_or_rent" id="sale_or_rent" value="SALE" <%= listing.sale_or_rent=="SALE" ? 'checked' : ''; %>>
@@ -35,19 +35,51 @@
         </div>
         
             <div class="col-md-5 mb-3">
-                <label for="title">Title</label>
+                <label for="title"class="form-label">Title</label>
                 <input type="text" name="title" id="title" class="form-control" required="required" value="<%= listing.title %>" placeholder="<%= listing.title %>">
             </div>
+            <div class="col-md-3 mb-3">
+                <label for="town" class="form-label">HDB Town</label>
+                <select name="town" id="town" class="form-select" aria-label="" required="required">
+                    <option value="">Select One</option>
+                    <option value="ang mo kio"<%= listing.town=="ang mo kio" ? 'selected' : ''; %>>Ang Mo Kio</option>
+                    <option value="bedok"<%= listing.town=="bedok" ? 'selected' : ''; %>>Bedok</option>
+                    <option value="bishan"<%= listing.town=="bishan" ? 'selected' : ''; %>>Bishan</option>
+                    <option value="bukit batok"<%= listing.town=="bukit batok" ? 'selected' : ''; %>>Bukit Batok</option>
+                    <option value="bukit merah"<%= listing.town=="bukit merah" ? 'selected' : ''; %>>Bukit Merah</option>
+                    <option value="central area"<%= listing.town=="central area" ? 'selected' : ''; %>>Central Area</option>
+                    <option value="choa chu kang"<%= listing.town=="choa chu kang" ? 'selected' : ''; %>>Choa Chu Kang</option>
+                    <option value="clementi"<%= listing.town=="clementi" ? 'selected' : ''; %>>Clementi</option>
+                    <option value="geylang"<%= listing.town=="geylang" ? 'selected' : ''; %>>Geylang</option>
+                    <option value="hougang"<%= listing.town=="hougang" ? 'selected' : ''; %>>Hougang</option>
+                    <option value="jurong east"<%= listing.town=="jurong east" ? 'selected' : ''; %>>Jurong East</option>
+                    <option value="jurong west"<%= listing.town=="jurong west" ? 'selected' : ''; %>>Jurong West</option>
+                    <option value="kallang/whampoa"<%= listing.town=="kallang/whampoa" ? 'selected' : ''; %>>Kallang/Whampoa</option>
+                    <option value="marine parade"<%= listing.town=="marine parade" ? 'selected' : ''; %>>Marine Parade</option>
+                    <option value="pasir ris"<%= listing.town=="pasir ris" ? 'selected' : ''; %>>Pasir Ris</option>
+                    <option value="punggol"<%= listing.town=="punggol" ? 'selected' : ''; %>>Punggol</option>
+                    <option value="queenstown"<%= listing.town=="queenstown" ? 'selected' : ''; %>>Queenstown</option>
+                    <option value="sembawang"<%= listing.town=="sembawang" ? 'selected' : ''; %>>Sembawang</option>
+                    <option value="sengkang"<%= listing.town=="sengkang" ? 'selected' : ''; %>>Sengkang</option>
+                    <option value="serangoon"<%= listing.town=="serangoon" ? 'selected' : ''; %>>Serangoon</option>
+                    <option value="tampines"<%= listing.town=="tampines" ? 'selected' : ''; %>>Tampines</option>
+                    <option value="tengah"<%= listing.town=="tengah" ? 'selected' : ''; %>>Tengah</option>
+                    <option value="toa payoh"<%= listing.town=="toa payoh" ? 'selected' : ''; %>>Toa Payoh</option>
+                    <option value="woodlands"<%= listing.town=="woodlands" ? 'selected' : ''; %>>Woodlands</option>
+                    <option value="yishun"<%= listing.town=="yishun" ? 'selected' : ''; %>>Yishun</option>
+                </select>
+            </div>
             <div class="col-md-9 mb-3">
-                <label for="address">Address</label>
+                <label for="address"class="form-label">Address</label>
                 <input type="text" name="address" id="address" class="form-control" required="required" value="<%= listing.listing_address %>" placeholder="<%= listing.listing_address %>">
             </div>
             <div class="col-auto mb-3">
-                <label for="listing_pc">Postal Code</label>
+                <label for="listing_pc"class="form-label">Postal Code</label>
                 <input type="text" name="listing_pc" id="listing_pc" class="form-control" required="required" value="<%= listing.listing_pc %>" placeholder="<%= listing.listing_pc %>">
             </div>
+            
             <div class="col-md-12 mb-3">
-                <label for="description">Description</label>
+                <label for="description"class="form-label">Description</label>
                 <textarea name="description" id="description" class="form-control" required="required" rows="10" placeholder="<%= listing.description %>"><%= listing.description %></textarea>
             </div>
             <div class="col-md-15 mb-3">
@@ -80,11 +112,11 @@
                 <select name="rooms" id="rooms" class="form-select">
                     <option class="RENT" value="Room Rental" <%= listing.rooms=="Room Rental" ? 'selected' : ''; %>>Room Rental</option>
                     <option value="Studio" <%= listing.rooms=="Studio" ? 'selected' : ''; %>>Studio</option>
-                    <option value="1" <%= listing.rooms=="1" ? 'selected' : ''; %>>1 Room</option>
-                    <option value="2"<%= listing.rooms=="2" ? 'selected' : ''; %>>2 Room</option>
-                    <option value="3"<%= listing.rooms=="3" ? 'selected' : ''; %>>3 Room</option>
-                    <option value="4"<%= listing.rooms=="4" ? 'selected' : ''; %>>4 Room</option>
-                    <option value="5"<%= listing.rooms=="5" ? 'selected' : ''; %>>5+ Room</option>
+                    <option value="1 Room" <%= listing.rooms=="1 Room" ? 'selected' : ''; %>>1 Room</option>
+                    <option value="2 Room"<%= listing.rooms=="2 Room" ? 'selected' : ''; %>>2 Room</option>
+                    <option value="3 Room"<%= listing.rooms=="3 Room" ? 'selected' : ''; %>>3 Room</option>
+                    <option value="4 Room"<%= listing.rooms=="4 Room" ? 'selected' : ''; %>>4 Room</option>
+                    <option value="5+ Room"<%= listing.rooms=="5+ Room" ? 'selected' : ''; %>>5+ Room</option>
                 </select>
             </div>
             <div class="col-md-4 mb-3">
@@ -96,7 +128,7 @@
                 </select>
             </div>
             
-        
+            
             
             
 
@@ -132,18 +164,11 @@
             
             <div class="col-md-4 mb-3 RENT">
                 <label>Earliest Move In Date</label>
-                <input type="date" name="availability" id="availability" class="form-control" required="required" value="<%= 
-                    listing.availability ? listing.availability.toLocaleDateString('en-CA') : ''; %>">
+                <input type="date" name="availability" id="availability" class="form-control" value="<%= listing.availability ? listing.availability.toLocaleDateString('en-CA') : new Date().toLocaleDateString('en-CA'); %>">
             </div>
             
             <button type="submit" class="btn btn-primary">Confirm</button>
         </form>
-        <div style="margin-top: 40px; margin-bottom: 40px;">
-            
-                <h1>TODO</h1>
-                <h3>edit facilities</h3>
-            
-        </div>
     </div>
     </div>
 
@@ -247,8 +272,8 @@
         <div class="col">
             <div class="card h-100">
                 <div class="card-body">
-                    <form action="/seller/listings/edit/<%= listing.listing_id %>/delete_all_images" method="POST" enctype="multipart/form-data">
-                        <button type="submit" class="btn btn-primary">DELETE ALL IMAGES</button>
+                    <form name="deleteAllImages" action="/seller/listings/edit/<%= listing.listing_id %>/delete_all_images" onsubmit="return confirmDeleteAllImages();" method="POST" enctype="multipart/form-data">
+                        <button type="submit" class="btn btn-danger">Delete All Images</button>
                     </form>
                 </div>
             </div>
@@ -292,6 +317,44 @@
             for(var i = 0; i < divsToHide.length; i++){
                 divsToHide[i].style.display = display;
             }
+        }
+
+        function validateEditListingForm() {
+            let pc = document.forms["editListingForm"]["listing_pc"].value;
+            
+            if (pc.length != 6) {
+                alert("postal code needs to have 6 digits")
+                return false;
+            }
+            for (let i = 0; i < pc.length; i++) {
+                if (pc[i] == '0' || pc[i] == '1' || pc[i] == '2' || pc[i] == '3' || pc[i] == '4' || pc[i] == '5' || pc[i] == '6' || pc[i] == '7' || pc[i] == '8' || pc[i] == '9')
+                    continue;
+                alert("postal code must be numbers");
+                return false;
+            }
+
+            let rooms = document.forms["editListingForm"]["rooms"].value;
+            let saleOrRent = document.forms["editListingForm"]["sale_or_rent"].value;
+
+            if (rooms === "Room Rental" && saleOrRent === "SALE") {
+                alert("you cannot rent a room when you are selling a house")
+                return false;
+            }
+            if (saleOrRent === "RENT" && (!availability || availability === "")) {
+                alert("please enter your earliest available date")
+                return false;
+            }
+
+            return true;
+        }
+
+        function confirmDeleteAllImages () {
+            if (confirm('Are you sure you want to delete all images?')) {
+                if (confirm('WARNING: THIS ACTION WILL PERMANENTLY DELETE ALL IMAGES. ARE YOU SURE?')) {
+                    return true;
+                }
+            }
+            return false;
         }
 
     </script>

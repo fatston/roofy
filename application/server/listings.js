@@ -37,16 +37,17 @@ const addListing = (id, image, req, res) => {
     let price_psf = pricing/floor_size;
     let tenure = req.body.tenure;
     let facilities = req.body.facilities;
+    let town = req.body.town;
 
     let listingsql = `
-        INSERT INTO listings(seller_id, listing_address, listing_pc, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, availability, lease_term, price_psf, tenure, title) 
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
+        INSERT INTO listings(seller_id, listing_address, listing_pc, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, availability, lease_term, price_psf, tenure, title, town) 
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
 
     let listingfacilitiessql = `
         INSERT INTO listing_facilities (listing_id, facility_id) VALUES ?
         ;`;
     
-    db.query(listingsql, [user_id, listing_address, listing_pc, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, availability, lease_term, price_psf, tenure, title],(err, result, fields)=>{
+    db.query(listingsql, [user_id, listing_address, listing_pc, sale_or_rent, description, image, property_type, floor_level, floor_size, rooms, pricing, p_negotiable, furnishings, availability, lease_term, price_psf, tenure, title, town],(err, result, fields)=>{
         if (err) {
             console.log("err", err)
             res({status: false, data: [], msg: err.message})
@@ -127,8 +128,8 @@ const deleteAllImages = (id, res) => {
     })
 }
 
-const editListing = (id, req, res) => {
-    let listing_id = req.params.id;
+const editListing = (req, res) => {
+    let listing_id = req.params.listingid;
     let sale_or_rent = req.body.sale_or_rent;
     let title = req.body.title;
     let listing_address = req.body.address;
@@ -143,15 +144,18 @@ const editListing = (id, req, res) => {
     let pricing = req.body.pricing;
     let availability = req.body.availability;
     let lease_term = req.body.lease_term;
+    let town = req.body.town;
+
+    if (availability == '') { availability = null; }
 
     let listingsql = `
         UPDATE listings 
         SET sale_or_rent = ?, title = ?, listing_address = ?, listing_pc = ?, description = ?, property_type = ?,
         floor_level = ?, rooms = ?, furnishings = ?, floor_size = ?, tenure = ?, pricing = ?,
-        availability = ?, lease_term = ?
+        availability = ?, lease_term = ?, town = ?
         WHERE listing_id = ?;
     `;
-    let questionMark = [sale_or_rent, title, listing_address, listing_pc, description, property_type, floor_level, rooms, furnishings, floor_size, tenure, pricing, availability, lease_term, listing_id];
+    let questionMark = [sale_or_rent, title, listing_address, listing_pc, description, property_type, floor_level, rooms, furnishings, floor_size, tenure, pricing, availability, lease_term, town, listing_id];
     
     db.query(listingsql, questionMark,(err, result)=>{
         if (err) {

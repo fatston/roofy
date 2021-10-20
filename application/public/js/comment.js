@@ -40,7 +40,8 @@ function populateComments(comments) {
         } else {
             image = "/images/" + image
         }
-      comment += 
+    let seller = (element.seller_id != null) ? "Seller" : "";
+    comment += 
     '<div class="card">'+
     '<div class="card-body" >'+
     '<div class="d-flex flex-start align-items-center">' +
@@ -48,8 +49,10 @@ function populateComments(comments) {
             'src="'+image +'"'+
             'alt="avatar" width="60" height="60"/>' +
         '<div>' +
-            '<h6 class="fw-bold text-primary mb-1">'+element.name+'</h6>' +
-            '<p class="text-muted small mb-0">'+element.datetime+'</p>' +
+            '<h6 class="fw-bold text-primary mb-1">'+
+            element.name+
+            ' <span class="badge rounded-pill bg-danger">'+seller+'</span></h6>' +
+            '<p class="text-muted small mb-0">'+moment(element.datetime).fromNow()+'</p>' +
         '</div>' +
     '</div>' +
     '<p class="mt-3 mb-4 pb-2">'+element.comments+'</p>' +
@@ -63,6 +66,7 @@ function populateComments(comments) {
 
     if(element.replies ){
       element.replies.forEach(reply => {
+        let seller = (reply.seller_id != null) ? "Seller" : "";
         let image = reply.display_picture
         if(image === null){
             image = "/images/LinkZelda.png";
@@ -77,8 +81,9 @@ function populateComments(comments) {
           'src="'+image+'"' +
           'alt="avatar" width="60" height="60"/>' +
         '<div>' +
-          '<h6 class="fw-bold text-primary mb-1">'+reply.name+'</h6>' +
-          '<p class="text-muted small mb-0">'+reply.datetime+'</p>' +
+          '<h6 class="fw-bold text-primary mb-1">'+reply.name+
+          ' <span class="badge rounded-pill bg-danger">'+seller+'</span></h6>' +
+          '<p class="text-muted small mb-0">'+moment(reply.datetime).fromNow()+'</p>' +
         '</div>' +
       '</div>' +
       '<p class="mt-3 pb-2">'+reply.comments+'</p>' +

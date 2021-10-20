@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage})
 
 const { getListings, addListing, editListing, addListingImage, deleteAllImages } = require('./server/listings');
-const { searchListings, getListingDetails } = require('./server/search');
+const { searchListings, getListingDetails, getHomeListings } = require('./server/search');
 const { getFacilities, addFacility, deleteFacilitiesFromListing, addFacilities } = require('./server/facilities');
 const { createBookmark, deleteBookmark, getBookmarks } = require('./server/bookmark.js');
 const { getAllComments, addComment, replyComment } = require('./server/comment');
@@ -58,10 +58,14 @@ app.get('/admin',(req,res)=>{
 
 // home page
 app.get('/',(req,res)=>{
-    if (req.session.userid)
-        res.render(path.resolve(__dirname,'./public/index'), {pageName: 'home', loggedIn: true})
-    else
-        res.render(path.resolve(__dirname,'./public/index'), {pageName: 'home'})
+    getHomeListings(req, function(data) {
+        if (req.session.userid)
+            res.render(path.resolve(__dirname,'./public/index'), {data, pageName: 'home', loggedIn: true})
+            // res.send({data})
+        else
+            res.render(path.resolve(__dirname,'./public/index'), {data, pageName: 'home'})
+            // res.send({data})
+    })
 })
 
 // about page
@@ -100,7 +104,9 @@ app.get('/seller/login',(req,res)=>{
 
 // post seller login request
 app.post('/seller/login', checkAuthAdminLogin, authSellerLogin, createSellerSession, (req,res)=>{
-    res.render(path.resolve(__dirname,'./public/seller/seller_home'), {'pageName': 'home'})
+    getListings(req.session.sellerid, function(data) {
+        res.render(path.resolve(__dirname,'./public/seller/seller_listings'), {data, 'pageName': 'home'})
+    })
 });
 
 // route to registration page
@@ -154,7 +160,12 @@ app.get('/bookmarks',checkSession,(req,res)=>{
 app.get('/listing/:id', (req,res)=>{
     getListingDetails(req.params.id, function(data) {
         // res.send(data);
-        res.render(path.resolve(__dirname,'./public/listing_details'), {data, 'pageName': 'home', loggedIn: true})
+        if (req.session.userid || req.session.sellerid)
+            res.render(path.resolve(__dirname,'./public/listing_details'), {data, 'pageName': 'home', loggedIn: true})
+        else
+            res.render(path.resolve(__dirname,'./public/listing_details'), {data, 'pageName': 'home', loggedIn: false})
+
+        
     })
 })
 
@@ -162,7 +173,9 @@ app.get('/listing/:id', (req,res)=>{
 
 // route to seller home page
 app.get('/seller',checkSellerSession, (req,res)=>{
-    res.render(path.resolve(__dirname,'./public/seller/seller_home'), {'pageName': 'home'})
+    getListings(req.session.sellerid, function(data) {
+        res.render(path.resolve(__dirname,'./public/seller/seller_listings'), {data, 'pageName': 'home'})
+    })
 })
 
 // route to seller profile page
@@ -183,33 +196,34 @@ app.post('/seller/profile/edit',checkSellerSession, editSellerProfile, (req,res)
 //route to seller listings page
 app.get('/seller/listings',checkSellerSession, async (req, res) => {
     getListings(req.session.sellerid, function(data) {
-        res.render(path.resolve(__dirname,'./public/seller/seller_listings'), {data, 'pageName': 'listings'})
+        res.render(path.resolve(__dirname,'./public/seller/seller_listings'), {data, 'pageName': 'home'})
     })
 })
 
+// post request for seller to create listings seller listings page
 app.post('/seller/listings', checkSellerSession, upload.single('image'), async (req, res) => {
     var fileimage = req.middlewareStorage.fileimage;
     addListing(req.session.sellerid, fileimage, req, async function(data) {
         getFacilities(function(facilities) {
-            res.render(path.resolve(__dirname,'./public/seller/seller_listings_add'), {'successAlert': data.status, 'facilities': facilities.data, 'pageName': 'listings'})
+            res.render(path.resolve(__dirname,'./public/seller/seller_listings_add'), {'successAlert': data.status, 'facilities': facilities.data, 'pageName': 'home'})
         })
     })
 })
 
 app.get('/seller/listings/add', checkSellerSession, async (req, res) => {
     getFacilities(function(facilities) {
-        res.render(path.resolve(__dirname,'./public/seller/seller_listings_add'), {'facilities': facilities.data, 'pageName': 'listings'});
+        res.render(path.resolve(__dirname,'./public/seller/seller_listings_add'), {'facilities': facilities.data, 'pageName': 'home'});
     })
 })
 
 // edit facility form post request
 
-app.post('/seller/listings/edit/:id/edit_facility', checkSellerSession, async(req,res) => {
-    deleteFacilitiesFromListing(req.params.id, async function() {
-        addFacilities(req.params.id, req.body.facilities, async function() {
-            getListingDetails(req.params.id, async function(data) {
+app.post('/seller/listings/edit/:listingid/edit_facility', checkSellerSession, checkSellerListing, async(req,res) => {
+    deleteFacilitiesFromListing(req.params.listingid, async function() {
+        addFacilities(req.params.listingid, req.body.facilities, async function() {
+            getListingDetails(req.params.listingid, async function(data) {
                 getFacilities(function(facilities) {
-                    res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
+                    res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'home'});
                 })
             })
         })
@@ -218,14 +232,14 @@ app.post('/seller/listings/edit/:id/edit_facility', checkSellerSession, async(re
 })
 
 // add facility form post request
-app.post('/seller/listings/edit/:id/add_facility', checkSellerSession, async(req,res) => {
+app.post('/seller/listings/edit/:listingid/add_facility', checkSellerSession, checkSellerListing, async(req,res) => {
     addFacility(req.body.new_facility, async function() {
         // if (data.status == false) res.send('failed... press back and try again');
         // else {
-            getListingDetails(req.params.id, async function(data) {
+            getListingDetails(req.params.listingid, async function(data) {
                 getFacilities(function(facilities) {
-                    res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
-                    // res.send({data, 'facilities': facilities.data, 'pageName': 'listings'})
+                    res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'home'});
+                    // res.send({data, 'facilities': facilities.data, 'pageName': 'home'})
                 })
             })
         // }
@@ -233,13 +247,13 @@ app.post('/seller/listings/edit/:id/add_facility', checkSellerSession, async(req
 })
 
 // edit image form post request
-app.post('/seller/listings/edit/:id/add_image', checkSellerSession, checkSellerListing, upload.single('image'), async (req,res) => {
+app.post('/seller/listings/edit/:listingid/add_image', checkSellerSession, checkSellerListing, upload.single('image'), async (req,res) => {
     try {
         var fileimage = req.middlewareStorage.fileimage;
-        addListingImage(req.params.id, fileimage, req, async function() {
-            getListingDetails(req.params.id, async function(data) {
+        addListingImage(req.params.listingid, fileimage, req, async function() {
+            getListingDetails(req.params.listingid, async function(data) {
                 getFacilities(async function(facilities) {
-                    res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
+                    res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'home'});
                 })
             })
         })
@@ -247,44 +261,46 @@ app.post('/seller/listings/edit/:id/add_image', checkSellerSession, checkSellerL
     catch {
         getListingDetails(req.params.id, async function(data) {
             getFacilities(async function(facilities) {
-                res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
+                res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'home'});
             })
         })
     }
 })
 
 // delete all images form post request
-app.post('/seller/listings/edit/:id/delete_all_images', checkSellerSession, checkSellerListing, (req,res) => {
-    deleteAllImages(req.params.id, async function() {
-        getListingDetails(req.params.id, async function(data) {
+app.post('/seller/listings/edit/:listingid/delete_all_images', checkSellerSession, checkSellerListing, (req,res) => {
+    deleteAllImages(req.params.listingid, async function() {
+        getListingDetails(req.params.listingid, async function(data) {
             getFacilities(async function(facilities) {
-                res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
+                res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'home'});
             })
         })
     }) 
 })
 
-//route to edit listings page
-app.get('/seller/listings/edit/:id*',checkSellerSession, checkSellerListing, async (req, res) => {
-    getListingDetails(req.params.id, async function(data) {
-        getFacilities(async function(facilities) {
-            res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
-            
-            // res.send({data, 'facilities': facilities.data, 'pageName': 'listings'});
-        })
-    })
-})
-
 // edit listing form post request
-app.post('/seller/listings/edit/:id', checkSellerSession, checkSellerListing, async (req, res) => {
-    editListing(req.session.sellerid, req, async function(data) {
-        getListingDetails(req.params.id, async function(data) {
+app.post('/seller/listings/edit/:listingid', checkSellerSession, checkSellerListing, async (req, res) => {
+    console.log("got here")
+    editListing(req, async function(data) {
+        getListingDetails(req.params.listingid, async function(data) {
             getFacilities(async function(facilities) {
-                res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'listings'});
+                res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'home'});
             })
         })
     })
 })
+
+//route to edit listings page
+app.get('/seller/listings/edit/:listingid*',checkSellerSession, checkSellerListing, async (req, res) => {
+    getListingDetails(req.params.listingid, async function(data) {
+        getFacilities(async function(facilities) {
+            res.render(path.resolve(__dirname,'./public/seller/edit_listing'), {data, 'facilities': facilities.data, 'pageName': 'home'});
+            
+            // res.send({data, 'facilities': facilities.data, 'pageName': 'home'});
+        })
+    })
+})
+
 
 
 // =========== Search =========== //
@@ -499,6 +515,7 @@ function checkSession(req,res,next) {
 }
 
 function checkSellerSession(req,res,next) {
+    console.log("got here delete!");
     if (req.session.sellerid) {
         // session is active
         next()

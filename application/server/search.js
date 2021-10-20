@@ -1,9 +1,80 @@
 const db = require('./connection')
 
+const getHomeListings = (req, res) => {
+    let sql;
+    id = req.session.userid;
+    if (id) {
+        sql = `
+            (SELECT l.*, b.user_id, COUNT(b1.listing_id) AS countbookmarks, DATE_FORMAT(l.listing_datetime, '%d %b %Y at %h:%i %p') AS niceD8
+            FROM listings l
+            LEFT JOIN bookmarks b ON l.listing_id = b.listing_id AND b.user_id = `+id+`
+            LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
+            WHERE sale_or_rent = 'SALE'
+            GROUP BY l.listing_id
+            ORDER BY listing_datetime DESC
+            LIMIT 3)
+            UNION
+            (SELECT l.*, b.user_id, COUNT(b1.listing_id) AS countbookmarks, DATE_FORMAT(l.listing_datetime, '%d %b %Y at %h:%i %p') AS niceD8
+            FROM listings l
+            LEFT JOIN bookmarks b ON l.listing_id = b.listing_id AND b.user_id = `+id+`
+            LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
+            WHERE sale_or_rent = 'SALE'
+            GROUP BY l.listing_id
+            ORDER BY countbookmarks DESC
+            LIMIT 3)
+            UNION
+            (SELECT l.*, b.user_id, COUNT(b1.listing_id) AS countbookmarks, DATE_FORMAT(l.listing_datetime, '%d %b %Y at %h:%i %p') AS niceD8
+            FROM listings l
+            LEFT JOIN bookmarks b ON l.listing_id = b.listing_id AND b.user_id = `+id+`
+            LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
+            WHERE sale_or_rent = 'RENT'
+            GROUP BY l.listing_id
+            ORDER BY countbookmarks DESC
+            LIMIT 3);
+        `;
+        
+    }
+    else {
+        sql = `
+            (SELECT l.*, COUNT(b1.listing_id) AS countbookmarks, DATE_FORMAT(l.listing_datetime, '%d %b %Y at %h:%i %p') AS niceD8
+            FROM listings l
+            LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
+            WHERE sale_or_rent = 'SALE'
+            GROUP BY l.listing_id
+            ORDER BY listing_datetime DESC
+            LIMIT 3)
+            UNION
+            (SELECT l.*, COUNT(b1.listing_id) AS countbookmarks, DATE_FORMAT(l.listing_datetime, '%d %b %Y at %h:%i %p') AS niceD8
+            FROM listings l
+            LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
+            WHERE sale_or_rent = 'SALE'
+            GROUP BY l.listing_id
+            ORDER BY countbookmarks DESC
+            LIMIT 3)
+            UNION
+            (SELECT l.*, COUNT(b1.listing_id) AS countbookmarks, DATE_FORMAT(l.listing_datetime, '%d %b %Y at %h:%i %p') AS niceD8
+            FROM listings l
+            LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
+            WHERE sale_or_rent = 'RENT'
+            GROUP BY l.listing_id
+            ORDER BY countbookmarks DESC
+            LIMIT 3);
+        `;
+    }
+    db.query(sql, (err, row) => {
+        if (err) {
+            res({success:false, msg:err});
+        }
+        else {
+            res({success:true, data:row, msg:'list of listings'});
+        }
+    })
+}
+
 const getListingDetails = (id, res) => {
     let sql = `
     SELECT l.*, s.name, s.contact_number, af.facility_id, af.facility_name, DATE_FORMAT(l.availability,'%d %b %Y') AS niceDate, 
-    DATE_FORMAT(l.listing_datetime, '%d %b %Y') AS niceD8
+    DATE_FORMAT(l.listing_datetime, '%d %b %Y at %h:%i %p') AS niceD8
     FROM seller s, listings l
     LEFT JOIN (
         SELECT lf.listing_id, f.* 
@@ -31,7 +102,7 @@ const getListingDetails = (id, res) => {
                     listing = element;
                 }
             });
-            // console.log(listing)
+            
             listing["facilities"] = facilities;
             res({success:true, data: [listing], msg:'listings details retrieved'});
         }
@@ -55,7 +126,7 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
 
     if (userid) { // get bookmarks too
         sql = `
-            SELECT l.*, b.user_id, COUNT(b1.listing_id) AS countbookmarks
+            SELECT l.*, b.user_id, COUNT(b1.listing_id) AS countbookmarks, DATE_FORMAT(l.listing_datetime, '%d %b %Y at %h:%i %p') AS niceD8
             FROM listings l
             LEFT JOIN bookmarks b ON l.listing_id = b.listing_id AND b.user_id = ?
             LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
@@ -68,7 +139,7 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
     }
     else {
         sql = `
-            SELECT l.*, COUNT(b1.listing_id) AS countbookmarks
+            SELECT l.*, COUNT(b1.listing_id) AS countbookmarks, DATE_FORMAT(l.listing_datetime, '%d %b %Y at %h:%i %p') AS niceD8
             FROM listings l
             LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
             WHERE (l.listing_address LIKE "%"?"%" OR l.title LIKE "%"?"%")
@@ -109,12 +180,12 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
     if (_1room) {
         if (and_inputted) {
             sql += `
-                OR l.rooms LIKE '1'
+                OR l.rooms LIKE '1%'
             `
         }
         else {
             sql += `
-                AND (l.rooms LIKE '1'
+                AND (l.rooms LIKE '1%'
             `
             and_inputted = true;
         }
@@ -123,12 +194,12 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
     if (_2room) {
         if (and_inputted) {
             sql += `
-                OR l.rooms LIKE '2'
+                OR l.rooms LIKE '2%'
             `
         }
         else {
             sql += `
-                AND (l.rooms LIKE '2'
+                AND (l.rooms LIKE '2%'
             `
             and_inputted = true;
         }
@@ -137,12 +208,12 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
     if (_3room) {
         if (and_inputted) {
             sql += `
-                OR l.rooms LIKE '3'
+                OR l.rooms LIKE '3%'
             `
         }
         else {
             sql += `
-                AND (l.rooms LIKE '3'
+                AND (l.rooms LIKE '3%'
             `
             and_inputted = true;
         }
@@ -151,12 +222,12 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
     if (_4room) {
         if (and_inputted) {
             sql += `
-                OR l.rooms LIKE '4'
+                OR l.rooms LIKE '4%'
             `
         }
         else {
             sql += `
-                AND (l.rooms LIKE '4'
+                AND (l.rooms LIKE '4%'
             `
             and_inputted = true;
         }
@@ -165,12 +236,12 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
     if (_5room) {
         if (and_inputted) {
             sql += `
-                OR l.rooms LIKE '5'
+                OR l.rooms LIKE '5%'
             `
         }
         else {
             sql += `
-                AND (l.rooms LIKE '5'
+                AND (l.rooms LIKE '5%'
             `
             and_inputted = true;
         }
@@ -202,5 +273,6 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
 
 module.exports = {
     searchListings,
-    getListingDetails
+    getListingDetails,
+    getHomeListings
 }
