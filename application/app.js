@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 })
 const upload = multer({storage: storage})
 
-const { getListings, addListing, editListing, addListingImage, deleteAllImages, deleteListing } = require('./server/listings');
+const { getListings, addListing, editListing, addListingImage, deleteAllImages, deleteListing, updateListingStatus } = require('./server/listings');
 const { searchListings, getListingDetails, getHomeListings } = require('./server/search');
 const { getFacilities, addFacility, deleteFacilitiesFromListing, addFacilities } = require('./server/facilities');
 const { createBookmark, deleteBookmark, getBookmarks } = require('./server/bookmark.js');
@@ -463,6 +463,15 @@ app.post('/api/comment', (req, res) => {
             })
         }
     }
+})
+
+//api update listing status
+app.post('/api/listing/status', checkSellerSession, (req, res) => {
+    let listing_id = req.body.listing_id
+    let status = req.body.status
+    updateListingStatus(listing_id, status, function(data){
+        res.send(data)
+    })
 })
 
 

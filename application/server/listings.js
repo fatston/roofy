@@ -183,13 +183,31 @@ const deleteListing = (id, res) => {
     })
 }
 
+const updateListingStatus = (id, status, res) => {
+    let sql = `
+        UPDATE listings
+        SET status = ?
+        WHERE listing_id = ?;
+    `
+
+    db.query(sql, [status, id], (err,row) => {
+        if (err) {
+            console.log("err", err)
+            res({status: false, data: [], msg: err.message})
+        } else {
+            res({status: true, data: [], msg: 'Deleted All Images'})
+        }
+    })
+}
+
 module.exports = {
     getListings,
     addListing,
     editListing,
     addListingImage,
     deleteAllImages,
-    deleteListing
+    deleteListing,
+    updateListingStatus
 }
 
 

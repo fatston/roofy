@@ -39,6 +39,7 @@
                         <th>Sale/Rent</th>
                         <th>Pricing</th>
                         <th>Type</th>
+                        <th>Status</th>
                         <th>&nbsp;</th>
                       </tr>
                     </thead>
@@ -51,13 +52,31 @@
                       %>
                         <tr data-toggle="collapse" data-target="#<%= tag %>" aria-expanded="false" aria-controls="<%= tag %>" class="collapsed">
                           <th scope="row"> <%= no %></th>
-                          <td><a href="/seller/listing/<%= listing.listing_id %>"> <%= listing.title %></a></td>
+                          <td><a href="/seller/listing/<%= listing.listing_id %>" onclick="event.stopPropagation();"> <%= listing.title %></a></td>
                           <td><%= listing.listing_address %></td>
                           <td><%= listing.sale_or_rent %></td>
                           <td>$<%= listing.pricing %></td>
                           <td><%= listing.property_type %></td>
+                          <% 
+                          var statusColor = "btn-danger"
+                          var statusText = "Live"
+                          var listingStatus = 0
+                          if(listing.status == 1) {    
+                            listingStatus = 1                  
+                            statusColor = "btn-success"
+                            statusText = (listing.sale_or_rent == "SALE") ? "Sold" : "Rented"
+                            
+                           } %>
                           <td>
-                            <a href="/seller/listings/edit/<%= listing.listing_id %>" class="btn btn-secondary">Edit</a>
+                            <input type="hidden" value="<%= listingStatus %>" id= "status-value-<%= listing.listing_id %>"/>
+                            <a onclick="event.stopPropagation();toggleStatus('<%= listing.listing_id %>', '<%= listing.sale_or_rent %>')"
+                              class="btn <%= statusColor %>"
+                              id= "status-<%= listing.listing_id %>">
+                              <%= statusText %>
+                            </a>
+                          </td>
+                          <td>
+                            <a href="/seller/listings/edit/<%= listing.listing_id %>" class="btn btn-secondary" onclick="event.stopPropagation();">Edit</a>
                           </td>
                         </tr>
                         <tr>
@@ -71,11 +90,7 @@
                                 str = str.slice(str.indexOf(",")+1);
                               }
                             %>
-                            <img src="/images/listings/<%= str %>" class="card-img-top" onerror="this.onerror=null;this.src='/images/listings/default.png';">
-                                
-                              
-                              
-                            
+                            <img src="/images/listings/<%= str %>" class="card-img-top" onerror="this.onerror=null;this.src='/images/listings/default.png';">  
                           </td>
                         </tr>
                       <% no = no + 1 %>
@@ -100,6 +115,41 @@
     <script src="js/bookmark.js"></script>
     <script>
         // todo change 3 to session data
+        function toggleStatus(listing_id, sale_or_rent) {
+          let id = "status-" + listing_id
+          let valueID = "status-value-"+listing_id
+          const status = parseInt(document.getElementById(valueID).value)
+          let newStatus = (status + 1) % 2;
+          var statusColor = "btn-danger"
+          var statusText = "Live"
+          if(newStatus == 1) {    
+            statusColor = "btn-success"
+            statusText = (sale_or_rent == "SALE") ? "Sold" : "Rented"
+            document.getElementById(id).classList.replace("btn-danger", statusColor)  
+          } else {
+            document.getElementById(id).classList.replace("btn-success", statusColor)
+          }
+          document.getElementById(id).innerHTML = statusText
+          document.getElementById(valueID).value = newStatus
+          updateListingStatus(listing_id, newStatus)
+        }
+
+        async function updateListingStatus(listing_id, status) {
+          console.log(listing_id, status)
+            const data = {
+              "listing_id": listing_id,
+              "status": status
+            }
+            fetch('/api/listing/status', {
+                method: "POST",
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(res => {
+                
+            })
+        }
     </script>
   </body>
 </html>
