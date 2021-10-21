@@ -28,7 +28,7 @@ const { searchListings, getListingDetails, getHomeListings } = require('./server
 const { getFacilities, addFacility, deleteFacilitiesFromListing, addFacilities } = require('./server/facilities');
 const { createBookmark, deleteBookmark, getBookmarks } = require('./server/bookmark.js');
 const { getAllComments, addComment, replyComment } = require('./server/comment');
-const { getListingStats } = require('./server/admin');
+const { getListingStats, getUserStats, getViewStats } = require('./server/admin');
 
 
 // using dependencies I guess
@@ -59,8 +59,12 @@ app.get('/admin',(req,res)=>{
     }
     else {
         getListingStats(function(listingData) {
-            res.render(path.resolve(__dirname,'./public/admin'), {listingData})
-            // res.send(listingData)
+            getUserStats(function(userData) {
+                getViewStats(function(viewsData) {
+                    res.render(path.resolve(__dirname,'./public/admin'), {listingData, userData, viewsData})
+                    // res.send({listingData, userData, viewsData})
+                })
+            })
         })
     }
 })

@@ -73,10 +73,12 @@
                     <div class="card-body">
                         <h5 class="card-title">New Users in the Past Week</h5>
                         <canvas id="UsersChart" style="width:100%;max-width:600px"></canvas>
+                        <% let ud = userData.data[0]; %>
+                        
                         <script>
                             // xValues = count(user_id), yValues = count(seller_id)
-                            var xValues = ["Seller", "User"];
-                            var yValues = [5, 200];
+                            var xValues = ["New Sellers", "New Users"];
+                            var yValues = [<%= ud.userCount %>, <%= ud.sellerCount %>];
                             var barColors = ["red","orange"];
 
                             new Chart("UsersChart", {
@@ -96,6 +98,7 @@
                         </script>
                     </div>
                     <div class="card-footer">
+                        
                         <a href="/admin/purchases" class="btn btn-primary">Learn More</a>
                     </div>
                 </div>

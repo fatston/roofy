@@ -35,6 +35,46 @@ const getListingStats = (res) => {
     })
 }
 
+const getUserStats = (res) => {
+    sql = `
+        SELECT (
+            SELECT COUNT(*) FROM user WHERE datetime_created BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) AND CURRENT_DATE()
+        ) AS userCount, (
+            SELECT COUNT(*) FROM seller WHERE datetime_created BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) AND CURRENT_DATE()
+        ) AS sellerCount;
+    `;
+    // run the sql query on db
+    db.query(sql, (err, row) => {
+        if (err) {
+            res({success:false, msg:err});
+        }
+        else {
+            res({success:true, data:row, msg:'past week user stats'});
+        }
+    })
+}
+
+const getViewStats = (res) => {
+    sql = `
+        Select day(datetime_viewed) as day, count(*) 
+        FROM views 
+        WHERE month(datetime_viewed) = month(CURRENT_DATE())
+        AND year(datetime_viewed) = year(CURRENT_DATE())
+        GROUP BY day 
+    `;
+    // run the sql query on db
+    db.query(sql, (err, row) => {
+        if (err) {
+            res({success:false, msg:err});
+        }
+        else {
+            res({success:true, data:row, msg:'past week user stats'});
+        }
+    })
+}
+
 module.exports = {
-    getListingStats
+    getListingStats,
+    getUserStats,
+    getViewStats
 }

@@ -228,16 +228,12 @@
       </div>
     </div>
     
-    <% if (s.sale_or_rent === "SALE") {%>
-      <script>
-        //hide rent fields
-        updateForm("RENT", "none")
-      </script>  
-    <%} %>
+    
+    
 
     <!-- javascript -->
     <script>
-        
+        updateForm("<%= s.sale_or_rent == 'SALE' ? 'RENT' : s.sale_or_rent ? 'SALE' : 'RENT';%>", "none")
         
 
         let saleOrRent = document.querySelector("#saleOrRent");
@@ -247,6 +243,7 @@
             let oppType = type == "RENT" ? "SALE" : "RENT";
             updateForm(oppType, "none")
             updateForm(type, "block")
+            document.getElementById('room-rental').checked = false;
         } )
         
         function updateForm(type, display) {
