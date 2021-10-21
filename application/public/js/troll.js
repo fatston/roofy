@@ -18,6 +18,40 @@ async function getProfilePicture(target) {
     }
 }
 
+async function getUserDetail() {
+    const profile_data_url = '/api/user/';
+    const response = await fetch(profile_data_url);
+    const profileData = await response.json();
+    if (profileData.success === true) {
+        let image = profileData.display_picture
+        if(image === null){
+            image = "/images/LinkZelda.png";
+        } else {
+            image = "/images/" + image
+        }
+        return {'profile_picture' : image, 'name' : profileData.name}
+    } else {
+        return {'profile_picture': "/images/LinkZelda.png", 'name': "" }
+    }
+}
+
+async function getSellerDetail() {
+    const profile_data_url = '/api/seller';
+    const response = await fetch(profile_data_url);
+    const profileData = await response.json();
+    if (profileData.success === true) {
+        let image = profileData.display_picture
+        if(image === null){
+            image = "/images/LinkZelda.png";
+        } else {
+            image = "/images/" + image
+        }
+        return {'profile_picture' : image, 'name' : profileData.name, 'sellerid' : profileData.sellerid}
+    } else {
+        return {'profile_picture': "/images/LinkZelda.png", 'name': "", 'sellerid' : "" }
+    }
+}
+
 async function getName(target) {
     const profile_data_url = '/api/user/';
     const response = await fetch(profile_data_url);

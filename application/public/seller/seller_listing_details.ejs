@@ -19,7 +19,7 @@
 
   </head>
   <body>
-    <%- include('include/navbar'); %>
+    <%- include('../include/seller-navbar'); %>
     
     <div class="container" style="margin-top: 40px; margin-bottom: 40px;">
             
@@ -57,7 +57,7 @@
                   </div>
                   <div class="col-8 col-sm-6">
                     <b>Status</b><br/>
-                    <%= listing.status == '' ? listing.status : 'Available'; %><br/>
+                    <%= listing.status %><br/>
                   </div>
                 </div>
               </div>
@@ -71,7 +71,7 @@
                   .chip img { float: left; margin: 0 10px 0 -25px; height: 50px; width: 50px; border-radius: 50%; color: orange;}
                 </style>
                 <div class="chip">
-                  <img src="/images/sellers/<%= listing.display_picture %>" alt="Avatar" width="96" height="96" onerror="this.onerror=null;this.src='/images/sellers/LinkZelda.png';">
+                  <img src="/images/LinkZelda.png" alt="Avatar" width="96" height="96">
                   <%= listing.name %>
                 </div><br/> 
                 <div id="phone-detail">
@@ -164,11 +164,9 @@
           <div class="col">
             <div class="card h-100">
               <div class="card-body">
-                <p><b>Town</b><br/>
-                <i class="bi-house"></i> <%= listing.town %><br/></p>
                 <p><b>Address</b><br/>
-                <i class="bi-house"></i> <%= listing.listing_address %><br/></p>
-                <p><b>Postal Code</b><br/>
+                <i class="bi-house"></i> <%= listing.listing_address %><br/>
+                <b>Postal Code</b><br/>
                 <i class="bi-globe"></i> <%= listing.listing_pc %></p>
                 <div id="map"></div>
               </div>
@@ -177,7 +175,7 @@
     </div>
     <% if(listing.sale_or_rent == "SALE") { %>
     <div class="container transactions-group my-5 py-5">
-      <h3 style='text-align:center'>Recent <%= listing.rooms %> transactions in <%= listing.town %></h3>
+      <h3 style='text-align:center'>Recent Nearby <%= listing.rooms %> Rooms Flat Transactions</h3>
       <div class="row text-center" id="sale-transactions">
       </div>
     </div>
@@ -191,7 +189,7 @@
                 <div class="card-body">
                   <h3>New Comment</h3>
                   <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
-                    <form action="/api/comment" method="POST" id="comment-form" onsubmit="return commentSubmitFunction(event)">
+                    <form action="/api/comment" method="POST" id="comment-form" onsubmit="return commentSubmitFunctionSeller(event)">
                     <div class="d-flex flex-start w-100">
                       <img
                         class="rounded-circle shadow-1-strong me-3"
@@ -250,21 +248,26 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
-    <script src="../js/user.js"></script>
+    <script src="../../js/user.js"></script>
     <!-- troll.js must be on top of comment due to comment using some feature available in troll.js -->
-    <script src="../js/troll.js"></script> 
-    <script src="../js/comment.js"></script>
-    <script src="../js/data-gov-api.js"></script>
+    <script src="../../js/troll.js"></script> 
+    <script src="../../js/comment.js"></script>
+    <script src="../../js/data-gov-api.js"></script>
     
     <script>
+      let sellerid = "<%= listing.seller_id %>";
       getRecentSaleByRoom("<%= listing.rooms %>", "<%= listing.town %>")
       let profile_picture = "/images/LinkZelda.png"
-      getUserDetail().then((detail) => {
+      getSellerDetail().then((detail) => {
+        console.log(sellerid, detail.sellerid)
+        if(sellerid != detail.sellerid) {
+          history.go(-1)
+        }
         profile_picture = detail.profile_picture
         document.getElementById("user_profile").src = profile_picture;
       })
       document.getElementById('new-comment').style.display = "none"
-      const check = checkUserLogin();
+      const check = checkSellerLogin();
       check.then((status) => {
         if(status === false ){
           document.getElementById('new-comment').style.display = "none"

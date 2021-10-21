@@ -70,9 +70,41 @@ const replyComment = (listing_id, reply_id, comments, user_id, res) => {
     })
 }
 
+const addCommentSeller = (listing_id, comments, sellerid, res) => {
+    let sql = `
+        INSERT INTO comments (listing_id, comments, datetime, seller_id) VALUES (?, ?, ?, ?)
+    `
+    let date = new Date();
+    db.query(sql, [listing_id, comments, date, sellerid], (err) => {
+        if (err) {
+            console.log("err", err)
+            res({status: false, data: [], msg: err.message})
+        } else {
+            res({status: true, data: [], msg: 'Comment Added'})
+        }
+    })
+}
+
+const replyCommentSeller = (listing_id, reply_id, comments, sellerid, res) => {
+    let sql = `
+        INSERT INTO comments (listing_id, reply_id, comments, datetime, seller_id) VALUES (?, ?, ?, ?, ?)
+    `
+    let date = new Date()
+    db.query(sql, [listing_id, reply_id, comments, date, sellerid], (err) => {
+        if (err) {
+            console.log("err", err)
+            res({status: false, data: [], msg: err.message})
+        } else {
+            res({status: true, data: [], msg: 'Reply Added'})
+        }
+    })
+}
+
 
 module.exports = {
     getAllComments,
     addComment,
-    replyComment
+    replyComment,
+    replyCommentSeller,
+    addCommentSeller
 }

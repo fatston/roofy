@@ -27,8 +27,8 @@ const { getListings, addListing, editListing, addListingImage, deleteAllImages, 
 const { searchListings, getListingDetails, getHomeListings } = require('./server/search');
 const { getFacilities, addFacility, deleteFacilitiesFromListing, addFacilities } = require('./server/facilities');
 const { createBookmark, deleteBookmark, getBookmarks } = require('./server/bookmark.js');
-const { getAllComments, addComment, replyComment } = require('./server/comment');
 const { getListingStats, getUserStats, getViewStats } = require('./server/admin');
+const { getAllComments, addComment, replyComment, addCommentSeller, replyCommentSeller } = require('./server/comment');
 
 
 // using dependencies I guess
@@ -207,7 +207,7 @@ app.post('/seller/profile/edit',checkSellerSession, editSellerProfile, (req,res)
 //route to seller listings page
 app.get('/seller/listings',checkSellerSession, async (req, res) => {
     getListings(req.session.sellerid, function(data) {
-        res.render(path.resolve(__dirname,'./public/seller/seller_listings'), {data, 'pageName': 'home'})
+        res.render(path.resolve(__dirname,'./public/seller/seller_listings'), {data, 'pageName': 'listings'})
     })
 })
 
@@ -224,6 +224,14 @@ app.post('/seller/listings', checkSellerSession, upload.single('image'), async (
 app.get('/seller/listings/add', checkSellerSession, async (req, res) => {
     getFacilities(function(facilities) {
         res.render(path.resolve(__dirname,'./public/seller/seller_listings_add'), {'facilities': facilities.data, 'pageName': 'home'});
+    })
+})
+
+// listing details page
+app.get('/seller/listing/:id', async (req,res)=>{
+    getListingDetails(req.params.id, function(data) {
+        // res.send(data);
+        res.render(path.resolve(__dirname,'./public/seller/seller_listing_details'), {data, 'pageName': 'listings', loggedIn: true})
     })
 })
 
@@ -387,6 +395,14 @@ app.get('/api/user/checkLogin', (req,res) => {
         res.json({success: false});
 })
 
+// check if seller is logged in
+app.get('/api/seller/checkLogin', (req, res) => {
+    if (req.session.sellerid)
+        res.json({success: true});
+    else
+        res.json({success: false});
+})
+
 // get profile details
 app.get('/api/user', checkSession, getProfileDetails,(req,res)=>{
     res.json({success:true, userid:req.session.userid, email:res.email, name:res.name, password:res.password, display_picture: res.display_picture});
@@ -394,7 +410,8 @@ app.get('/api/user', checkSession, getProfileDetails,(req,res)=>{
 
 // get seller details
 app.get('/api/seller', checkSellerSession, getSellerDetails, (req,res)=>{
-    
+    res.json({success: true, sellerid: req.session.sellerid, username: res.username, password: res.password, name: res.name, company: res.company, email: res.email, contact : res.contact, display_picture: res.display_picture})
+
 })
 
 // create bookmark
@@ -422,15 +439,29 @@ app.post('/api/comment', (req, res) => {
     let listing_id = req.body.listing_id
     let comments = req.body.comments
     let user_id = req.session.userid
+    let sellerid = req.session.sellerid
     let reply_id = req.body.reply_id
     if(reply_id !== undefined) {
-        replyComment(listing_id, reply_id, comments, user_id, function(data){
-            res.send(data)
-        })
+        if(sellerid !== undefined) {
+            replyCommentSeller(listing_id, reply_id, comments, sellerid, function(data){
+                res.send(data)
+            })
+        } else {
+            replyComment(listing_id, reply_id, comments, user_id, function(data){
+                res.send(data)
+            })
+        }
+        
     } else {
-        addComment(listing_id, comments, user_id, function(data){
-            res.send(data)
-        })
+        if(sellerid !== undefined) {
+            addCommentSeller(listing_id, comments, sellerid, function(data){
+                res.send(data)
+            })
+        } else {
+            addComment(listing_id, comments, user_id, function(data){
+                res.send(data)
+            })
+        }
     }
 })
 
@@ -664,13 +695,13 @@ function getSellerDetails(req,res,next) {
             res.json({success:false})
         }
         else {
-            let username = row[0].username
-            let password = row[0].password
-            let name = row[0].name
-            let company = row[0].company
-            let email = row[0].email
-            let contact = row[0].contact_number
-            res.json({success: true, sellerid: sellerid, username: username, password: password, name: name, company: company, email: email, contact : contact})
+            res.username = row[0].username
+            res.password = row[0].password
+            res.name = row[0].name
+            res.company = row[0].company
+            res.email = row[0].email
+            res.contact = row[0].contact_number
+            res.display_picture = row[0].display_picture;
             next();
         }
     })

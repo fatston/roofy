@@ -34,6 +34,7 @@
                     <thead>
                       <tr>
                         <th>#</th>
+                        <th>Title</th>
                         <th>Address</th>
                         <th>Sale/Rent</th>
                         <th>Pricing</th>
@@ -50,6 +51,7 @@
                       %>
                         <tr data-toggle="collapse" data-target="#<%= tag %>" aria-expanded="false" aria-controls="<%= tag %>" class="collapsed">
                           <th scope="row"> <%= no %></th>
+                          <td><a href="/seller/listing/<%= listing.listing_id %>"> <%= listing.title %></a></td>
                           <td><%= listing.listing_address %></td>
                           <td><%= listing.sale_or_rent %></td>
                           <td>$<%= listing.pricing %></td>
@@ -59,7 +61,7 @@
                           </td>
                         </tr>
                         <tr>
-                          <td colspan="6" id="<%= tag %>" class="collapse acc" data-parent="#accordion">
+                          <td colspan="7" id="<%= tag %>" class="collapse acc" data-parent="#accordion">
                             <p><%= listing.description %></p>
                             <%
                               let str = listing.image; 

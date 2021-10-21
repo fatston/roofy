@@ -12,6 +12,10 @@ async function getAllComments(id) {
 function commentSubmitFunction(e) {
     var form = new FormData(document.getElementById("comment-form"));
     let listing_id = form.get("listing_id")
+    let profile_picture = "/images/LinkZelda.png"
+    getUserDetail().then((detail) => {
+        profile_picture = detail.profile_picture
+    })
     const data = {"comments" : form.get("comments"), "listing_id" : listing_id}
     fetch("/api/comment", {
         method: "POST",
@@ -22,7 +26,7 @@ function commentSubmitFunction(e) {
     }).then(res => {
         const allComments = getAllComments(listing_id)
         allComments.then((comments) => {
-            document.getElementById('allComments').innerHTML = populateComments(comments)
+            document.getElementById('allComments').innerHTML = populateComments(comments, profile_picture)
         })
         e.preventDefault()
     })
@@ -31,7 +35,33 @@ function commentSubmitFunction(e) {
     return false
 }
 
-function populateComments(comments) {
+function commentSubmitFunctionSeller(e) {
+    var form = new FormData(document.getElementById("comment-form"));
+    let listing_id = form.get("listing_id")
+    let profile_picture = "/images/LinkZelda.png"
+    getSellerDetail().then((detail) => {
+        profile_picture = detail.profile_picture
+    })
+    const data = {"comments" : form.get("comments"), "listing_id" : listing_id}
+    fetch("/api/comment", {
+        method: "POST",
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then(res => {
+        const allComments = getAllComments(listing_id)
+        allComments.then((comments) => {
+            document.getElementById('allComments').innerHTML = populateComments(comments, profile_picture)
+        })
+        e.preventDefault()
+    })
+
+    e.preventDefault()
+    return false
+}
+
+function populateComments(comments, login_profile_picture) {
     let comment = '<h3>'+comments.length+' Comments</h3>';
     comments.forEach(element => {
         let image = element.display_picture
@@ -57,7 +87,7 @@ function populateComments(comments) {
     '</div>' +
     '<p class="mt-3 mb-4 pb-2">'+element.comments+'</p>' +
     '<div class="small d-flex justify-content-start">' +
-      '<a href="#!" class="d-flex align-items-center me-3" onclick = "toggleReplyForm('+element.comment_id+', '+element.listing_id+');">' +
+      '<a href="#!" class="d-flex align-items-center me-3" id= "reply-button-click" onclick = "toggleReplyForm('+element.comment_id+', '+element.listing_id+', \''+login_profile_picture+'\');">' +
         '<i class="far fa-comment-dots me-2"></i>' +
         '<p class="mb-0" id="reply-text'+element.comment_id+'">Reply</p>' +
       '</a>' + 
@@ -96,9 +126,10 @@ function populateComments(comments) {
     return comment;
 }
 
-async function toggleReplyForm(reply_id, listing_id) {
-    let check = await checkUserLogin();
-    if (check == false) {        
+async function toggleReplyForm(reply_id, listing_id, profile_picture) {
+    let checkUser = await checkUserLogin();
+    let checkSeller = await checkSellerLogin();
+    if (checkUser == false && checkSeller == false) {        
         alert("you need to login to reply comment")
         return
     }
@@ -106,8 +137,7 @@ async function toggleReplyForm(reply_id, listing_id) {
     let reply_text = document.getElementById('reply-text'+reply_id)
     if(reply_div.innerHTML == "") {
         reply_text.innerHTML = "Hide"
-        reply_div.innerHTML = populateReplyForm(reply_id, listing_id)
-        getProfilePicture("reply_profile")
+        reply_div.innerHTML = populateReplyForm(reply_id, listing_id, profile_picture)
     } else {
         reply_text.innerHTML = "Reply"
         reply_div.innerHTML = ""
@@ -119,7 +149,10 @@ function replySubmitFunction(e) {
     var form = new FormData(document.getElementById("reply-form"));
     let listing_id = form.get("listing_id")
     let reply_id = form.get("reply_id")
-    console.log(listing_id, reply_id)
+    let profile_picture = "/images/LinkZelda.png"
+    getUserDetail().then((detail) => {
+        profile_picture = detail.profile_picture
+    })
     const data = {"comments" : form.get("comments"), "listing_id" : listing_id, "reply_id": reply_id}
     fetch("/api/comment", {
         method: "POST",
@@ -130,7 +163,7 @@ function replySubmitFunction(e) {
     }).then(res => {
         const allComments = getAllComments(listing_id)
         allComments.then((comments) => {
-            document.getElementById('allComments').innerHTML = populateComments(comments)
+            document.getElementById('allComments').innerHTML = populateComments(comments, profile_picture)
         })
         e.preventDefault()
     })
@@ -139,7 +172,7 @@ function replySubmitFunction(e) {
     return false
 }
 
-function populateReplyForm(reply_id, listing_id) {
+function populateReplyForm(reply_id, listing_id, profile_picture) {
     let form = 
     '<div class="col-md-12 col-lg-12 col-xl-12">'+
         '<div class="card">'+
@@ -148,7 +181,7 @@ function populateReplyForm(reply_id, listing_id) {
             '<form action="/api/comment" method="POST" id="reply-form" onsubmit="return replySubmitFunction(event)">'+
                 '<div class="d-flex flex-start w-100">'+
                     '<img class="rounded-circle shadow-1-strong me-3" id="reply_profile"'+
-                    'src="/images/LinkZelda.png"'+
+                    'src="'+profile_picture+'"'+
                     'alt="avatar" width="40" height="40"/>'+
                     
                     '<div class="form-outline w-100">'+
