@@ -196,7 +196,10 @@ app.get('/profile/edit',checkSession, (req,res)=>{
 
 // post request for profile page
 app.post('/profile/edit',checkSession, editProfile, (req,res)=>{
-    res.render(path.resolve(__dirname,'./public/buyer/edit_profile'), {pageName: 'profile'})
+    if (req.session.userid)
+    res.render(path.resolve(__dirname,'./public/buyer/edit_profile'), {pageName:'profile', loggedIn: true})
+else
+    res.render(path.resolve(__dirname,'./public/buyer/edit_profile'), {pageName:'profile'})
 })
 
 // route to seller registration page

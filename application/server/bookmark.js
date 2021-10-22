@@ -41,6 +41,7 @@ const getBookmarks = (user_id, res) => {
         INNER JOIN bookmarks b ON b.listing_id = l.listing_id
         LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
         WHERE b.user_id = ?
+        AND (isnull(l.status) OR l.status = 0)
         GROUP BY l.listing_id;
     `
     // run the sql query on db
