@@ -29,6 +29,7 @@ const { getFacilities, addFacility, deleteFacilitiesFromListing, addFacilities }
 const { createBookmark, deleteBookmark, getBookmarks } = require('./server/bookmark.js');
 const { getListingStats, getUserStats, getViewStats, getViewStatsMonth } = require('./server/admin');
 const { getAllComments, addComment, replyComment, addCommentSeller, replyCommentSeller } = require('./server/comment');
+const { addUserView, addSellerView } = require('./server/views');
 
 
 // using dependencies I guess
@@ -229,11 +230,14 @@ app.get('/bookmarks',checkSession,(req,res)=>{
 app.get('/listing/:id', (req,res)=>{
     getListingDetails(req.params.id, function(data) {
         // res.send(data);
-        if (req.session.userid || req.session.sellerid)
+        if (req.session.userid || req.session.sellerid) {
+            if(req.session.userid) {
+                addUserView(req.session.userid, req.params.id, function(status) {})
+            }
             res.render(path.resolve(__dirname,'./public/listing_details'), {data, 'pageName': 'home', loggedIn: true})
-        else
+        } else {
             res.render(path.resolve(__dirname,'./public/listing_details'), {data, 'pageName': 'home', loggedIn: false})
-
+        }
         
     })
 })
@@ -286,9 +290,10 @@ app.get('/seller/listings/add', checkSellerSession, async (req, res) => {
 })
 
 // listing details page
-app.get('/seller/listing/:id', async (req,res)=>{
+app.get('/seller/listing/:id', checkSellerSession, async (req,res)=>{
     getListingDetails(req.params.id, function(data) {
         // res.send(data);
+        addSellerView(req.session.sellerid, req.params.id, function(status) {})
         res.render(path.resolve(__dirname,'./public/seller/seller_listing_details'), {data, 'pageName': 'listings', loggedIn: true})
     })
 })
