@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roofy</title>
+    
+    <!-- styles -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>  
+  </head>
+  <body>
+
+    <!-- navbar for admin -->
+        <nav class="navbar navbar-expand-md navbar-light bg-light">
+            <a class="navbar-brand" href="/admin"><img src="/logo.png" style="height: 40px; padding-left:10px"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto nav-tabs">
+                   
+                    
+                </ul>
+            </div>
+            <a href="/logout" class="btn">Logout</a>
+        </nav>
+
+    <div class="container mb-3" style="margin-top: 40px;">
+        <h1>Admin Listings Page</h1>
+        <canvas id="ListingsChart" style="width:100%;max-width:600px"></canvas>
+        <% 
+            let ld = listingData.data; 
+            let maximum_listings = Math.max(ld[0].last_week, ld[1].last_week, ld[2].last_week, ld[3].last_week) * 1.1
+            maximum_listings = Math.ceil(maximum_listings / 10) * 10
+        %>
+        <script>
+            //xValues = listing_datetime, yValues = count(listing_id)
+            
+            var xValues = [1,2,3,4];
+            var yValues = [<%= ld[0].last_week+','+ld[1].last_week+','+ld[2].last_week+','+ld[3].last_week %>];
+            let maximum_listings = <%= maximum_listings %>
+
+            new Chart("ListingsChart", {
+            type: "bar",
+            data: {
+                labels: xValues,
+                datasets: [{
+                backgroundColor: "green",
+                data: yValues
+                }]
+            },
+            options: {
+                legend: {display: false},
+                title: {display: false},
+                scales: {
+                    xAxes: [{scaleLabel: {display: true, labelString: 'No of Weeks Ago'}}],
+                    yAxes: [{ticks: {min: 0, max:maximum_listings}, scaleLabel: {display: true, labelString: 'No of New Listings'}}],
+                }
+            }
+            });
+        </script>                           
+    </div>
+
+    
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+      <script src="js/bootstrap.bundle.min.js"></script>
+    </body>
+  </html>

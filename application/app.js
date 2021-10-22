@@ -55,13 +55,64 @@ const db = require('./server/connection');
 // admin page
 app.get('/admin',(req,res)=>{
     if (!req.session.alcohol || req.session.alcohol != "yamazaki") {
-        res.send('You are not the admin.')
+        res.send('<h1>You are not the admin. <a href="/seller/login">login as admin</a></h1>')
     }
     else {
         getListingStats(function(listingData) {
             getUserStats(function(userData) {
                 getViewStats(function(viewsData) {
-                    res.render(path.resolve(__dirname,'./public/admin'), {listingData, userData, viewsData})
+                    res.render(path.resolve(__dirname,'./public/admin/admin'), {listingData, userData, viewsData})
+                    // res.send({listingData, userData, viewsData})
+                })
+            })
+        })
+    }
+})
+
+// admin views page
+app.get('/admin/views',(req,res)=>{
+    if (!req.session.alcohol || req.session.alcohol != "yamazaki") {
+        res.send('<h1>You are not the admin. <a href="/seller/login">login as admin</a></h1>')
+    }
+    else {
+        getListingStats(function(listingData) {
+            getUserStats(function(userData) {
+                getViewStats(function(viewsData) {
+                    res.render(path.resolve(__dirname,'./public/admin/views'), {listingData, userData, viewsData})
+                    // res.send({listingData, userData, viewsData})
+                })
+            })
+        })
+    }
+})
+
+// admin users page
+app.get('/admin/users',(req,res)=>{
+    if (!req.session.alcohol || req.session.alcohol != "yamazaki") {
+        res.send('<h1>You are not the admin. <a href="/seller/login">login as admin</a></h1>')
+    }
+    else {
+        getListingStats(function(listingData) {
+            getUserStats(function(userData) {
+                getViewStats(function(viewsData) {
+                    res.render(path.resolve(__dirname,'./public/admin/users'), {listingData, userData, viewsData})
+                    // res.send({listingData, userData, viewsData})
+                })
+            })
+        })
+    }
+})
+
+// admin listings page
+app.get('/admin/listings',(req,res)=>{
+    if (!req.session.alcohol || req.session.alcohol != "yamazaki") {
+        res.send('<h1>You are not the admin. <a href="/seller/login">login as admin</a></h1>')
+    }
+    else {
+        getListingStats(function(listingData) {
+            getUserStats(function(userData) {
+                getViewStats(function(viewsData) {
+                    res.render(path.resolve(__dirname,'./public/admin/listings'), {listingData, userData, viewsData})
                     // res.send({listingData, userData, viewsData})
                 })
             })
