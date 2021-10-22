@@ -33,12 +33,26 @@
             <div class="col">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="card-title">Views in the Past Month</h5>  
+                        <h5 class="card-title">Views this Month</h5>  
                         <canvas id="ViewsChart" style="width:100%;max-width:600px"></canvas>
+                        
                         <script>
                             //xValues = listing_datetime(date), yValues = count(views)
-                            var xValues = [1,2,3,4,5,6,7,8,9,10,11];
-                            var yValues = [7,8,3,9,5,9,10,11,8,14,15];
+                            var xValues = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
+                            var yValues = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                            let maxViews = 0
+                            <% viewsData.data.forEach((vd) => { %>
+                                for (let i = 0; i < yValues.length; i++) {
+                                    if (<%=vd.day%> == xValues[i]) {
+                                        yValues[i] = <%=vd.countViews%>;
+                                        if (yValues[i] > maxViews) 
+                                            maxViews = yValues[i];
+                                    }
+                                        
+                                }
+                            <% }) %>
+                            
+                            
 
                             new Chart("ViewsChart", {
                             type: "line",
@@ -55,8 +69,8 @@
                             options: {
                                 legend: {display: false},
                                 scales: {
-                                    xAxes: [{scaleLabel: {display: true, labelString: 'Date'}}],
-                                    yAxes: [{ticks: {min: 0, max:16}, scaleLabel: {display: true, labelString: 'Number of Views'}}],
+                                    xAxes: [{ticks: {min: 0, max:31}, scaleLabel: {display: true, labelString: 'Date'}}],
+                                    yAxes: [{ticks: {min: 0, max:maxViews+5}, scaleLabel: {display: true, labelString: 'Number of Views'}}],
                                 }
                             }
                             });
@@ -64,6 +78,8 @@
                     </div>
                     <div class="card-footer">
                         <a href="/admin/views" class="btn btn-primary">Learn More</a>
+                        
+                        
                     </div>
                 </div>
             </div>
@@ -106,7 +122,7 @@
             <div class="col">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="card-title">No of New Listings This Month</h5>
+                        <h5 class="card-title">New Listings This Month</h5>
                         <canvas id="ListingsChart" style="width:100%;max-width:600px"></canvas>
                         <% 
                             let ld = listingData.data; 

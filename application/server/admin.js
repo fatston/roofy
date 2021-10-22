@@ -56,11 +56,12 @@ const getUserStats = (res) => {
 
 const getViewStats = (res) => {
     sql = `
-        Select day(datetime_viewed) as day, count(*) 
+        Select day(datetime_viewed) as day, count(*) as countViews
         FROM views 
         WHERE month(datetime_viewed) = month(CURRENT_DATE())
         AND year(datetime_viewed) = year(CURRENT_DATE())
         GROUP BY day 
+        ORDER BY day ASC
     `;
     // run the sql query on db
     db.query(sql, (err, row) => {
