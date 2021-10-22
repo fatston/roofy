@@ -357,7 +357,7 @@ app.post('/seller/listings/edit/:listingid/delete_all_images', checkSellerSessio
 
 // edit listing form post request
 app.post('/seller/listings/edit/:listingid', checkSellerSession, checkSellerListing, async (req, res) => {
-    console.log("got here")
+    
     editListing(req, async function(data) {
         getListingDetails(req.params.listingid, async function(data) {
             getFacilities(async function(facilities) {
@@ -638,7 +638,7 @@ function checkSession(req,res,next) {
 }
 
 function checkSellerSession(req,res,next) {
-    console.log("got here delete!");
+    
     if (req.session.sellerid) {
         // session is active
         next()
@@ -715,7 +715,7 @@ function authSellerLogin(req, res, next) {
 function checkAuthAdminLogin(req, res, next) {
     if (req.body.username == "alcohol" && req.body.password == "alcohol") { // process admin login
         req.session.alcohol = "yamazaki";
-        console.log("got here admin")
+        
         res.send("<h1>welcome back admin</h1><h1><a href='/admin'>proceed</a></h1>");
     }
     else 
@@ -840,7 +840,7 @@ function registerSeller(req,res,next) {
 
     db.query(sql, [username,password,name,company,contact,email],(err)=>{
         if (err) {
-            res.send(err)
+            res.send('Username or email or phone number is already used. <a href="/seller/register">try again</a>')
             res.end();
         } else {
             next()

@@ -40,7 +40,7 @@
         }
       %>
       <img src="/images/listings/<%= str %>" width="45%" onerror="this.onerror=null;this.src='/images/listings/default.png';">
-      <h1><%= listing.title %> for <%= listing.sale_or_rent %></h1>
+      <h1><%= listing.title %></h1>
       <h3><%= listing.rooms == "Studio" ? "Studio Apartment" : listing.rooms %>, <%= listing.property_type %></h3>
         <div class="row row-cols-1 row-cols-md-2 g-4">
           <div class="col">
@@ -57,7 +57,7 @@
                   </div>
                   <div class="col-8 col-sm-6">
                     <b>Status</b><br/>
-                    <%= listing.status == '' ? listing.status : 'Available'; %><br/>
+                    <%= listing.status == '' ? 'Unavailable' : 'Available'; %><br/>
                   </div>
                 </div>
               </div>
@@ -164,11 +164,11 @@
           <div class="col">
             <div class="card h-100">
               <div class="card-body">
-                <p><b>Town</b><br/>
-                <i class="bi-house"></i> <%= listing.town %><br/></p>
-                <p><b>Address</b><br/>
-                <i class="bi-house"></i> <%= listing.listing_address %><br/></p>
-                <p><b>Postal Code</b><br/>
+                <b>Town</b><br/>
+                <i class="bi-house"></i> <%= listing.town %><br>
+                <b>Address</b><br/>
+                <i class="bi-house"></i> <%= listing.listing_address %><br/>
+                <b>Postal Code</b><br/>
                 <i class="bi-globe"></i> <%= listing.listing_pc %></p>
                 <div id="map"></div>
               </div>
