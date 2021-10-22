@@ -187,7 +187,7 @@ function populateReplyForm(reply_id, listing_id, profile_picture) {
                     '<div class="form-outline w-100">'+
                         '<textarea class="form-control" id="comments" rows="4"'+
                         'style="background: #fff;"'+
-                        'name="comments"></textarea>'+
+                        'name="comments" required></textarea>'+
                         '<label class="form-label" for="textAreaExample">Message</label>'+
                     '</div>'+
                 '</div>'+ 
