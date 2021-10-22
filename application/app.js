@@ -27,7 +27,7 @@ const { getListings, addListing, editListing, addListingImage, deleteAllImages, 
 const { searchListings, getListingDetails, getHomeListings } = require('./server/search');
 const { getFacilities, addFacility, deleteFacilitiesFromListing, addFacilities } = require('./server/facilities');
 const { createBookmark, deleteBookmark, getBookmarks } = require('./server/bookmark.js');
-const { getListingStats, getUserStats, getViewStats } = require('./server/admin');
+const { getListingStats, getUserStats, getViewStats, getViewStatsMonth } = require('./server/admin');
 const { getAllComments, addComment, replyComment, addCommentSeller, replyCommentSeller } = require('./server/comment');
 
 
@@ -75,30 +75,38 @@ app.get('/admin/views',(req,res)=>{
         res.send('<h1>You are not the admin. <a href="/seller/login">login as admin</a></h1>')
     }
     else {
-        getListingStats(function(listingData) {
-            getUserStats(function(userData) {
-                getViewStats(function(viewsData) {
-                    res.render(path.resolve(__dirname,'./public/admin/views'), {listingData, userData, viewsData})
-                    // res.send({listingData, userData, viewsData})
-                })
-            })
+        getViewStatsMonth(req, function(viewsData) {
+            let d = new Date()
+            let month_year = {month: (d.getMonth()+1).toString(), year: d.getFullYear().toString()}
+            res.render(path.resolve(__dirname,'./public/admin/views'), {viewsData, month_year})
+            // res.send({viewsData, month_year})
         })
     }
 })
 
-// admin users page
-app.get('/admin/users',(req,res)=>{
+// admin views page (month)
+app.get('/admin/views/month/:month/:year',(req,res)=>{
     if (!req.session.alcohol || req.session.alcohol != "yamazaki") {
         res.send('<h1>You are not the admin. <a href="/seller/login">login as admin</a></h1>')
     }
     else {
-        getListingStats(function(listingData) {
-            getUserStats(function(userData) {
-                getViewStats(function(viewsData) {
-                    res.render(path.resolve(__dirname,'./public/admin/users'), {listingData, userData, viewsData})
-                    // res.send({listingData, userData, viewsData})
-                })
-            })
+        getViewStatsMonth(req, function(viewsData) {
+            let month_year = {month: req.params.month, year: req.params.year}
+            res.render(path.resolve(__dirname,'./public/admin/views'), {viewsData, month_year})
+            // res.send({viewsData, month_year})
+        })
+    }
+})
+
+// admin views page (year)
+app.get('/admin/views/year',(req,res)=>{
+    if (!req.session.alcohol || req.session.alcohol != "yamazaki") {
+        res.send('<h1>You are not the admin. <a href="/seller/login">login as admin</a></h1>')
+    }
+    else {
+        getViewStatsQ(req, function(viewsData) {
+            res.render(path.resolve(__dirname,'./public/admin/views'), {viewsData})
+            // res.send({viewsData})
         })
     }
 })
