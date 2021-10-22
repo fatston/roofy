@@ -2,7 +2,7 @@ const db = require('./connection')
 
 
 const getListingStats = (res) => {
-    sql = `
+    let sql = `
         (
             SELECT COUNT(*) AS last_week
             FROM listings l
@@ -36,7 +36,7 @@ const getListingStats = (res) => {
 }
 
 const getUserStats = (res) => {
-    sql = `
+    let sql = `
         SELECT (
             SELECT COUNT(*) FROM user WHERE datetime_created BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) AND CURRENT_DATE()
         ) AS userCount, (
@@ -55,7 +55,7 @@ const getUserStats = (res) => {
 }
 
 const getViewStats = (res) => {
-    sql = `
+    let sql = `
         Select day(datetime_viewed) as day, count(*) as countViews
         FROM views 
         WHERE month(datetime_viewed) = month(CURRENT_DATE())
@@ -72,6 +72,11 @@ const getViewStats = (res) => {
             res({success:true, data:row, msg:'past week user stats'});
         }
     })
+}
+
+const getViewStatsQ = (req, res) => {
+    let sql;
+    
 }
 
 module.exports = {
