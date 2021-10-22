@@ -30,14 +30,15 @@
       <%
         let str = listing.image; 
         let image = "";
-        while (str.indexOf(",") > 0) {
-        image = str.slice(0, str.indexOf(","));
-        str = str.slice(str.indexOf(",")+1);
-        
+        if(str !== undefined) {
+          while (str.indexOf(",") > 0) {
+          image = str.slice(0, str.indexOf(","));
+          str = str.slice(str.indexOf(",")+1);
       %>
       <img src="/images/listings/<%= image %>" width="45%" onerror="this.onerror=null;this.src='/images/listings/default.png';">
       <%
         }
+      }
       %>
       <img src="/images/listings/<%= str %>" width="45%" onerror="this.onerror=null;this.src='/images/listings/default.png';">
       <h1><%= listing.title %></h1>
@@ -57,7 +58,7 @@
                   </div>
                   <div class="col-8 col-sm-6">
                     <b>Status</b><br/>
-                    <%= listing.status == '' ? 'Unavailable' : 'Available'; %><br/>
+                    <%= listing.status == "1" ? 'Unavailable' : 'Available'; %><br/>
                   </div>
                 </div>
               </div>
