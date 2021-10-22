@@ -98,19 +98,6 @@ app.get('/admin/views/month/:month/:year',(req,res)=>{
     }
 })
 
-// admin views page (year)
-app.get('/admin/views/year',(req,res)=>{
-    if (!req.session.alcohol || req.session.alcohol != "yamazaki") {
-        res.send('<h1>You are not the admin. <a href="/seller/login">login as admin</a></h1>')
-    }
-    else {
-        getViewStatsQ(req, function(viewsData) {
-            res.render(path.resolve(__dirname,'./public/admin/views'), {viewsData})
-            // res.send({viewsData})
-        })
-    }
-})
-
 // admin listings page
 app.get('/admin/listings',(req,res)=>{
     if (!req.session.alcohol || req.session.alcohol != "yamazaki") {
@@ -118,12 +105,21 @@ app.get('/admin/listings',(req,res)=>{
     }
     else {
         getListingStats(function(listingData) {
-            getUserStats(function(userData) {
-                getViewStats(function(viewsData) {
-                    res.render(path.resolve(__dirname,'./public/admin/listings'), {listingData, userData, viewsData})
+                    res.render(path.resolve(__dirname,'./public/admin/listings'), {listingData})
                     // res.send({listingData, userData, viewsData})
-                })
-            })
+        })
+    }
+})
+
+// admin page
+app.get('/admin/users',(req,res)=>{
+    if (!req.session.alcohol || req.session.alcohol != "yamazaki") {
+        res.send('<h1>You are not the admin. <a href="/seller/login">login as admin</a></h1>')
+    }
+    else {
+        getUserStats(function(userData) {
+            res.render(path.resolve(__dirname,'./public/admin/users'), {userData})
+            // res.send({listingData, userData, viewsData})
         })
     }
 })
