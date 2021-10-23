@@ -30,13 +30,15 @@
       <%
         let str = listing.image; 
         let image = "";
-        while (str.indexOf(",") > 0) {
-        image = str.slice(0, str.indexOf(","));
-        str = str.slice(str.indexOf(",")+1);
+        if(str !== undefined) {
+          while (str.indexOf(",") > 0) {
+            image = str.slice(0, str.indexOf(","));
+            str = str.slice(str.indexOf(",")+1);
         
       %>
       <img src="/images/listings/<%= image %>" width="45%" onerror="this.onerror=null;this.src='/images/listings/default.png';">
       <%
+          }
         }
       %>
       <img src="/images/listings/<%= str %>" width="45%" onerror="this.onerror=null;this.src='/images/listings/default.png';">
@@ -258,6 +260,11 @@
     <script src="../js/data-gov-api.js"></script>
     
     <script>
+      const deleted = "<%= listing.listing_id %>";
+      if(deleted == "") {
+        history.go(-1)
+      }
+
       getRecentSaleByRoom("<%= listing.rooms %>", "<%= listing.town %>")
       let profile_picture = "/images/LinkZelda.png"
       getUserDetail().then((detail) => {
