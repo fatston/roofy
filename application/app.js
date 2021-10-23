@@ -230,10 +230,8 @@ app.get('/bookmarks',checkSession,(req,res)=>{
 app.get('/listing/:id', (req,res)=>{
     getListingDetails(req.params.id, function(data) {
         // res.send(data);
+        addUserView(req.session.userid, req.params.id, function(status) {})
         if (req.session.userid || req.session.sellerid) {
-            if(req.session.userid) {
-                addUserView(req.session.userid, req.params.id, function(status) {})
-            }
             res.render(path.resolve(__dirname,'./public/listing_details'), {data, 'pageName': 'home', loggedIn: true})
         } else {
             res.render(path.resolve(__dirname,'./public/listing_details'), {data, 'pageName': 'home', loggedIn: false})
