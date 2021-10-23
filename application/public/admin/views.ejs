@@ -29,12 +29,27 @@
 
     <div class="container mb-3" style="margin-top: 40px;">
         <h1>Admin Views Page</h1>
+        <form class="row g-3 mb-3">
+            <div class="col-auto">
+                <% let m_y = month_year.year + '-' + month_year.month %>
+                
+                <input type='month' class='form-control' name='choose_month' onchange='get_views_month(this.value)' value='<%= m_y %>'>
+            </div>
+        </form>
+        
         <canvas id="ViewsChart" style="width:100%;max-width:600px"></canvas>
                         
         <script>
+            <% m_y = month_year %>
+            let days_in_month = daysInMonth(<%=m_y.month%>,<%=m_y.year%>)
             //xValues = listing_datetime(date), yValues = count(views)
-            var xValues = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
-            var yValues = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            var xValues = [];
+            var yValues = [];
+            for (let i = 1; i <= days_in_month; i++) {
+                xValues.push(i);
+                yValues.push(0);
+            }
+            // alert("array size: " + xValues.length);
             let maxViews = 0
             <% viewsData.data.forEach((vd) => { %>
                 for (let i = 0; i < yValues.length; i++) {
@@ -43,7 +58,6 @@
                         if (yValues[i] > maxViews) 
                             maxViews = yValues[i];
                     }
-                        
                 }
             <% }) %>
             
@@ -69,6 +83,15 @@
                 }
             }
             });
+
+            function get_views_month(input) {
+                let year = input.slice(0,4)
+                let month = input.slice(5,7)
+                window.location.href = 'http://localhost/admin/views/month/' + month + '/' + year
+            }
+            function daysInMonth (month, year) {
+                return new Date(year, month, 0).getDate();
+            }
         </script>
     </div>
 

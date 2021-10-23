@@ -30,17 +30,18 @@
       <%
         let str = listing.image; 
         let image = "";
-        while (str.indexOf(",") > 0) {
-        image = str.slice(0, str.indexOf(","));
-        str = str.slice(str.indexOf(",")+1);
-        
+        if(str !== undefined) {
+          while (str.indexOf(",") > 0) {
+          image = str.slice(0, str.indexOf(","));
+          str = str.slice(str.indexOf(",")+1);
       %>
       <img src="/images/listings/<%= image %>" width="45%" onerror="this.onerror=null;this.src='/images/listings/default.png';">
       <%
         }
+      }
       %>
       <img src="/images/listings/<%= str %>" width="45%" onerror="this.onerror=null;this.src='/images/listings/default.png';">
-      <h1><%= listing.title %> for <%= listing.sale_or_rent %></h1>
+      <h1><%= listing.title %></h1>
       <h3><%= listing.rooms == "Studio" ? "Studio Apartment" : listing.rooms %>, <%= listing.property_type %></h3>
         <div class="row row-cols-1 row-cols-md-2 g-4">
           <div class="col">
@@ -57,7 +58,7 @@
                   </div>
                   <div class="col-8 col-sm-6">
                     <b>Status</b><br/>
-                    <%= listing.status %><br/>
+                    <%= listing.status == "1" ? 'Unavailable' : 'Available'; %><br/>
                   </div>
                 </div>
               </div>
@@ -71,7 +72,7 @@
                   .chip img { float: left; margin: 0 10px 0 -25px; height: 50px; width: 50px; border-radius: 50%; color: orange;}
                 </style>
                 <div class="chip">
-                  <img src="/images/LinkZelda.png" alt="Avatar" width="96" height="96">
+                  <img src="/images/sellers/<%= listing.display_picture %>" alt="Avatar" width="96" height="96" onerror="this.onerror=null;this.src='/images/sellers/LinkZelda.png';">
                   <%= listing.name %>
                 </div><br/> 
                 <div id="phone-detail">
@@ -164,7 +165,9 @@
           <div class="col">
             <div class="card h-100">
               <div class="card-body">
-                <p><b>Address</b><br/>
+                <b>Town</b><br/>
+                  <i class="bi-house"></i> <%= listing.town %><br>
+                <b>Address</b><br/>
                 <i class="bi-house"></i> <%= listing.listing_address %><br/>
                 <b>Postal Code</b><br/>
                 <i class="bi-globe"></i> <%= listing.listing_pc %></p>
@@ -175,7 +178,7 @@
     </div>
     <% if(listing.sale_or_rent == "SALE") { %>
     <div class="container transactions-group my-5 py-5">
-      <h3 style='text-align:center'>Recent Nearby <%= listing.rooms %> Rooms Flat Transactions</h3>
+      <h3 style='text-align:center'>Recent <%= listing.rooms %> transactions in <%= listing.town %></h3>
       <div class="row text-center" id="sale-transactions">
       </div>
     </div>
@@ -207,6 +210,7 @@
                             rows="4"
                             style="background: #fff;"
                             name="comments"
+                            required
                           ></textarea>
                           <label class="form-label" for="textAreaExample">Message</label>
                         </div>

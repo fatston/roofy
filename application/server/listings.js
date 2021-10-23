@@ -4,7 +4,7 @@ const db = require('./connection')
 
 const getListings = (id, res) => {
     let sql = `
-        SELECT *
+        SELECT *, DATE_FORMAT(listing_datetime, '%d %b %Y at %h:%i %p') AS niceD8
         FROM listings
         WHERE seller_id = ? ORDER BY listing_datetime DESC;
     `;

@@ -27,8 +27,9 @@ const { getListings, addListing, editListing, addListingImage, deleteAllImages, 
 const { searchListings, getListingDetails, getHomeListings } = require('./server/search');
 const { getFacilities, addFacility, deleteFacilitiesFromListing, addFacilities } = require('./server/facilities');
 const { createBookmark, deleteBookmark, getBookmarks } = require('./server/bookmark.js');
-const { getListingStats, getUserStats, getViewStats } = require('./server/admin');
+const { getListingStats, getUserStats, getViewStats, getViewStatsMonth } = require('./server/admin');
 const { getAllComments, addComment, replyComment, addCommentSeller, replyCommentSeller } = require('./server/comment');
+const { addUserView, addSellerView } = require('./server/views');
 
 
 // using dependencies I guess
@@ -75,30 +76,25 @@ app.get('/admin/views',(req,res)=>{
         res.send('<h1>You are not the admin. <a href="/seller/login">login as admin</a></h1>')
     }
     else {
-        getListingStats(function(listingData) {
-            getUserStats(function(userData) {
-                getViewStats(function(viewsData) {
-                    res.render(path.resolve(__dirname,'./public/admin/views'), {listingData, userData, viewsData})
-                    // res.send({listingData, userData, viewsData})
-                })
-            })
+        getViewStatsMonth(req, function(viewsData) {
+            let d = new Date()
+            let month_year = {month: (d.getMonth()+1).toString(), year: d.getFullYear().toString()}
+            res.render(path.resolve(__dirname,'./public/admin/views'), {viewsData, month_year})
+            // res.send({viewsData, month_year})
         })
     }
 })
 
-// admin users page
-app.get('/admin/users',(req,res)=>{
+// admin views page (month)
+app.get('/admin/views/month/:month/:year',(req,res)=>{
     if (!req.session.alcohol || req.session.alcohol != "yamazaki") {
         res.send('<h1>You are not the admin. <a href="/seller/login">login as admin</a></h1>')
     }
     else {
-        getListingStats(function(listingData) {
-            getUserStats(function(userData) {
-                getViewStats(function(viewsData) {
-                    res.render(path.resolve(__dirname,'./public/admin/users'), {listingData, userData, viewsData})
-                    // res.send({listingData, userData, viewsData})
-                })
-            })
+        getViewStatsMonth(req, function(viewsData) {
+            let month_year = {month: req.params.month, year: req.params.year}
+            res.render(path.resolve(__dirname,'./public/admin/views'), {viewsData, month_year})
+            // res.send({viewsData, month_year})
         })
     }
 })
@@ -110,12 +106,21 @@ app.get('/admin/listings',(req,res)=>{
     }
     else {
         getListingStats(function(listingData) {
-            getUserStats(function(userData) {
-                getViewStats(function(viewsData) {
-                    res.render(path.resolve(__dirname,'./public/admin/listings'), {listingData, userData, viewsData})
+                    res.render(path.resolve(__dirname,'./public/admin/listings'), {listingData})
                     // res.send({listingData, userData, viewsData})
-                })
-            })
+        })
+    }
+})
+
+// admin page
+app.get('/admin/users',(req,res)=>{
+    if (!req.session.alcohol || req.session.alcohol != "yamazaki") {
+        res.send('<h1>You are not the admin. <a href="/seller/login">login as admin</a></h1>')
+    }
+    else {
+        getUserStats(function(userData) {
+            res.render(path.resolve(__dirname,'./public/admin/users'), {userData})
+            // res.send({listingData, userData, viewsData})
         })
     }
 })
@@ -192,7 +197,10 @@ app.get('/profile/edit',checkSession, (req,res)=>{
 
 // post request for profile page
 app.post('/profile/edit',checkSession, editProfile, (req,res)=>{
-    res.render(path.resolve(__dirname,'./public/buyer/edit_profile'), {pageName: 'profile'})
+    if (req.session.userid)
+    res.render(path.resolve(__dirname,'./public/buyer/edit_profile'), {pageName:'profile', loggedIn: true})
+else
+    res.render(path.resolve(__dirname,'./public/buyer/edit_profile'), {pageName:'profile'})
 })
 
 // route to seller registration page
@@ -222,11 +230,12 @@ app.get('/bookmarks',checkSession,(req,res)=>{
 app.get('/listing/:id', (req,res)=>{
     getListingDetails(req.params.id, function(data) {
         // res.send(data);
-        if (req.session.userid || req.session.sellerid)
+        addUserView(req.session.userid, req.params.id, function(status) {})
+        if (req.session.userid || req.session.sellerid) {
             res.render(path.resolve(__dirname,'./public/listing_details'), {data, 'pageName': 'home', loggedIn: true})
-        else
+        } else {
             res.render(path.resolve(__dirname,'./public/listing_details'), {data, 'pageName': 'home', loggedIn: false})
-
+        }
         
     })
 })
@@ -279,9 +288,10 @@ app.get('/seller/listings/add', checkSellerSession, async (req, res) => {
 })
 
 // listing details page
-app.get('/seller/listing/:id', async (req,res)=>{
+app.get('/seller/listing/:id', checkSellerSession, async (req,res)=>{
     getListingDetails(req.params.id, function(data) {
         // res.send(data);
+        addSellerView(req.session.sellerid, req.params.id, function(status) {})
         res.render(path.resolve(__dirname,'./public/seller/seller_listing_details'), {data, 'pageName': 'listings', loggedIn: true})
     })
 })
@@ -350,7 +360,7 @@ app.post('/seller/listings/edit/:listingid/delete_all_images', checkSellerSessio
 
 // edit listing form post request
 app.post('/seller/listings/edit/:listingid', checkSellerSession, checkSellerListing, async (req, res) => {
-    console.log("got here")
+    
     editListing(req, async function(data) {
         getListingDetails(req.params.listingid, async function(data) {
             getFacilities(async function(facilities) {
@@ -631,7 +641,7 @@ function checkSession(req,res,next) {
 }
 
 function checkSellerSession(req,res,next) {
-    console.log("got here delete!");
+    
     if (req.session.sellerid) {
         // session is active
         next()
@@ -708,7 +718,7 @@ function authSellerLogin(req, res, next) {
 function checkAuthAdminLogin(req, res, next) {
     if (req.body.username == "alcohol" && req.body.password == "alcohol") { // process admin login
         req.session.alcohol = "yamazaki";
-        console.log("got here admin")
+        
         res.send("<h1>welcome back admin</h1><h1><a href='/admin'>proceed</a></h1>");
     }
     else 
@@ -833,7 +843,7 @@ function registerSeller(req,res,next) {
 
     db.query(sql, [username,password,name,company,contact,email],(err)=>{
         if (err) {
-            res.send(err)
+            res.send('Username or email or phone number is already used. <a href="/seller/register">try again</a>')
             res.end();
         } else {
             next()

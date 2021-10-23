@@ -7,7 +7,7 @@
     
     <!-- styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="/styles/seller_listings_styles.css" /> -->
+    <link rel="stylesheet" href="/styles/seller_listings_styles.css" />
 
   </head>
   <body>
@@ -52,7 +52,7 @@
                       %>
                         <tr data-toggle="collapse" data-target="#<%= tag %>" aria-expanded="false" aria-controls="<%= tag %>" class="collapsed">
                           <th scope="row"> <%= no %></th>
-                          <td><a href="/seller/listing/<%= listing.listing_id %>" onclick="event.stopPropagation();"> <%= listing.title %></a></td>
+                          <td> <%= listing.title %></td>
                           <td><%= listing.listing_address %></td>
                           <td><%= listing.sale_or_rent %></td>
                           <td>$<%= listing.pricing %></td>
@@ -71,7 +71,8 @@
                             <input type="hidden" value="<%= listingStatus %>" id= "status-value-<%= listing.listing_id %>"/>
                             <a onclick="event.stopPropagation();toggleStatus('<%= listing.listing_id %>', '<%= listing.sale_or_rent %>')"
                               class="btn <%= statusColor %>"
-                              id= "status-<%= listing.listing_id %>">
+                              id= "status-<%= listing.listing_id %>"
+                              style = "color: white;">
                               <%= statusText %>
                             </a>
                           </td>
@@ -80,17 +81,64 @@
                           </td>
                         </tr>
                         <tr>
-                          <td colspan="7" id="<%= tag %>" class="collapse acc" data-parent="#accordion">
-                            <p><%= listing.description %></p>
-                            <%
-                              let str = listing.image; 
-                              let image = "";
-                              while (str.indexOf(",") > 0) {
-                                image = str.slice(0, str.indexOf(","));
-                                str = str.slice(str.indexOf(",")+1);
-                              }
-                            %>
-                            <img src="/images/listings/<%= str %>" class="card-img-top" onerror="this.onerror=null;this.src='/images/listings/default.png';">  
+                          <td colspan="8" id="<%= tag %>" class="collapse acc" data-parent="#accordion">
+                         
+                            <div class="offset-md-3 col-md-6">
+                              <div class="card h-100">
+                                <div id="carousel_<%= listing.listing_id %>" class="carousel slide" data-bs-ride="carousel">
+              
+                                  <!-- <style> .carousel-item > img{width: 500px; height: 300px;}</style> -->
+                    
+                                  <div class="carousel-inner">
+                                    <%
+                                      let str = listing.image; 
+                                      let image = "";
+                                      if(str !== undefined) {
+                                      while (str.indexOf(",") > 0) {
+                                      image = str.slice(0, str.indexOf(","));
+                                      str = str.slice(str.indexOf(",")+1);
+                                      
+                                    %>
+                                    <div class="carousel-item">
+                                      <img src="/images/listings/<%= image %>" class="card-img-top" onerror="this.onerror=null;this.src='/images/listings/default.png';">
+                                    </div>
+                                    <%
+                                        }
+                                      }
+                                    %>
+                                    <div class="carousel-item active">
+                                      <img src="/images/listings/<%= str %>" class="card-img-top" onerror="this.onerror=null;this.src='/images/listings/default.png';">
+                                    </div>
+                                  </div>
+                                  <button class="carousel-control-prev" type="button" data-bs-target="#carousel_<%= listing.listing_id %>" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                  </button>
+                                  <button class="carousel-control-next" type="button" data-bs-target="#carousel_<%= listing.listing_id %>" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                  </button>
+                                </div>
+                                  <div class="card-body">
+                                      <h4 class="card-title"><%= listing.title %></h4>
+                                      <p class="card-text"><%= listing.description %> </p>
+                                  </div>
+                                  <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                      <b><%= listing.rooms %> <%= listing.property_type %> for <%= listing.sale_or_rent === "RENT" ? "Rent" : "Sale" %></b><br>
+                                      Address: <%= listing.listing_address %><br>
+                                      Price: $<%= listing.pricing %> <%= listing.sale_or_rent === "RENT" ? "per month" : '' %>
+                                    </li>
+                                    
+                                    <li class="list-group-item">
+                                      <a href="/seller/listing/<%= listing.listing_id %>" onclick="event.stopPropagation();" class="btn btn-primary">Learn More</a>
+                                    </li>
+                                  </ul>
+                                  <div class="card-footer">
+                                    <small class="text-muted">posted on <%= listing.niceD8 %></small>
+                                  </div>
+                              </div>
+                            </div>
                           </td>
                         </tr>
                       <% no = no + 1 %>

@@ -10,6 +10,7 @@ const getHomeListings = (req, res) => {
             LEFT JOIN bookmarks b ON l.listing_id = b.listing_id AND b.user_id = `+id+`
             LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
             WHERE sale_or_rent = 'SALE'
+            AND (isnull(status) OR status = 0)
             GROUP BY l.listing_id
             ORDER BY listing_datetime DESC
             LIMIT 3)
@@ -19,6 +20,7 @@ const getHomeListings = (req, res) => {
             LEFT JOIN bookmarks b ON l.listing_id = b.listing_id AND b.user_id = `+id+`
             LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
             WHERE sale_or_rent = 'SALE'
+            AND (isnull(status) OR status = 0)
             GROUP BY l.listing_id
             ORDER BY countbookmarks DESC
             LIMIT 3)
@@ -28,6 +30,7 @@ const getHomeListings = (req, res) => {
             LEFT JOIN bookmarks b ON l.listing_id = b.listing_id AND b.user_id = `+id+`
             LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
             WHERE sale_or_rent = 'RENT'
+            AND (isnull(status) OR status = 0)
             GROUP BY l.listing_id
             ORDER BY countbookmarks DESC
             LIMIT 3);
@@ -40,6 +43,7 @@ const getHomeListings = (req, res) => {
             FROM listings l
             LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
             WHERE sale_or_rent = 'SALE'
+            AND (isnull(status) OR status = 0)
             GROUP BY l.listing_id
             ORDER BY listing_datetime DESC
             LIMIT 3)
@@ -48,6 +52,7 @@ const getHomeListings = (req, res) => {
             FROM listings l
             LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
             WHERE sale_or_rent = 'SALE'
+            AND (isnull(status) OR status = 0)
             GROUP BY l.listing_id
             ORDER BY countbookmarks DESC
             LIMIT 3)
@@ -56,6 +61,7 @@ const getHomeListings = (req, res) => {
             FROM listings l
             LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
             WHERE sale_or_rent = 'RENT'
+            AND (isnull(status) OR status = 0)
             GROUP BY l.listing_id
             ORDER BY countbookmarks DESC
             LIMIT 3);
@@ -131,6 +137,7 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
             LEFT JOIN bookmarks b ON l.listing_id = b.listing_id AND b.user_id = ?
             LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
             WHERE (l.listing_address LIKE "%"?"%" OR l.title LIKE "%"?"%")
+            AND (isnull(status) OR status = 0)
             AND l.sale_or_rent = ?
             AND l.property_type LIKE "%"?"%"
             AND l.pricing >= ? AND pricing <= ?
@@ -143,6 +150,7 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
             FROM listings l
             LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
             WHERE (l.listing_address LIKE "%"?"%" OR l.title LIKE "%"?"%")
+            AND (isnull(status) OR status = 0)
             AND l.sale_or_rent = ?
             AND l.property_type LIKE "%"?"%"
             AND l.pricing >= ? AND l.pricing <= ?
