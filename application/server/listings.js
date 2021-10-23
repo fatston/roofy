@@ -145,6 +145,13 @@ const editListing = (req, res) => {
     let availability = req.body.availability;
     let lease_term = req.body.lease_term;
     let town = req.body.town;
+    let price_psf;
+    if (pricing && floor_size) {
+        price_psf = pricing / floor_size;
+    } else {
+        price_psf = 0;
+    }
+    
 
     if (availability == '') { availability = null; }
 
@@ -152,10 +159,10 @@ const editListing = (req, res) => {
         UPDATE listings 
         SET sale_or_rent = ?, title = ?, listing_address = ?, listing_pc = ?, description = ?, property_type = ?,
         floor_level = ?, rooms = ?, furnishings = ?, floor_size = ?, tenure = ?, pricing = ?,
-        availability = ?, lease_term = ?, town = ?
+        availability = ?, lease_term = ?, town = ?, price_psf = ?
         WHERE listing_id = ?;
     `;
-    let questionMark = [sale_or_rent, title, listing_address, listing_pc, description, property_type, floor_level, rooms, furnishings, floor_size, tenure, pricing, availability, lease_term, town, listing_id];
+    let questionMark = [sale_or_rent, title, listing_address, listing_pc, description, property_type, floor_level, rooms, furnishings, floor_size, tenure, pricing, availability, lease_term, town, price_psf, listing_id];
     
     db.query(listingsql, questionMark,(err, result)=>{
         if (err) {
