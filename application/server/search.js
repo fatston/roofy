@@ -42,8 +42,7 @@ const getHomeListings = (req, res) => {
             (SELECT l.*, COUNT(b1.listing_id) AS countbookmarks, DATE_FORMAT(l.listing_datetime, '%d %b %Y at %h:%i %p') AS niceD8
             FROM listings l
             LEFT JOIN bookmarks b1 ON b1.listing_id = l.listing_id
-            WHERE sale_or_rent = 'SALE'
-            AND (isnull(status) OR status = 0)
+            WHERE (isnull(status) OR status = 0)
             GROUP BY l.listing_id
             ORDER BY listing_datetime DESC
             LIMIT 3)

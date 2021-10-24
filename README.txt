@@ -2,7 +2,7 @@ Testing guide
 1) open command prompt, navigate to <application> folder
 2) type "npm install" (if you don't see loading screen, download from https://nodejs.org/en/download/
 3) type "npm start"
-4) open "localhost:5000"
+4) open "localhost"
 5) have fun!
 
 

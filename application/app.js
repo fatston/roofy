@@ -740,7 +740,7 @@ function getProfileDetails(req,res,next) {
             res.json({success:false})
         }
         else {
-            console.log("asdasd", row[0].display_picture);
+            // console.log("asdasd", row[0].display_picture);
             res.email = row[0].email;
             res.name = row[0].name;
             res.password = row[0].password;
