@@ -42,10 +42,10 @@
                 <option value="landed" <%= s.property_type === 'landed' ? 'selected' : '' %> >Landed</option>
               </select>
             </div>
-            <div class="col-auto">
+            <div class="col-md-2">
               <input type="number" class="form-control" name="price_lower_bound" placeholder="Min $$" min="0" value='<%= s.price_lower_bound %>'>
             </div>
-              <div class="col-auto">
+              <div class="col-md-2">
               <input type="number" class="form-control" name="price_upper_bound" placeholder="Max $$" min="0" value='<%= s.price_upper_bound %>'>
             </div>
             <div class="col-auto">
