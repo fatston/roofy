@@ -122,12 +122,15 @@ const searchListings = ([search, sale_or_rent, property_type, price_lower_bound,
     if (property_type != "hdb" && property_type != "condo" && property_type != "landed") {
         property_type = "";
     }
-    if (price_lower_bound < 0) {
+    price_lower_bound = Number(price_lower_bound);
+    price_upper_bound = Number(price_upper_bound);
+    if (price_lower_bound < 0 || !price_lower_bound) {
         price_lower_bound = 0;
     }
-    if (price_upper_bound < 0 || price_upper_bound <= price_lower_bound) {
+    if (price_upper_bound <= price_lower_bound || !price_upper_bound) {
         price_upper_bound = price_lower_bound + 100000000;
     }
+
 
     if (userid) { // get bookmarks too
         sql = `
