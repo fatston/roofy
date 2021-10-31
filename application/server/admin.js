@@ -6,22 +6,22 @@ const getListingStats = (res) => {
         (
             SELECT COUNT(*) AS last_week
             FROM listings l
-            WHERE l.listing_datetime BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) AND CURRENT_DATE()
+            WHERE l.listing_datetime BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY) AND CURRENT_DATE()
         )
         UNION ALL (
             SELECT COUNT(*)
             FROM listings
-            WHERE listing_datetime BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 14 DAY) AND DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+            WHERE listing_datetime BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 60 DAY) AND DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
         )
         UNION ALL (
             SELECT COUNT(*)
             FROM listings
-            WHERE listing_datetime BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 21 DAY) AND DATE_SUB(CURRENT_DATE(), INTERVAL 14 DAY)
+            WHERE listing_datetime BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 90 DAY) AND DATE_SUB(CURRENT_DATE(), INTERVAL 60 DAY)
         )
         UNION ALL (
             SELECT COUNT(*)
             FROM listings
-            WHERE listing_datetime BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY) AND DATE_SUB(CURRENT_DATE(), INTERVAL 21 DAY)
+            WHERE listing_datetime BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 120 DAY) AND DATE_SUB(CURRENT_DATE(), INTERVAL 90 DAY)
         );
     `
     // run the sql query on db
@@ -38,9 +38,9 @@ const getListingStats = (res) => {
 const getUserStats = (res) => {
     let sql = `
         SELECT (
-            SELECT COUNT(*) FROM user WHERE datetime_created BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) AND CURRENT_DATE()
+            SELECT COUNT(*) FROM user WHERE datetime_created BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 366 DAY) AND CURRENT_DATE()
         ) AS userCount, (
-            SELECT COUNT(*) FROM seller WHERE datetime_created BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) AND CURRENT_DATE()
+            SELECT COUNT(*) FROM seller WHERE datetime_created BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 366 DAY) AND CURRENT_DATE()
         ) AS sellerCount;
     `;
     // run the sql query on db

@@ -171,9 +171,7 @@ app.get('/seller/login',(req,res)=>{
 
 // post seller login request
 app.post('/seller/login', checkAuthAdminLogin, authSellerLogin, createSellerSession, (req,res)=>{
-    getListings(req.session.sellerid, function(data) {
-        res.render(path.resolve(__dirname,'./public/seller/seller_listings'), {data, 'pageName': 'home'})
-    })
+    res.redirect('/seller');
 });
 
 // route to registration page
@@ -244,9 +242,7 @@ app.get('/listing/:id', (req,res)=>{
 
 // route to seller home page
 app.get('/seller',checkSellerSession, (req,res)=>{
-    getListings(req.session.sellerid, function(data) {
-        res.render(path.resolve(__dirname,'./public/seller/seller_listings'), {data, 'pageName': 'home'})
-    })
+    res.redirect('/seller/listings');
 })
 
 // route to seller profile page
@@ -818,7 +814,10 @@ function registerUser(req,res,next) {
     `;
 
     db.query(sql, [email,password,name],(err)=>{
-        if (err) {
+        if (err.errno == 1062) {
+            res.send('Email is already used. <a href="register">try again</a>')
+        }
+        else if (err) {
             res.send('Email is already used. <a href="register">try again</a>')
             res.end();
         } else {
@@ -867,7 +866,10 @@ function editProfile(req,res,next) {
     `;
 
     db.query(sql, [email,password,name,userid],(err)=>{
-        if (err) {
+        if (err.errno == 1062) {
+            res.send("<h1>" + err.sqlMessage + "</h1><h1>Please <a href='/profile/edit'>try again</a></h1>")
+        }
+        else if (err) {
             res.send('Something went wrong...')
             res.end();
         } else {
@@ -892,7 +894,10 @@ function editSellerProfile(req,res,next) {
     `;
 
     db.query(sql, [username, password, name, company, contact, email, sellerid],(err)=>{
-        if (err) {
+        if (err.errno == 1062) {
+            res.send("<h1>" + err.sqlMessage + "</h1><h1>Please <a href='/seller/profile/edit'>try again</a></h1>")
+        }
+        else if (err) {
             res.send(err)
             console.log(err);
             res.end();

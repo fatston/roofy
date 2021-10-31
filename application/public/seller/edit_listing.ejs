@@ -84,15 +84,15 @@
             </div>
             <div class="col-md-15 mb-3">
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="property_type" id="hdb" value="hdb" <%= listing.property_type=="hdb" ? 'checked' : ''; %>>
+                    <input class="form-check-input" type="radio" name="property_type" id="hdb" value="hdb" <%= listing.property_type=="hdb" || listing.property_type=="HDB" ? 'checked' : ''; %>>
                     <label class="form-check-label" for="hdb">hdb</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="property_type" id="condo" value="condo"<%= listing.property_type=="condo" ? 'checked' : ''; %>>
+                    <input class="form-check-input" type="radio" name="property_type" id="condo" value="condo"<%= listing.property_type=="condo" || listing.property_type=="CONDOMINIUM" ? 'checked' : ''; %>>
                     <label class="form-check-label" for="condominium">condominium</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="property_type" id="landed" value="landed" <%= listing.property_type=="landed" ? 'checked' : ''; %>>
+                    <input class="form-check-input" type="radio" name="property_type" id="landed" value="landed" <%= listing.property_type=="landed" || listing.property_type == "LANDED" ? 'checked' : ''; %>>
                     <label class="form-check-label" for="landed">landed</label>
                 </div>
             </div>
