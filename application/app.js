@@ -814,12 +814,11 @@ function registerUser(req,res,next) {
     `;
 
     db.query(sql, [email,password,name],(err)=>{
-        if (err.errno == 1062) {
-            res.send('Email is already used. <a href="register">try again</a>')
-        }
-        else if (err) {
-            res.send('Email is already used. <a href="register">try again</a>')
-            res.end();
+        if (err) {
+            if (err.errno == 1062) 
+                res.send('Email is already used. <a href="register">try again</a>')
+            else
+                res.send('something went wrong')
         } else {
             next()
         }
@@ -866,12 +865,13 @@ function editProfile(req,res,next) {
     `;
 
     db.query(sql, [email,password,name,userid],(err)=>{
-        if (err.errno == 1062) {
-            res.send("<h1>" + err.sqlMessage + "</h1><h1>Please <a href='/profile/edit'>try again</a></h1>")
-        }
-        else if (err) {
-            res.send('Something went wrong...')
-            res.end();
+        if (err) {
+            if (err.errno == 1062) {
+                res.send("<h1>" + err.sqlMessage + "</h1><h1>Please <a href='/profile/edit'>try again</a></h1>")
+            }
+            else {
+                res.send('Something went wrong...')
+            }
         } else {
             next()
         }
@@ -894,13 +894,14 @@ function editSellerProfile(req,res,next) {
     `;
 
     db.query(sql, [username, password, name, company, contact, email, sellerid],(err)=>{
-        if (err.errno == 1062) {
-            res.send("<h1>" + err.sqlMessage + "</h1><h1>Please <a href='/seller/profile/edit'>try again</a></h1>")
-        }
-        else if (err) {
-            res.send(err)
-            console.log(err);
-            res.end();
+        
+        if (err) {
+            if (err.errno == 1062) {
+                res.send("<h1>" + err.sqlMessage + "</h1><h1>Please <a href='/seller/profile/edit'>try again</a></h1>")
+            }
+            else {
+                res.send("something went wrong...")
+            }
         } else {
             next()
         }
