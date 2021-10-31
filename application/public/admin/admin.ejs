@@ -28,7 +28,7 @@
         </nav>
 
     <div class="container mb-3" style="margin-top: 40px;">
-        <h1>Welcome back to the Admin Page you wanker!</h1><br>
+        <h1>Welcome Back, Admin</h1><br>
         <div class="row row-cols-1 row-cols-md-3 g-4">
             <div class="col">
                 <div class="card h-100">
@@ -122,7 +122,7 @@
             <div class="col">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="card-title">New Listings This Month</h5>
+                        <h5 class="card-title">New Listings: past 4 Months</h5>
                         <canvas id="ListingsChart" style="width:100%;max-width:600px"></canvas>
                         <% 
                             let ld = listingData.data; 
@@ -149,7 +149,7 @@
                                 legend: {display: false},
                                 title: {display: false},
                                 scales: {
-                                    xAxes: [{scaleLabel: {display: true, labelString: 'No of Weeks Ago'}}],
+                                    xAxes: [{scaleLabel: {display: true, labelString: 'No of Months Ago'}}],
                                     yAxes: [{ticks: {min: 0, max:maximum_listings}, scaleLabel: {display: true, labelString: 'No of New Listings'}}],
                                 }
                             }
